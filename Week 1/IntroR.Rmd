@@ -39,6 +39,11 @@ knit_hooks$set(output = function(x, options) {
 - Basic Functions
 - Installing Packages
 - Loading Data
+
+<br>
+<br>
+
+**Note**: Please follow along and run the code in the file *IntroR.R* found in BlueLine
 ---
 ## Announcements
 
