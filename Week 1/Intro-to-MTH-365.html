@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Welcome to MTH365: Introduction to Data Science!</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Alison Kleffner" />
+    <meta name="date" content="2023-08-15" />
+    <script src="libs/header-attrs-2.23/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Welcome to MTH365: Introduction to Data Science!
+]
+.author[
+### Alison Kleffner
+]
+.date[
+### August 15, 2023
+]
+
+---
+
+
+
+
+## Agenda
+
+- Introductions
+- Syllabus/Course Specifics
+- Software Set-up
+  + What is `R`?
+
+---
+## Announcements
+
+- Introduction Questionnaire in BlueLine due **Thursday August 24 at 11:59 pm**
+  + Should take approximately 5 minutes
+- Software Downloaded by class on **Thursday August 17 at 11:59 pm**
+  + Should hopefully have time at end of class
+
+
+
+---
+
+## Alison Kleffner, PhD
+
+- BS in Applied Mathematics and Economics at Rockhurst University
+- Master and PhD in Statistics at University of Nebraska at Lincoln
+- Thesis: *Visualization and Modeling of Multivariate Data in Environmental Applications*
+- New Faculty! So I am learning and open to student research projects
+
+--
+
+**Now let introduce yourselves!**
+
+- Name
+- Something fun you did this summer
+
+---
+class:inverse
+
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+.center[
+## Syllabus and Course Specifics
+]
+
+
+---
+
+## What will be in this course?
+
+- This is a programming course using *R*, the most commonly used statistical language
+- We will also cover some statistical concepts (different than math!)
+- In this course you will complete in-class labs, projects, and presentations.
+- Since this course invovles using *R*, please bring your laptops to class with you
+
+---
+
+## Syllabus
+
+
+
+---
+class:inverse
+
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+.center[
+## Software Set-Up
+]
+
+---
+
+### How to Learn a Programming Language
+
+If you have never used *R* (or even heard of it) before, it is totally OK! We will be starting with the basics.
+
+.pull-left[
+- Breathe
+- Mistakes are ok!
+- Ask for help, with a reproducible example
+- Translate code into plain English
+- Don't reinvent the wheel
+- Google is your friend!
+].pull-right[
+&lt;img src="../Week 1/images/begin-R.png" width="1565" /&gt;
+.center[&lt;font size = "0.75"&gt;Artwork by Allison Horst&lt;/font&gt;]
+]
+
+---
+
+### What is R?
+
+*R* is a free software environment and programming language for statistical computing and graphics
+
+- Open-source
+- According to it's website, "R is a system for statistical computation and graphics" [(Source)](https://www.r-project.org)
+- **Interpreted language**: we interact with R through a “command line” interpreter, which translates our “code” to machine code
+- CRAN is R's central software repository. Contains contributed packages
+
+
+---
+
+### What is R Studio?
+
+Every R installation comes with the *R* Console, so we don’t actually need an additional program to interface with R. BUT most of people who uses *R* ALSO uses RStudio to interact with it.
+
+- “Integrated Development Environment”
+- Clean user interface
+- Ability to see loaded data sets, packages, history
+- Write code in separate “scripts” from the console
+
+---
+
+### Implication of Open-Source Software
+
+Because *R* is open source, users can contribute *R* packages to add additional functions and capabilities (more than 16,000 as of November 2020). 
+
+- A complete list can be found [here](https://cran.r-project.org/web/packages/available_packages_by_name.html)
+- Pro: New statistical/data science techniques are added to CRAN, Bioconductor (another package repository), GitHub, etc. daily
+- Con: No standard syntax! Not all are well documented
+
+---
+
+### Reproducible Research
+
+Excerpt from the Simply Statistics blog: “The Real Reason Reproducible Research is Important” [Source](https://simplystatistics.org/2014/06/06/the-real-reason-reproducible-research-is-important/MTH)
+
+- **Reproducible**: the original data (and original computer code) can be analyzed (by an independent investigator) to obtain the same results of the original study.
+- Reproducibility is important because it is the only thing that an investigator can guarantee about a study.
+
+More reasons to do your programming in a reproducible way:
+
+1. **Time saved**: especially important in the professional world
+2. **Time elapsed**: even the best programmers forget how their code runs eventually
+
+---
+
+### Reproducible Research with R Markdown
+
+R Markdown provides “an authoring framework for data science”. In an R Markdown document, you can:
+
+- Save and execute code
+- Generate written reports that can be shared with someone else
+- Supported file formats: Word, PDF, HTML, slide shows, handouts, dashboards, Powerpoint
+
+&lt;br&gt;
+&lt;br&gt;
+**More on this next week**
+---
+
+### Let's Install it Together
+
+1. Download and run the R installer for your operating system from CRAN
+  - Windows: https://cran.rstudio.com/bin/windows/base/
+  - Mac: https://cran.rstudio.com/bin/macosx/
+  - Linux: https://cran.rstudio.com/bin/linux/
+2. Now download RStudio from the RStudio website – IDE of R
+ - https://posit.co/download/rstudio-desktop/
+3. If you are using a Mac, you may need to download XQuartz.
+https://www.xquartz.org/
+ - If you run into issues, try downloading this to see if it helps.
+
+
+Go with all default options
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

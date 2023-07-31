@@ -1,0 +1,208 @@
+---
+title: "Welcome to MTH365: Introduction to Data Science!"
+author: "Alison Kleffner"
+date: "August 15, 2023"
+output: 
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r echo=FALSE, message=FALSE, warning = FALSE}
+library(tidyverse)
+library(knitr)
+
+hook_output = knit_hooks$get('output')
+knit_hooks$set(output = function(x, options) {
+  # this hook is used only when the linewidth option is not NULL
+  if (!is.null(n <- options$linewidth)) {
+    x = xfun::split_lines(x)
+    # any lines wider than n should be wrapped
+    if (any(nchar(x) > n)) x = strwrap(x, width = n)
+    x = paste(x, collapse = '\n')
+  }
+  hook_output(x, options)
+})
+
+```
+
+## Agenda
+
+- Introductions
+- Syllabus/Course Specifics
+- Software Set-up
+  + What is `R`?
+
+---
+## Announcements
+
+- Introduction Questionnaire in BlueLine due **Thursday August 24 at 11:59 pm**
+  + Should take approximately 5 minutes
+- Software Downloaded by class on **Thursday August 17 at 11:59 pm**
+  + Should hopefully have time at end of class
+
+
+
+---
+
+## Alison Kleffner, PhD
+
+- BS in Applied Mathematics and Economics at Rockhurst University
+- Master and PhD in Statistics at University of Nebraska at Lincoln
+- Thesis: *Visualization and Modeling of Multivariate Data in Environmental Applications*
+- New Faculty! So I am learning and open to student research projects
+
+--
+
+**Now let introduce yourselves!**
+
+- Name
+- Something fun you did this summer
+
+---
+class:inverse
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+.center[
+## Syllabus and Course Specifics
+]
+
+
+---
+
+## What will be in this course?
+
+- This is a programming course using *R*, the most commonly used statistical language
+- We will also cover some statistical concepts (different than math!)
+- In this course you will complete in-class labs, projects, and presentations.
+- Since this course invovles using *R*, please bring your laptops to class with you
+
+---
+
+## Syllabus
+
+
+
+---
+class:inverse
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+.center[
+## Software Set-Up
+]
+
+---
+
+### How to Learn a Programming Language
+
+If you have never used *R* (or even heard of it) before, it is totally OK! We will be starting with the basics.
+
+.pull-left[
+- Breathe
+- Mistakes are ok!
+- Ask for help, with a reproducible example
+- Translate code into plain English
+- Don't reinvent the wheel
+- Google is your friend!
+].pull-right[
+```{r, echo=FALSE}
+
+knitr::include_graphics("../Week 1/images/begin-R.png")
+
+```
+.center[<font size = "0.75">Artwork by Allison Horst</font>]
+]
+
+---
+
+### What is R?
+
+*R* is a free software environment and programming language for statistical computing and graphics
+
+- Open-source
+- According to it's website, "R is a system for statistical computation and graphics" [(Source)](https://www.r-project.org)
+- **Interpreted language**: we interact with R through a “command line” interpreter, which translates our “code” to machine code
+- CRAN is R's central software repository. Contains contributed packages
+
+
+---
+
+### What is R Studio?
+
+Every R installation comes with the *R* Console, so we don’t actually need an additional program to interface with R. BUT most of people who uses *R* ALSO uses RStudio to interact with it.
+
+- “Integrated Development Environment”
+- Clean user interface
+- Ability to see loaded data sets, packages, history
+- Write code in separate “scripts” from the console
+
+---
+
+### Implication of Open-Source Software
+
+Because *R* is open source, users can contribute *R* packages to add additional functions and capabilities (more than 16,000 as of November 2020). 
+
+- A complete list can be found [here](https://cran.r-project.org/web/packages/available_packages_by_name.html)
+- Pro: New statistical/data science techniques are added to CRAN, Bioconductor (another package repository), GitHub, etc. daily
+- Con: No standard syntax! Not all are well documented
+
+---
+
+### Reproducible Research
+
+Excerpt from the Simply Statistics blog: “The Real Reason Reproducible Research is Important” [Source](https://simplystatistics.org/2014/06/06/the-real-reason-reproducible-research-is-important/MTH)
+
+- **Reproducible**: the original data (and original computer code) can be analyzed (by an independent investigator) to obtain the same results of the original study.
+- Reproducibility is important because it is the only thing that an investigator can guarantee about a study.
+
+More reasons to do your programming in a reproducible way:
+
+1. **Time saved**: especially important in the professional world
+2. **Time elapsed**: even the best programmers forget how their code runs eventually
+
+---
+
+### Reproducible Research with R Markdown
+
+R Markdown provides “an authoring framework for data science”. In an R Markdown document, you can:
+
+- Save and execute code
+- Generate written reports that can be shared with someone else
+- Supported file formats: Word, PDF, HTML, slide shows, handouts, dashboards, Powerpoint
+
+<br>
+<br>
+**More on this next week**
+---
+
+### Let's Install it Together
+
+1. Download and run the R installer for your operating system from CRAN
+  - Windows: https://cran.rstudio.com/bin/windows/base/
+  - Mac: https://cran.rstudio.com/bin/macosx/
+  - Linux: https://cran.rstudio.com/bin/linux/
+2. Now download RStudio from the RStudio website – IDE of R
+ - https://posit.co/download/rstudio-desktop/
+3. If you are using a Mac, you may need to download XQuartz.
+https://www.xquartz.org/
+ - If you run into issues, try downloading this to see if it helps.
+
+
+Go with all default options
