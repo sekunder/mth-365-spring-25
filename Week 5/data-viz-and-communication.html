@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>MTH365: Introduction to Data Science</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Graphical Perception" />
+    <meta name="date" content="2023-09-12" />
+    <script src="libs/header-attrs-2.23/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# MTH365: Introduction to Data Science
+]
+.author[
+### Graphical Perception
+]
+.date[
+### September 12, 2023
+]
+
+---
+
+
+
+
+
+## Agenda
+
+- Introduction to Graphical Perception
+  + General Guidelines
+  + Color
+- Data Writing
+  + Figure Captions
+  + Descriptive Paragraphs
+
+---
+## Announcements
+
++ Mini-Project 1 is due tonight!
+  + Presentations on Thursday
++ Lab 3 due Tuesday September 19 at 11:59 pm 
+  + No additional Lab this week
+
+
+---
+## Graphical Perception
+
+To visually display data, information is encoded into a graph. The viewer then visually decodes this information, known as graphical perception, to gain knowledge. A successful graphic allows the user to perform graphical perception accurately and efficiently
+
+In previous weeks we have discussed how to choose the right plot to visualize the data. This week we will focus on the other two principles:
+
+- Keep it simple
+- Show the data clearly
+
+To achieve these two goals, you need to make use of several optional functions in the ggplot as well as understand what need to be include in your writing.
+
+---
+## Keep it Simple
+
+A general guideline is to use simplicity in the design. 
+
+- Minimize the number of unique symbols to not overload the user’s memory.
+- A sample of graphics found that graphics with the best overall ratings had fewer features on average. 
+- Beauty with the addition of unnecessary features does not always equal good content as attention is limited 
+
+---
+## Show the Data Clearly
+
+Here authors wanted to display the relationship between the average lifespan and lifespan standard deviation of different countries by labeling each point by sex and education level. Additionally, they denoted the country, represented by each point, by including its name on the chart
+
+&lt;img src="../Week 5/images/unclear-graph.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+---
+## Show the Data Clearly
+
+&lt;img src="../Week 5/images/better-graph.png" width="1765" style="display: block; margin: auto;" /&gt;
+
+---
+## Show the Data Clearly: Preattentive Features
+
+Pre-Attentive Features are things that "jump out" in less than 500 ms
+
++ Color, shape, angle, movement, spatial localization
+
+There is a hierarchy of features
++ Color is stronger than shape
+
+Reduces the amount of work users of your graph have to do when they view it
+
+---
+class:primary
+# Find the Target
+
+&lt;img src="data-viz-and-communication_files/figure-html/unnamed-chunk-4-1.png" width="60%" height="60%" style="display: block; margin: auto;" /&gt;
+
+???
+Find the target?
+
+how quickly did you spot the circle?
+
+---
+class:primary
+# Find the Target
+
+&lt;img src="data-viz-and-communication_files/figure-html/unnamed-chunk-5-1.png" width="60%" height="60%" style="display: block; margin: auto;" /&gt;
+
+
+---
+## Show Data Clearly: Pie vs Bar Chart
+
+.pull-left[
+&lt;img src="data-viz-and-communication_files/figure-html/diamonds1-1.png" style="display: block; margin: auto;" /&gt;
+].pull-right[
+
+&lt;img src="data-viz-and-communication_files/figure-html/diamonds2-1.png" style="display: block; margin: auto;" /&gt;
+]
+
+--
+
+Anything that can be put into a pie chart can also be put into a bar chart
+
+- Research has shown that people have more difficulty with angle measurements than length measurements, so always prefer bar chart over pie chart. 
+
+
+
+---
+## Show Data Clearly: Color
+
++ Hue: shade of color (red, orange, yellow...)
+
++ Intensity: amount of color
+
++ Both color and hue are pre-attentive. Bigger contrast corresponds to faster detection.
+
++ Use color to your advantage
+
++ When choosing color schemes, we will want mappings from data to color that are not just numerically but also perceptually uniform
+  - Avoid rainbow color gradients
+
++ Distinguish between sequential scales and categorical scales
+
++ Be conscious of what color means
+  - Leverage common association
+
+---
+## Color
+
+Our eyes are optimized for perceiving the yellow/green region of the color spectrum
+
+&lt;img src="../Week 5/images/color-spectrum.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+## Gradients
+
+Qualitative schemes: no more than 7 colors
+
+&lt;img src="data-viz-and-communication_files/figure-html/unnamed-chunk-7-1.png" width="35%" height="35%" /&gt;
+
+Quantitative schemes: use color gradient with only one hue for positive values
+
+&lt;img src="data-viz-and-communication_files/figure-html/unnamed-chunk-8-1.png" width="35%" height="35%" /&gt;
+
+
+Quantitative schemes: use color gradient with two hues for positive and negative values. Gradient should go through a light, neutral color (white)
+
+&lt;img src="data-viz-and-communication_files/figure-html/unnamed-chunk-9-1.png" width="35%" height="35%" /&gt;
+
+---
+## Color Blindness
+
+Not everyone perceives color in the same way. Some individuals have [colorblindness or color deficiencies](https://en.wikipedia.org/wiki/Color_blindness).
+
+You can take a test designed to screen for colorblindness [here](https://www.eyeque.com/color-blind-test/test/).
+
+Suggestions:
++ Design for a black-and-white photocopier
++ Use a monochromatic color gradient scheme where possible.
++ Suggested 2-color gradient: blue/purple - white - orange (safe for most types of colorblindness)
++ Utilize double encoding: use color and another aesthetic (line type, shape)
++ Avoid any scheme that uses green-yellow-red signaling if you have a target audience that may include colorblind people.
++ Can use [this website](https://colorbrewer2.org/#type=sequential&amp;scheme=BuGn&amp;n=3) to help pick palettes as well
++ The `viridis package` (from last week's lab) contains a set of color scales designed to span as wide a palette as possible, making it easier to see differences in your data and are also perceptually uniform.
+
+---
+## Example: Hair Color
+
+The data `HairEyeColor` provides the information of hair colors and eye colors in a statistics class. The data is recorded in a three-way table. The first step is to convert the data into a column-wise data frame.
+
+--
+.pull-left[
+
+```r
+data(HairEyeColor)
+HairEyeColor[,,1] #Male
+```
+
+```
+##        Eye
+## Hair    Brown Blue Hazel Green
+##   Black    32   11    10     3
+##   Brown    53   50    25    15
+##   Red      10   10     7     7
+##   Blond     3   30     5     8
+```
+].pull-right[
+
+```r
+data(HairEyeColor)
+HairEyeColor[,,2] #Female
+```
+
+```
+##        Eye
+## Hair    Brown Blue Hazel Green
+##   Black    36    9     5     2
+##   Brown    66   34    29    14
+##   Red      16    7     7     7
+##   Blond     4   64     5     8
+```
+
+]
+--
+
+
+```r
+newdata_male = as.data.frame(HairEyeColor[,,1]) 
+newdata_female = as.data.frame(HairEyeColor[,,2]) 
+newdata = rbind(newdata_male, newdata_female)
+newdata = newdata %&gt;% 
+  mutate(Gender = rep(c("Male", "Female"), each  = 16))
+```
+
+
+---
+## Example: Hair Color
+
+
+```r
+head(newdata, n = 2)
+```
+
+```
+##    Hair   Eye Freq Gender
+## 1 Black Brown   32   Male
+## 2 Brown Brown   53   Male
+```
+--
+
+```r
+hairData = newdata %&gt;% 
+  group_by(Hair) %&gt;%
+  summarise(Freq = sum(Freq))
+hairData
+```
+
+```
+## # A tibble: 4 × 2
+##   Hair   Freq
+##   &lt;fct&gt; &lt;dbl&gt;
+## 1 Black   108
+## 2 Brown   286
+## 3 Red      71
+## 4 Blond   127
+```
+
+--
+Suppose now we want to see the distribution of hair color in this class. What kind of the plot we should use?
+
+---
+## Example: Hair Color
+
+What is the difference between these two?
+.pull-left[
+
+
+```r
+hairData %&gt;% 
+  ggplot(aes(x=Hair, y=Freq)) + 
+  geom_col(aes(color = Hair))
+```
+
+![](data-viz-and-communication_files/figure-html/unnamed-chunk-15-1.png)&lt;!-- --&gt;
+
+
+].pull-right[
+
+
+```r
+hairData %&gt;% 
+  ggplot(aes(x=Hair, y=Freq)) +  
+  geom_col(aes(fill = Hair))
+```
+
+![](data-viz-and-communication_files/figure-html/unnamed-chunk-16-1.png)&lt;!-- --&gt;
+
+]
+
+---
+
+## Example: Hair Color
+
+What is the difference between these two?
+.pull-left[
+
+
+```r
+hairData %&gt;% 
+  ggplot(aes(x=Hair, y=Freq)) + 
+* geom_col(aes(color = Hair))
+```
+
+![](data-viz-and-communication_files/figure-html/unnamed-chunk-17-1.png)&lt;!-- --&gt;
+
+
+].pull-right[
+
+
+```r
+hairData %&gt;% 
+  ggplot(aes(x=Hair, y=Freq)) +  
+* geom_col(aes(fill = Hair))
+```
+
+![](data-viz-and-communication_files/figure-html/unnamed-chunk-18-1.png)&lt;!-- --&gt;
+
+]
+
+---
+## Example: Hair Color
+
+It is a little weird that the color in the visualization does not match the color. Let’s try to define the color by ourselves. 
+
+```r
+ggplot(hairData, aes(x = Hair, y = Freq)) + 
+  geom_col(aes(fill = Hair)) +
+* scale_fill_manual(breaks = c("Black", "Brown", "Red", "Blond"),
+*                   values=c("black", "brown", "red", "yellow"))
+```
+
+&lt;img src="data-viz-and-communication_files/figure-html/unnamed-chunk-19-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+## Example: Hair Color
+
+You may have realized that in the previous figure, the color red and brown are pretty close. For an extreme case, what if you have a reader who is color-blind? There are a lot of [research](https://jfly.uni-koeln.de/color/) on which palette then to use.
+
+
+```r
+cbPalette &lt;- c("#000000","#E69F00","#56B4E9","#009E73","#F0E442")
+
+ggplot(hairData, aes(x = Hair, y = Freq)) + 
+  geom_col(aes(fill = Hair)) +
+  scale_fill_manual(values=cbPalette)
+```
+
+&lt;img src="data-viz-and-communication_files/figure-html/unnamed-chunk-20-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+## Try it for yourself!!
+
+Now try by yourself (or with a group) with another type of figure.
+
+(a). Use the iris data below. Plot the figure to show the relation between Sepal.Length and Petal.Length.
+
+```r
+data(iris)
+```
+
+(b). Use colors to distinguish the species. Which function you have used? fill or color?
+
+(c). Use red to represents `virginica`, blue to represents `versicolor`, and yellow to represents `setosa`.
+
+(d). Use the color blind friendly color to distinguish three different species
+
+(e). Besides of the color, use different shape of the points to represents the difference (Hint: Use Google or the Help Documentation).
+
+---
+## Writing About Your Figure
+
+Your visualizations should include:
+
+- Clearly labeled axes
+- Clear and descriptive captions
+- Readable and easily understandable legends (if applicable)
+---
+## Labels
+
+(a). Use plain English `\(\\\)`
+(b). If there is mathematically symbols in your label, use `expression`:
+
+
+```r
+x = -5:10
+y = x^2
+xy = data.frame(x,y)
+ggplot(xy, aes(x = x, y=y)) +
+  geom_point() +
+* xlab("X") + ylab(expression(X^2))
+```
+
+&lt;img src="data-viz-and-communication_files/figure-html/unnamed-chunk-22-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+## Captions
+
+There are two ways of writing a caption:
+
+1. In-Figure Style
+
+
+```r
+ggplot(iris, aes(x=Sepal.Length, y=Petal.Length, group=Species)) + 
+  geom_point(aes(color = Species, shape = Species)) + 
+  scale_color_manual(values=cbPalette) +
+  xlab("Sepal Length") + 
+  ylab("Patal Length") +
+* ggtitle("Relation between Sepal Length and Petal Length")
+```
+
+&lt;img src="data-viz-and-communication_files/figure-html/unnamed-chunk-23-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+## Captions
+
+Formal report style: descriptive caption
+
+1. It is not included in the figure. Usually placed below the figure.
+2. Starts with the word “figure” or “table” followed by a number and a colon
+3. One sentence to clearly explained What and How is being compared
+4. One sentence to summarize the main conclusion.
+5. Any other necessary context
+
+&lt;img src="../Week 5/images/fig-caption.png" width="2427" /&gt;
+
+---
+## Captions
+
+What this then looks like:
+
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="data-viz-and-communication_files/figure-html/fig1-1.png" alt="Scatter plot between Iris sepal length and Iris petal length. Different species are indicated by different color and shapes. In general, the length of sepal and petal for Iris have a strong positive linear relationship."  /&gt;
+&lt;p class="caption"&gt;Scatter plot between Iris sepal length and Iris petal length. Different species are indicated by different color and shapes. In general, the length of sepal and petal for Iris have a strong positive linear relationship.&lt;/p&gt;
+&lt;/div&gt;
+
+---
+## Captions
+
+The caption only shows in the knit version of documents. Why we need a descriptive caption? How to check whether you have written a good descriptive caption?
+
+- The reader can capture your main argument without seeing the figure
+- The reader can capture the context of your figure without reading the other analysis in the formal report.
+
+---
+## Writing About Figures in Reports
+
+A formal data analysis report requires you to answer the question with a figure and explain the potential reasons behind the figure image. Sometimes you need multiple figures to answer one question and sometimes you can answer multiple questions with one figure.
+
+Once you generate one figures, here is what you should do:
+
+- Re-introduce the visualization and main argument
+- Cite any statistical evidence or figure characteristics to support your argument
+- State secondary argument and other information
+- Contrast with the other figures if necessary
+- Provide potential reasons and explain the conclusion
+
+Note: *HTML* documents do not automatically generate "Figure 1", you must add that into the caption for referencing. However, *PDF* documents do. 
+
+---
+## Example: Writing About Figures in Reports
+
+Figure 2 indicates that there is no linear relationship between iris sepal width and petal width since the scatter plot did not show a clear linear shape on the distribution of the point.
+
+Meanwhile, the three species does have clear different distributions of the sepal width and petal width and within a species, the the sepal width and petal width may have a positive linear relationship except Setosa, which does not have a clear trend.
+
+The relative size of different iris species is similar to what we have found in Figure 1, where Virginica tends to have the largest size among all three while Setosa is the smallest. One of the potential reasons for the different sizes may be the habitat condition while Virginica tends to grow in the places with enough sunshine but Setosa prefers relatively dark and wet environment.
+
+---
+## Your turn!
+
+Try to write a paragraph the following figure:
+
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="data-viz-and-communication_files/figure-html/unnamed-chunk-25-1.png" alt="Scatter plot between Iris sepal length and Iris petal length. Different species are indicated by different color and shapes. In general, the length of sepal and petal for Iris have a strong positive linear relationship."  /&gt;
+&lt;p class="caption"&gt;Scatter plot between Iris sepal length and Iris petal length. Different species are indicated by different color and shapes. In general, the length of sepal and petal for Iris have a strong positive linear relationship.&lt;/p&gt;
+&lt;/div&gt;
+
+---
+## Word Choice
+
+In data writing, it is quite important that you know how to use different word to show your confidence in the statement. This is subjective but here is a list of words you may need, listed from the highest confidence to the lowest:
+
+`demonstrates`
+
+`shows`
+
+`indicates`
+
+`illustrates`
+
+`reveals`
+
+`suggests`
+
+`might indicate`
+
+`may suggest`
+
+`seems to suggest`
+
+---
+## Referencing Figures: Optional
+
+The `bookdown` package in R allows cross-referencing, which is a useful way of directing your readers through your document 
+
+More information can be found [here](https://bookdown.org/yihui/rmarkdown-cookbook/cross-ref.html)
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

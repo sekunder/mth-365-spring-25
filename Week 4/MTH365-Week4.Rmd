@@ -210,10 +210,10 @@ gapminder %>%
 gapminder %>% filter(GDP_pc != "NA") %>% 
   filter(year==2010) %>% 
   group_by(region) %>% 
-  summarize(avg_GDP_pc=mean(GDP_pc),
-            sd_GDP_pc=sd(GDP_pc),
-            min_GDP_pc=min(GDP_pc),
-            max_GDP_pc=max(GDP_pc),
+  summarize(avg_GDP_pc=mean(GDP_pc, na.rm = TRUE),
+            sd_GDP_pc=sd(GDP_pc, na.rm = TRUE),
+            min_GDP_pc=min(GDP_pc, na.rm = TRUE),
+            max_GDP_pc=max(GDP_pc, na.rm = TRUE),
             N=n())
 ```
 
@@ -365,16 +365,19 @@ glimpse(flight2)
 
 ```{r}
 flight_united <- flight2 %>%
-  filter(name == "United Air Lines Inc.")
-glimpse(flight_united)
-```
-
-```{r}
-flight_united <- flight2 %>%
   filter(name == "United Air Lines Inc.") %>%
   group_by(flight) %>%
   summarise(N = n())
+
+## OR
+
+flight_united <- flight2 %>%
+  filter(name == "United Air Lines Inc.") %>%
+  group_by(origin, dest) %>%
+  summarise(N = n())
+
 glimpse(flight_united)
+
 ```
 
 3. How many unique destinations does United Airlines serve from the New York Area?
@@ -392,9 +395,17 @@ glimpse(flight_united_dest)
 ```{r}
 flight_united <- flight2 %>%
   filter(name == "United Air Lines Inc.") %>%
-  filter(origin == "EWR") %>%
-  group_by(flight) %>%
-  summarise(N = n())
+  group_by(origin, flight) %>%
+  summarise(N = n()) %>%
+  group_by(origin) %>%
+  summarise(Route = sum(N))
+
+flight_united <- flight2 %>%
+  filter(name == "United Air Lines Inc.") %>%
+  group_by(origin) %>%
+  summarise(length(unique(dest)))
+
+
 glimpse(flight_united)
 ```
 
