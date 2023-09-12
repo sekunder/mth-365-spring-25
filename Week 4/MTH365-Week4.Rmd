@@ -403,7 +403,7 @@ flight_united <- flight2 %>%
 flight_united <- flight2 %>%
   filter(name == "United Air Lines Inc.") %>%
   group_by(origin) %>%
-  summarise(length(unique(dest)))
+  summarise(uniq_des = length(unique(dest)))
 
 
 glimpse(flight_united)
@@ -415,7 +415,7 @@ glimpse(flight_united)
 flight2 %>%
   filter(!is.na(dep_delay)) %>%
   filter(name == "United Air Lines Inc.") %>%
-  summarize(dep_delay = mean(dep_delay))
+  summarize(dep_delay = mean(dep_delay, na.rm = TRUE))
 ```
 
 6. What is the average departure delay of a United Airlines flight leaving JFK? LGA? EWR?
