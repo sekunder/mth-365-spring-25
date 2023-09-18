@@ -16,4 +16,7 @@ Date | Notes | Description | Additional Files | Homework Assigned
 9/7/2023 | Lab 3 |  | Lab 3 found in BlueLine | Lab 3 due **Tuesday September 19** at 11:59 pm 
 9/12/2023 | [Viz and Communication](Week 5/data-viz-and-communication.html) | Basics of Graphical Perception | [R Markdown File](Week 5/MTH365-Week5-Student.Rmd)| 
 9/14/2023 | Present Project Proposals |  |  | 
+9/19/2023 | [tidyr and Data classes](Week 6/tidyr-and-classes.html) | Intro to `pivot_wider`, `pivot_longer`, and basic R data classes | [R Markdown File](Week 6/MTH365-Week6.Rmd)| 
+9/21/2023 |  Lab 4 |  | Lab 4 found in BlueLine | Lab 4 due **Tuesday September 26** at 11:59 pm
+
 
