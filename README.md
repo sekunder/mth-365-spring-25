@@ -18,5 +18,6 @@ Date | Notes | Description | Additional Files | Homework Assigned
 9/14/2023 | Present Project Proposals |  |  | 
 9/19/2023 | [tidyr and Data classes](Week 6/tidyr-and-classes.html) | Intro to `pivot_wider`, `pivot_longer`, and basic R data classes | [R Markdown File](Week 6/MTH365-Week6.Rmd)| 
 9/21/2023 |  Lab 4 |  | Lab 4 found in BlueLine | Lab 4 due **Tuesday September 26** at 11:59 pm
+9/26/2023 | [Statistical Foundations](Week 7/statistical-foundations.html) | Sampling Distributions and Bootstrapping | [R Markdown File](Week 7/statistical-foundations-student.Rmd)| 
 
 

@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>MTH365: Introduction to Data Science</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Statistical Foundations" />
+    <meta name="date" content="2023-09-26" />
+    <script src="libs/header-attrs-2.23/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# MTH365: Introduction to Data Science
+]
+.author[
+### Statistical Foundations
+]
+.date[
+### September 26, 2023
+]
+
+---
+
+
+
+
+## Agenda
+
+- Population vs. Sampling
+- Sampling Distributions
+  + Standard Error
+- Confidence Intervals
+- Bootstrapping 
+
+---
+## Announcements
+
+- Lab 4: **due tonight at 11:59 pm!**
+- A Look Ahead:
+  + Thursday - Linear Models
+  + Tuesday October 3 - Lab 5
+  + Thursday October 5 - Mini Project 2 work day
+- Both Lab 5 and Mini-Project 2 are due after Fall Break on Tuesday October 17.
+
+
+--
+
+Notes on Lab 3:
+
+- Please don't print our full data set
+- Check your data set - see if what you did is what you were expecting.
+- When asks a question, create code and then using the code develop your response
+
+---
+## Isn't this data science?
+
+- Statistics: Statistics is a mathematically based field which seeks to collect and interpret quantitative data. 
+
+- Data science: Data science is a multidisciplinary filed which uses scientific methods, processes and system to extract information from data in a large range of forms. 
+
+Data science techniques can provide us a clean data and its visualization but we still reply on statistics theory to interpret what the data is trying to tell us
+
+---
+## Introduction
+
+In data science we want to extract meaning from the data
+
+- Data wrangling
+- Visualization
+
+Visualizations are powerful because humans are good at seeing patterns! However, we are also very good at seeing patterns that do not exist!
+
+- Statistical Methods collect data and quantifies patterns in the data
+
+Moral of the story: Data science techniques can provide us clean data and visualizations but we still rely on statistical theory to interpret what the data is trying to tell us
+
+---
+## Samples and Population
+
+In statistics we are interested in a **population** of cases/people/objects. However, often this population is too large to collect data on, so we take **samples** from the larger population.
+
+Statistical methodology assumes that the cases are drawn from a much larger set of potential cases, so the given data are a sample of a larger population of potential cases. 
+  - Other samples that might have been drawn from the population.
+
+--
+
+**Next**:
+- Why sample?
+- Requirements of a “good” sample?
+
+
+---
+## Example: Setting travel policy by sampling from the population
+
+Example: You’ve been asked to develop a travel policy for business travelers going from New York City to Chicago. Assume that the `nycflights13` data sets represents the complete population of flights.
+
+What would we do?
+
+Let’s first filter all the flights going to Chicago and with a non-NA value of arrival delay time.
+
+
+```r
+library(nycflights13)
+Chicago &lt;- flights %&gt;%
+  filter(dest %in% c('ORD', 'MDW'), !is.na(arr_delay))
+nrow(Chicago)
+```
+
+```
+## [1] 20591
+```
+
+---
+## Let's find a Sample!
+
+
+```r
+set.seed(365)
+Sample100 &lt;- Chicago %&gt;% sample_n(size=100)
+glimpse(Sample100)
+```
+
+```
+## Rows: 100
+## Columns: 19
+## $ year           &lt;int&gt; 2013, 2013, 2013, 2013, 2013, 2013, 2013, 2013, 2013, 2013, 2013, 2013, 20…
+## $ month          &lt;int&gt; 9, 12, 7, 10, 10, 6, 4, 4, 6, 9, 4, 11, 10, 9, 6, 1, 2, 2, 4, 7, 11, 4, 3,…
+## $ day            &lt;int&gt; 15, 18, 2, 10, 7, 24, 28, 18, 2, 8, 25, 14, 29, 8, 20, 15, 5, 11, 22, 20, …
+## $ dep_time       &lt;int&gt; 603, 2034, 1800, 629, 2116, 1156, 1759, 906, 1157, 1325, 1222, 1121, 1156,…
+## $ sched_dep_time &lt;int&gt; 601, 2035, 1805, 630, 1901, 1200, 1800, 630, 1200, 1330, 1225, 1125, 1200,…
+## $ dep_delay      &lt;dbl&gt; 2, -1, -5, -1, 135, -4, -1, 156, -3, -5, -3, -4, -4, 19, 13, 26, -4, 1, 17…
+## $ arr_time       &lt;int&gt; 717, 2153, 1926, 737, 2226, 1300, 1910, 1244, 1303, 1452, 1438, 1245, 1308…
+## $ sched_arr_time &lt;int&gt; 730, 2210, 1950, 805, 2040, 1333, 1944, 804, 1310, 1510, 1405, 1310, 1315,…
+## $ arr_delay      &lt;dbl&gt; -13, -17, -24, -28, 106, -33, -34, 280, -7, -18, 33, -25, -7, -2, -17, 39,…
+## $ carrier        &lt;chr&gt; "UA", "WN", "AA", "AA", "UA", "UA", "UA", "B6", "WN", "AA", "AA", "AA", "W…
+## $ flight         &lt;int&gt; 1143, 168, 353, 303, 693, 255, 994, 905, 654, 331, 329, 327, 3330, 565, 37…
+## $ tailnum        &lt;chr&gt; "N68453", "N930WN", "N3CPAA", "N489AA", "N429UA", "N824UA", "N808UA", "N29…
+## $ origin         &lt;chr&gt; "EWR", "LGA", "LGA", "LGA", "LGA", "LGA", "EWR", "JFK", "EWR", "LGA", "LGA…
+## $ dest           &lt;chr&gt; "ORD", "MDW", "ORD", "ORD", "ORD", "ORD", "ORD", "ORD", "MDW", "ORD", "ORD…
+## $ air_time       &lt;dbl&gt; 116, 116, 117, 105, 111, 106, 104, 168, 110, 114, 116, 119, 119, 99, 107, …
+## $ distance       &lt;dbl&gt; 719, 725, 733, 733, 733, 733, 719, 740, 711, 733, 733, 733, 711, 711, 733,…
+## $ hour           &lt;dbl&gt; 6, 20, 18, 6, 19, 12, 18, 6, 12, 13, 12, 11, 12, 20, 21, 16, 6, 7, 15, 9, …
+## $ minute         &lt;dbl&gt; 1, 35, 5, 30, 1, 0, 0, 30, 0, 30, 25, 25, 0, 30, 0, 50, 30, 0, 0, 35, 30, …
+## $ time_hour      &lt;dttm&gt; 2013-09-15 06:00:00, 2013-12-18 20:00:00, 2013-07-02 18:00:00, 2013-10-10…
+```
+
+---
+## Finding Summary Statistics
+
+How long of a delay should we expect based on the sample? We can look at the mean, minimum, maximum, and standard deviation to get some idea.
+
+
+```r
+Sample100 %&gt;% summarize(mean=mean(arr_delay),
+                        min=min(arr_delay),
+                        max=max(arr_delay), 
+                        sd=sd(arr_delay))
+```
+
+```
+## # A tibble: 1 × 4
+##    mean   min   max    sd
+##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1  8.96   -39   280  46.5
+```
+
+---
+### Finding Summary Statistics
+
+We might also want to examine the quantiles.
+
+
+
+```r
+Sample100 %&gt;% summarize(q05=quantile(arr_delay, 0.05), 
+                        q25=quantile(arr_delay, 0.25),
+                        median=median(arr_delay),
+                        q75=quantile(arr_delay, 0.75), 
+                        q95=quantile(arr_delay, 0.95))
+```
+
+```
+## # A tibble: 1 × 5
+##     q05   q25 median   q75   q95
+##   &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1   -33   -18   -6.5  17.2  102.
+```
+
+Sorting the values from min to max, Quantile X means there are x% of values less than it:
+
+  - ie. 75% of the values are less than 17.2
+  
+---
+# What constitutes an “unacceptable” delay?
+
+How about an one and half hour delay?
+
+
+```r
+Chicago %&gt;% mutate(less90 = arr_delay&lt;=90) %&gt;% 
+  group_by(less90) %&gt;% 
+  summarize(n=n())
+```
+
+```
+## # A tibble: 2 × 2
+##   less90     n
+##   &lt;lgl&gt;  &lt;int&gt;
+## 1 FALSE   1197
+## 2 TRUE   19394
+```
+
+
+---
+## Take Another sample
+
+
+
+```r
+set.seed(10)
+Sample100_2 &lt;- Chicago %&gt;% sample_n(size=100)
+
+Sample100_2 %&gt;% summarize(mean=mean(arr_delay),
+            min=min(arr_delay),
+            max=max(arr_delay), 
+            sd=sd(arr_delay))
+```
+
+```
+## # A tibble: 1 × 4
+##    mean   min   max    sd
+##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1  9.64   -42   175  46.4
+```
+
+
+The sample mean is now 9.64. Is this the same or different than the previous sample?
+
+--
+
+Different samples of data will have different sample statistics!
+
+---
+## Compare to Population to Check Sample
+
+
+```r
+Sample100_2 %&gt;% summarize(mean=mean(arr_delay), #sample
+            min=min(arr_delay),
+            max=max(arr_delay), 
+            sd=sd(arr_delay)) 
+```
+
+```
+## # A tibble: 1 × 4
+##    mean   min   max    sd
+##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1  9.64   -42   175  46.4
+```
+
+```r
+Chicago %&gt;% summarize(mean=mean(arr_delay), #population
+            min=min(arr_delay),
+            max=max(arr_delay), 
+            sd=sd(arr_delay))
+```
+
+```
+## # A tibble: 1 × 4
+##    mean   min   max    sd
+##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1  7.14   -62  1109  47.9
+```
+
+--
+However, in most real-world settings, we do not have access to the population data. We have only our sample.
+
+---
+## Sample statistics
+
+Statistic: A quantity computed from values in a sample to represent some characteristics
+
+Examples:
+
++ Mean `\((\bar{x})\)`
++ Proportion `\((\hat{p})\)`
++ Median `\((m)\)`
++ Standard Deviation `\((s)\)`
++ Sample Size `\((n)\)`
+
+
+
+---
+## Sampling Distributions
+
+Sample statistics depend completely on the data. Different samples of data will have different sample statistics!
+
+We need to figure out the reliability of a sample statistic from the sample itself. 
+  + For now, though, we are going to use the population to develop some ideas about how to define reliability. 
+
+--
+
+If we draw many different samples from the population, each of size `\(n\)`, and calculated the sample statistic on each of those samples, how similar would the sample statistic be across all the samples?
+  + Do so by creating a sampling distribution
+
+--
+
+**Sampling distribution**: a set of probabilities represents the chance to see certain values of the statistics
++ There are three components for a sampling distribution: center (mean), spread (standard error) and shape.
++ [Animation](https://onlinestatbook.com/stat_sim/sampling_dist/index.html)
+
+---
+## Creating a Sampling Distribution
+
+We could run the previous code multiple times to obtain our different samples
+
+--
+
+Or, we could speed it up:
+
+
+```r
+n &lt;- 100
+num_trials &lt;- 500
+chi_25_means &lt;- 1:num_trials %&gt;% 
+  map(~Chicago %&gt;% slice_sample(n = n) %&gt;% 
+        summarize(mean_arr_delay = mean(arr_delay))) %&gt;% 
+  list_rbind() %&gt;% 
+  mutate(n = n)
+
+head(chi_25_means)
+```
+
+```
+## # A tibble: 6 × 2
+##   mean_arr_delay     n
+##            &lt;dbl&gt; &lt;dbl&gt;
+## 1          10.4    100
+## 2           9.98   100
+## 3           5.49   100
+## 4           2.16   100
+## 5          12.1    100
+## 6          15.5    100
+```
+
+---
+## Creating a Sampling Distribution
+
+```r
+# favstats() is in the mosaic library
+favstats(~mean_arr_delay, data=chi_25_means)
+```
+
+```
+##    min     Q1 median      Q3   max   mean       sd   n missing
+##  -4.19 3.2275   6.64 10.3025 21.15 7.0059 4.808579 500       0
+```
+
+--
+
+
+```r
+ggplot(chi_25_means, aes(x=mean_arr_delay)) + 
+  geom_density(fill='turquoise', alpha=0.5) + 
+  labs(x='Sampling Distribution of Sample Mean')
+```
+
+&lt;img src="statistical-foundations_files/figure-html/unnamed-chunk-11-1.png" style="display: block; margin: auto;" /&gt;
+
+
+---
+## Discuss Reliability: Standard Error
+
+**Standard error**: the standard deviation of the sampling distribution. It describes the width of the sampling distribution.
+
+`$$SE = \frac{s}{\sqrt{n}}$$`
+--
+
+Example: What’s the standard error of the sample mean?
+
+
+```r
+favstats(~arr_delay, data=Sample100)
+```
+
+```
+##  min  Q1 median    Q3 max mean       sd   n missing
+##  -39 -18   -6.5 17.25 280 8.96 46.46665 100       0
+```
+
+
+```r
+favstats(~mean_arr_delay, data=chi_25_means)
+```
+
+```
+##    min     Q1 median      Q3   max   mean       sd   n missing
+##  -4.19 3.2275   6.64 10.3025 21.15 7.0059 4.808579 500       0
+```
+
+--
+
+A larger sample size produces a standard error that is smaller. That is, a larger sample size is more reliable than a smaller sample size.
+
+---
+## Discuss Readability: Approximate 95% confidence interval
+
+**Approximate 95% Confidence interval**: If generate repeated samples, 95% of those intervals will contain the true population value.
+
+
+- The interval can be used to identify plausible values for the true mean of a variable. It is calculated from the mean and standard error of the sampling distribution.
+
+--
+
+&lt;img src="../Week 7/images/confidence-interval.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+
+---
+## Discuss Readability: Approximate 95% confidence interval
+
+Example: Calculate and interpret an approximate 95% confidence interval for the mean arrival delay.
+
+
+```r
+chi_25_means %&gt;%
+  summarize(
+    x_bar = mean(mean_arr_delay),
+    se = sd(mean_arr_delay)
+  ) %&gt;%
+  mutate(
+    ci_lower = x_bar - 2 * se, # approximately 95% of observations 
+    ci_upper = x_bar + 2 * se  # are within two standard errors
+  )
+```
+
+```
+## # A tibble: 1 × 4
+##   x_bar    se ci_lower ci_upper
+##   &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+## 1  7.01  4.81    -2.61     16.6
+```
+
+---
+## Discuss Readability: Approximate 95% confidence interval
+
+
+```r
+ggplot(chi_25_means, aes(x=mean_arr_delay)) + 
+  geom_density(fill='turquoise', alpha=0.5) + 
+  labs(x='Sampling Distribution of Sample Mean') +
+* geom_vline(xintercept=c(-2.61, 16.6), color="red")
+```
+
+&lt;img src="statistical-foundations_files/figure-html/unnamed-chunk-16-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+## How does sample size affect the sampling distribution?
+
+
+```r
+Means50 &lt;- do(1000)*(Chicago %&gt;% sample_n(size=50) %&gt;% 
+                       summarize(mean=mean(arr_delay)))
+Means100 &lt;- do(1000)*(Chicago %&gt;% sample_n(size=100) %&gt;% 
+                        summarize(mean=mean(arr_delay)))
+Means500 &lt;- do(1000)*(Chicago %&gt;% sample_n(size=500) %&gt;% 
+                        summarize(mean=mean(arr_delay)))
+```
+
+
+```r
+Means &lt;- rbind(Means50 %&gt;% mutate(n=50),
+               Means100 %&gt;% mutate(n=100),
+               Means500 %&gt;% mutate(n=500))
+```
+---
+## How does sample size affect the sampling distribution?
+
+
+```r
+ggplot(dat=Means, aes(x=mean)) + 
+  geom_density(aes(fill=as.factor(n))) + 
+  facet_grid(~n)+xlab('Sample means') + guides(fill=FALSE)
+```
+
+&lt;img src="statistical-foundations_files/figure-html/unnamed-chunk-18-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+## How does sample size affect the sampling distribution?
+
+A larger sample size produces a smaller standard error. 
+  - A larger sample size is more reliable than a smaller sample size
+
+--
+
+What happens to the confidence interval as the standard error decreases?
+
+--
+
++ Smaller Interval
+
+--
+
+For large sample sizes, the shape of the sampling distribution tends to bell-shaped
+
+
+---
+## Bootstraping
+
+In the last example, we had access to the population data and so we could find the sampling distribution by repeatedly sampling from the population. 
+  - We typically only have one sample and not the entire population. 
+  
+**Bootstrap** is a method that allows us to approximate the sampling distribution even though we do not have the population.
+
+In bootstraping we think of our sample as if it were the population. 
+  - So, like before, we draw many new samples from our original sample. 
+  - *Resampling*: drawing a new sample from an existing sample.
+
+When resampling, we sample with replacement.
+  - Allows us to estimate the variability of the sample
+  - If we did not sample with replacement, we would always get the same sample median as the observed value.
+
+Bootstrapping does not create new cases
+  - It isn’t a way to collect data. 
+
+---
+## Bootstraping
+
+&lt;img src="../Week 7/images/bootstrap.png" width="2107" style="display: block; margin: auto;" /&gt;
+
+  
+---
+## Bootstraping: Let's take a small sample (n=3)
+
+
+```r
+f3 &lt;- Chicago %&gt;% sample_n(size=3) %&gt;% dplyr::select(year,month,day)
+```
+
+
+```
+## # A tibble: 3 × 3
+##    year month   day
+##   &lt;int&gt; &lt;int&gt; &lt;int&gt;
+## 1  2013    10    14
+## 2  2013    12    31
+## 3  2013     1     2
+```
+
+--
+
+.pull-left[
+First Resample: 
+
+```r
+f3 %&gt;% slice_sample(n= 3, 
+               replace = TRUE)
+```
+
+```
+## # A tibble: 3 × 3
+##    year month   day
+##   &lt;int&gt; &lt;int&gt; &lt;int&gt;
+## 1  2013    12    31
+## 2  2013    12    31
+## 3  2013    10    14
+```
+].pull-right[
+Second Resample: 
+
+```r
+f3 %&gt;% slice_sample(n= 3, 
+               replace = TRUE)
+```
+
+```
+## # A tibble: 3 × 3
+##    year month   day
+##   &lt;int&gt; &lt;int&gt; &lt;int&gt;
+## 1  2013     1     2
+## 2  2013    12    31
+## 3  2013    12    31
+```
+]
+
+---
+## Bootstrapping: Bigger Sample
+
+
+```r
+Bootstrap_Means &lt;- Sample100 %&gt;% 
+  specify(response = arr_delay) %&gt;%
+  generate(reps = 500, type = "bootstrap") %&gt;%
+  calculate(stat = "mean")
+
+ggplot(Bootstrap_Means, aes(x=stat))+
+  geom_density(fill='turquoise', alpha=0.5)+labs(x='Bootstrap Means')
+```
+
+&lt;img src="statistical-foundations_files/figure-html/unnamed-chunk-24-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+## Bootstrapping: Bigger Sample
+
+
+Bootstrap Sample:
+
+```r
+favstats(~stat, data=Bootstrap_Means)
+```
+
+```
+##    min   Q1 median     Q3   max    mean       sd   n missing
+##  -5.22 5.55  8.725 12.295 23.57 8.95738 4.739031 500       0
+```
+
+Sampling Distribution:
+
+```r
+favstats(~mean_arr_delay, data=chi_25_means)
+```
+
+```
+##    min     Q1 median      Q3   max   mean       sd   n missing
+##  -4.19 3.2275   6.64 10.3025 21.15 7.0059 4.808579 500       0
+```
+
+--
+
+For moderate to large sample sizes and sufficient number of bootstraps, the bootstrap distribution approximates certain aspects of the sampling distribution, like the standard error and quantiles 
+
+---
+## Example: What if we start with a different sample?
+
+
+```r
+NewSample &lt;- Chicago %&gt;% sample_n(size=100)
+
+New_Bootstrap_Means &lt;- NewSample %&gt;% 
+  specify(response = arr_delay) %&gt;%
+  generate(reps = 1000, type = "bootstrap") %&gt;%
+  calculate(stat = "mean")
+
+ggplot(New_Bootstrap_Means, aes(x=stat))+
+  geom_density(fill='turquoise', alpha=0.5)+
+  labs(x='NEW Bootstrap Means')
+```
+
+&lt;img src="statistical-foundations_files/figure-html/unnamed-chunk-27-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+## Comparison of 3 Bootstrap Distributions
+
+&lt;img src="statistical-foundations_files/figure-html/unnamed-chunk-28-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+## Side Note: We want Quality Samples!
+
+The quality of bootstrap estimates depends on the quality of the collected data.
+  - So we want quality samples!
+  
+Quality samples tend to be representative of the population of interest
+
+--
+
+Is this class a quality sample of all Creighton students?
+
+---
+
+## Outliers
+
+Outliers: a data point that differs significantly from other observations
+
+When you have an outlier:
+
+- Identify the potential outlier
+- Try to understand why it is an outlier
+- Only remove it if you are sure it is caused by completely random error, or not related to your research focus.
+
+---
+## Example: Are there any outliers in the arrival delay?
+
+
+```r
+ggplot(Chicago, aes(x=arr_delay)) + geom_histogram()
+```
+
+&lt;img src="statistical-foundations_files/figure-html/unnamed-chunk-29-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+## Example: Let's Zoom In
+
+
+```r
+Chicago %&gt;% filter(arr_delay&gt;400) %&gt;% ggplot(aes(x=arr_delay)) + 
+  geom_histogram()
+```
+
+&lt;img src="statistical-foundations_files/figure-html/unnamed-chunk-30-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+## Example: Any commonalities?
+
+Do the long arrival delays have anything in common?
+
+
+```r
+Chicago %&gt;% filter(arr_delay&gt;400) %&gt;%
+  dplyr::select(month, day, dep_delay, arr_delay, carrier)
+```
+
+```
+## # A tibble: 6 × 5
+##   month   day dep_delay arr_delay carrier
+##   &lt;int&gt; &lt;int&gt;     &lt;dbl&gt;     &lt;dbl&gt; &lt;chr&gt;  
+## 1     1    10      1126      1109 MQ     
+## 2     4    12       414       428 MQ     
+## 3     4    24       423       422 WN     
+## 4     5     3       878       875 MQ     
+## 5     5    23       466       448 AA     
+## 6     6    25       420       424 UA
+```
+
+---
+## Your Turn!
+
+1. Are long delays (over 2 hours) more common in particular months? 
+
+2. Are long delays (over 2 hours) more common with certain carriers?
+
+---
+## Your Turn!
+
+Are long delays (over 2 hours) more common in particular months? 
+
+
+```r
+Chicago %&gt;% filter(arr_delay &gt; 120) %&gt;% 
+  dplyr::select(month, day, dep_delay, arr_delay, carrier) %&gt;%
+  group_by(month) %&gt;% 
+  summarize(N = n())
+```
+
+```
+## # A tibble: 12 × 2
+##    month     N
+##    &lt;int&gt; &lt;int&gt;
+##  1     1    30
+##  2     2    30
+##  3     3    48
+##  4     4   115
+##  5     5    90
+##  6     6   110
+##  7     7    93
+##  8     8    64
+##  9     9    53
+## 10    10    30
+## 11    11    29
+## 12    12    50
+```
+
+
+---
+## Your Turn!
+
+Are long delays (over 2 hours) more common with certain carriers?
+
+
+```r
+Chicago %&gt;% filter(arr_delay &gt; 120) %&gt;% 
+  dplyr::select(month, day, dep_delay, arr_delay, carrier) %&gt;%
+  group_by(carrier) %&gt;% 
+  summarize(N = n()) %&gt;%
+  arrange(desc(N))
+```
+
+```
+## # A tibble: 6 × 2
+##   carrier     N
+##   &lt;chr&gt;   &lt;int&gt;
+## 1 UA        226
+## 2 WN        172
+## 3 AA        151
+## 4 MQ         84
+## 5 9E         58
+## 6 B6         51
+```
+
+---
+## Your Turn!
+
+Are long delays (over 2 hours) more common with certain carriers?
+
+
+```r
+Chicago %&gt;% 
+  dplyr::select(month, day, dep_delay, arr_delay, carrier) %&gt;%
+  group_by(carrier) %&gt;% 
+  summarize(N = sum(arr_delay &gt; 120)/n()) %&gt;%
+  ggplot(aes(x = carrier, y = N)) + 
+  geom_col()
+```
+
+&lt;img src="statistical-foundations_files/figure-html/unnamed-chunk-34-1.png" style="display: block; margin: auto;" /&gt;
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
