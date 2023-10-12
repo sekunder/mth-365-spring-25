@@ -36,6 +36,16 @@ class: center, middle, inverse, title-slide
 
 ## Agenda
 
+- Prediction
+  - Evaluating Models
+- Decision Trees
+- Random Forests
+
+---
+## Announcements
+
+- **Lab 5** due tonight at 11:59 pm
+- **Mini-Project 2** due tonight at 11:59 pm
 
 ---
 
@@ -146,6 +156,8 @@ sqrt(mean(int$residuals^2))
 ```
 
 ```r
+#install.packages("Metrics")
+library(Metrics)
 #RMSE for Testing Data
 rmse(TEST$arr_delay, predict(int, TEST))
 ```
@@ -298,11 +310,15 @@ TRAIN %&gt;% group_by(LEGAL) %&gt;% summarize(n=n())
 
 Decision trees: A tree-like model of decisions and their possible consequences
 
-A decision tree is a flowchart-like structure in which each internal node represents a "test" on an attribute (e.g. whether a coin flip comes up heads or tails), each branch represents the outcome of the test, and each leaf node represents a class label (decision taken after computing all attributes). The paths from root to leaf represent classification rules.
+- Has flowchart-like structure in which each...
+  + Internal node represents a "test" on an attribute (decision node), 
+  - Branch represents the outcome of the test, 
+  - Leaf node represents a class label (decision taken after computing all attributes). 
+- The paths from root to leaf represent classification rules.
+- Can be applied on both regression and classification problems.
 
-Note: Decision trees can be applied on both regression and classification problems.
+&lt;img src="../Week 8/decision-tree.png" width="75%" style="display: block; margin: auto;" /&gt;
 
-*Add Picture
 
 ---
 ## Fitting A Decision Tree
@@ -336,7 +352,7 @@ tree &lt;- rpart(LEGAL~AGE, data=TRAIN, na.action = na.pass)
 fancyRpartPlot(tree)
 ```
 
-![](decision-trees-random-forests_files/figure-html/unnamed-chunk-16-1.png)&lt;!-- --&gt;
+&lt;img src="../Week 8/tree1.png" width="75%" style="display: block; margin: auto;" /&gt;
 
 ---
 ### Visualizing using ggplot
@@ -344,11 +360,22 @@ fancyRpartPlot(tree)
 
 ```r
 TRAIN %&gt;% ggplot(aes(x=LEGAL, y=AGE)) + 
-  geom_hline(yintercept=45, col='black') + 
+  geom_hline(yintercept=69, col='black') + 
   geom_jitter(alpha=0.5, aes(col=LEGAL))
 ```
 
 &lt;img src="decision-trees-random-forests_files/figure-html/unnamed-chunk-17-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+### Visualizing using ggplot
+
+
+```r
+TRAIN %&gt;% ggplot(aes(x=LEGAL, y=AGE)) +
+geom_boxplot(aes(col=LEGAL))
+```
+
+&lt;img src="decision-trees-random-forests_files/figure-html/unnamed-chunk-18-1.png" style="display: block; margin: auto;" /&gt;
 
 
 ---
@@ -357,14 +384,15 @@ TRAIN %&gt;% ggplot(aes(x=LEGAL, y=AGE)) +
 Remember we said earlier decision trees can also use to do the prediction when response variable is a continuous variable. Let’s see how it works. Suppose you want to use people’s political view (POLVIEWS) and marriage status (MARITAL) to estimate
 people’s age. Try to plot and tree and also make a side-by-side scatter plot.
 
+--
+
 
 ```r
 tree2 &lt;- rpart(AGE~POLVIEWS + MARITAL, data=TRAIN)
 fancyRpartPlot(tree2)
 ```
 
-![](decision-trees-random-forests_files/figure-html/unnamed-chunk-18-1.png)&lt;!-- --&gt;
-
+&lt;img src="../Week 8/tree2.png" width="75%" style="display: block; margin: auto;" /&gt;
 ---
 ### Try Yourself
 
@@ -372,10 +400,10 @@ fancyRpartPlot(tree2)
 ```r
 TRAIN %&gt;% ggplot(aes(x=MARITAL, y=AGE)) +
   geom_jitter(alpha=0.5, aes(col=MARITAL)) +
-  geom_hline(yintercept=45, col='black')
+  geom_hline(yintercept=c(36, 52, 69), col='black')
 ```
 
-&lt;img src="decision-trees-random-forests_files/figure-html/unnamed-chunk-19-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="decision-trees-random-forests_files/figure-html/unnamed-chunk-21-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 ## Evaluating a decision tree: the three C’s
@@ -385,7 +413,7 @@ TRAIN %&gt;% ggplot(aes(x=MARITAL, y=AGE)) +
 - Classification Accuracy
 
 ---
-## Complexity parameter
+### Complexity parameter
 
 It is the amount by which splitting that node improved the relative error.
   - So splitting that node only resulted in an improvement of 0.01, so the tree building stopped there
@@ -491,13 +519,65 @@ predict(tree2, TEST , method = "anova") %&gt;% head()
 ## 51.60315 51.60315 36.39895 51.60315 51.60315 36.39895
 ```
 
+&lt;br&gt;
 
+**Be Careful**: Can only predict using categorical variables located in the Training Set
 
 ---
 ### Try by Yourself
 
 What if we try to use both age and political affiliation to predict the view on marijuana legalization? Visualize the tree and calculate the classification accuracy.
 
+--
+
+
+```r
+tree3 &lt;- rpart(LEGAL~AGE+PARTYID, data=TRAIN)
+fancyRpartPlot(tree3)
+```
+
+&lt;img src="../Week 8/tree3.png" width="2080" style="display: block; margin: auto;" /&gt;
+
+---
+### Try by Yourself
+
+
+```r
+TRAIN &lt;- TRAIN %&gt;%
+  mutate(Legal_Tree = predict(tree3, type='class'))
+
+confusion_train &lt;- tally(Legal_Tree~LEGAL, data=TRAIN)
+```
+
+
+```r
+TEST &lt;- TEST %&gt;%
+  mutate(Legal_Tree = predict(tree3, type='class', newdata = TEST))
+
+confusion_test &lt;- tally(Legal_Tree~LEGAL, data=TEST)
+```
+
+Training Accuracy:
+
+
+```r
+sum(diag(confusion_train))/nrow(TRAIN)
+```
+
+```
+## [1] 0.6379898
+```
+
+Testing Accuracy:
+
+
+```r
+sum(diag(confusion_test))/nrow(TEST)
+```
+
+```
+## [1] 0.6197183
+```
 
 ---
 ### Advantages and Disadvantages of Decision Trees
@@ -516,9 +596,9 @@ What if we try to use both age and political affiliation to predict the view on 
 
 A random forest is collection of decision trees that are aggregated by majority rule
 
-Note: Random forest will expect you to have a relatively large number of input variables.
+Random forest will expect you to have a relatively large number of input variables.
 
-Example: Which variables are most important for predicting views on marijuana legalization?
+**Example**: Which variables are most important for predicting views on marijuana legalization?
 
 ---
 ### When to use random forest
@@ -532,6 +612,7 @@ Once the random forest tells you several potential important variables, you can 
 ---
 ## Random Forests
 
+.tiny[
 
 ```r
 #install.packages('randomForest')
@@ -555,13 +636,13 @@ forest_grass
 ##                      Number of trees: 201
 ## No. of variables tried at each split: 4
 ## 
-##         OOB estimate of  error rate: 36.23%
+##         OOB estimate of  error rate: 35.2%
 ## Confusion matrix:
 ##           Legal Not legal class.error
-## Legal       540       151   0.2185239
-## Not legal   270       201   0.5732484
+## Legal       544       147   0.2127352
+## Not legal   262       209   0.5562633
 ```
-
+]
 ---
 ## Random Forests: Prediction
 
@@ -583,11 +664,9 @@ TEST$Legal_RF[1:5]
 ---
 ### Variable Importance
 
-Because each tree in a random forest uses a different set of variables, it is possible to keep track of which variables seem to be the most consistently influential. This is captured by the notion of importance.
+Since each tree in a random forest uses a different set of variables, we want to keep track of which variables seem to be the most consistently influential. This is captured by the notion of importance.
 
-Describe gini - lower is more pure
-
-a measure of how each variable contributes to the homogeneity of the nodes and leaves in the resulting random forest.
+Gini is a measure of how each variable contributes to the homogeneity of the nodes and leaves in the resulting random forest (lower is more pure).
 
 .tiny[
 
@@ -598,22 +677,22 @@ importance(forest_grass) %&gt;% as.data.frame() %&gt;%
 
 ```
 ##     rowname MeanDecreaseGini
-## 1       AGE         96.93349
-## 2  POLVIEWS         50.93758
-## 3    REGION         49.19999
-## 4    DEGREE         38.56643
-## 5    INCOME         35.49929
-## 6     RELIG         35.15588
-## 7   MARITAL         33.27099
-## 8    COURTS         33.08327
-## 9    ENERGY         28.20776
-## 10  PARTYID         27.75550
-## 11    ENVIR         26.15204
-## 12    HAPPY         24.58731
-## 13     EDUC         22.67870
-## 14 NEWSFROM         18.13683
-## 15      SEX         16.10481
-## 16   BALLOT         15.45517
+## 1       AGE         96.69696
+## 2  POLVIEWS         50.70547
+## 3    REGION         50.44967
+## 4    DEGREE         38.00338
+## 5    INCOME         36.11226
+## 6     RELIG         35.42239
+## 7   MARITAL         34.38492
+## 8    COURTS         31.95195
+## 9   PARTYID         29.37467
+## 10   ENERGY         28.29650
+## 11    ENVIR         25.20959
+## 12    HAPPY         25.00908
+## 13     EDUC         21.64429
+## 14 NEWSFROM         18.99580
+## 15      SEX         16.16021
+## 16   BALLOT         14.30361
 ```
 ]
 
@@ -623,16 +702,75 @@ importance(forest_grass) %&gt;% as.data.frame() %&gt;%
 
 
 ```r
-tree5 &lt;- rpart(LEGAL~AGE+REGION+POLVIEWS, data=TRAIN)
-fancyRpartPlot(tree5)
+tree4 &lt;- rpart(LEGAL~AGE+REGION+POLVIEWS, data=TRAIN)
+fancyRpartPlot(tree4)
 ```
 
-![](decision-trees-random-forests_files/figure-html/unnamed-chunk-29-1.png)&lt;!-- --&gt;
+&lt;img src="../Week 8/tree4.png" width="2437" style="display: block; margin: auto;" /&gt;
 
 ---
 ### Your Turn: Age
 
 Which variables are most important for predicting ages? Use these to create a Decision Tree.
+
+--
+
+```r
+forest_age &lt;- randomForest(AGE~NEWSFROM+ HAPPY+RELIG+COURTS+ENERGY
+                           +EDUC+ENVIR+ POLVIEWS+PARTYID+REGION+
+                             INCOME+SEX+ DEGREE+LEGAL+MARITAL+BALLOT, 
+                           data=TRAIN,
+                           ntree=201, mtry=3, na.action = na.omit)
+
+forest_age
+```
+
+```
+## 
+## Call:
+##  randomForest(formula = AGE ~ NEWSFROM + HAPPY + RELIG + COURTS +      ENERGY + EDUC + ENVIR + POLVIEWS + PARTYID + REGION + INCOME +      SEX + DEGREE + LEGAL + MARITAL + BALLOT, data = TRAIN, ntree = 201,      mtry = 3, na.action = na.omit) 
+##                Type of random forest: regression
+##                      Number of trees: 201
+## No. of variables tried at each split: 3
+## 
+##           Mean of squared residuals: 217.5614
+##                     % Var explained: 25.31
+```
+
+---
+### Your Turn: Age
+
+
+
+```r
+importance(forest_age) %&gt;% as.data.frame() %&gt;%
+  rownames_to_column() %&gt;% arrange(desc(IncNodePurity))
+```
+
+```
+##     rowname IncNodePurity
+## 1   MARITAL     69859.884
+## 2    REGION     23423.711
+## 3  POLVIEWS     21030.137
+## 4    INCOME     18554.606
+## 5    DEGREE     16564.431
+## 6  NEWSFROM     16245.763
+## 7     RELIG     15808.346
+## 8    COURTS     14875.083
+## 9   PARTYID     14549.817
+## 10    ENVIR     12059.533
+## 11    HAPPY     11943.089
+## 12   ENERGY     11917.316
+## 13     EDUC      9906.080
+## 14    LEGAL      9328.205
+## 15      SEX      7502.404
+## 16   BALLOT      6191.509
+```
+
+```r
+tree5 &lt;- rpart(AGE~MARITAL+REGION+POLVIEWS, data=TRAIN)
+```
+
 
 ---
 ### If Time: Iris Data
@@ -650,7 +788,115 @@ data("iris")
 4. Evaluate your decision Tree
 
 
+---
+### If Time: Iris Data
 
+
+```r
+set.seed(10)
+test_id &lt;- sample(1:nrow(iris), size=round(0.4*nrow(iris)))
+TEST &lt;- iris[test_id,]
+TRAIN &lt;- iris[-test_id,]
+```
+
+.tiny[
+
+```r
+forest_species &lt;- randomForest(Species~Sepal.Length + Sepal.Width+ 
+                                 Petal.Length+Petal.Width, data=TRAIN,
+                               ntree=50, mtry=2, na.action =na.omit)
+
+forest_species
+```
+
+```
+## 
+## Call:
+##  randomForest(formula = Species ~ Sepal.Length + Sepal.Width +      Petal.Length + Petal.Width, data = TRAIN, ntree = 50, mtry = 2,      na.action = na.omit) 
+##                Type of random forest: classification
+##                      Number of trees: 50
+## No. of variables tried at each split: 2
+## 
+##         OOB estimate of  error rate: 5.56%
+## Confusion matrix:
+##            setosa versicolor virginica class.error
+## setosa         35          0         0  0.00000000
+## versicolor      0         29         2  0.06451613
+## virginica       0          3        21  0.12500000
+```
+]
+
+---
+### If Time: Iris Data
+
+
+```r
+importance(forest_species) %&gt;% as.data.frame() %&gt;%
+  rownames_to_column() %&gt;% arrange(desc(MeanDecreaseGini))
+```
+
+```
+##        rowname MeanDecreaseGini
+## 1 Petal.Length        29.035207
+## 2  Petal.Width        21.343675
+## 3 Sepal.Length         6.047485
+## 4  Sepal.Width         1.862966
+```
+
+```r
+tree6 &lt;- rpart(Species ~ Petal.Width + Petal.Length, data=TRAIN)
+```
+
+---
+### If Time: Iris Data
+
+
+```r
+fancyRpartPlot(tree6)
+```
+
+&lt;img src="../Week 8/tree6.png" width="1405" style="display: block; margin: auto;" /&gt;
+
+---
+### If Time: Iris Data
+
+
+```r
+TRAIN &lt;- TRAIN %&gt;%
+  mutate(Species_Tree = predict(tree6, type='class'))
+
+confusion_train &lt;- tally(Species_Tree~Species, data=TRAIN)
+```
+
+
+```r
+TEST &lt;- TEST %&gt;%
+  mutate(Species_Tree = predict(tree6, type='class', newdata = TEST))
+
+confusion_test &lt;- tally(Species_Tree~Species, data=TEST)
+```
+
+Training Accuracy:
+
+
+```r
+sum(diag(confusion_train))/nrow(TRAIN)
+```
+
+```
+## [1] 0.9666667
+```
+
+Testing Accuracy:
+
+
+```r
+sum(diag(confusion_test))/nrow(TEST)
+```
+
+```
+## [1] 0.95
+```
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
