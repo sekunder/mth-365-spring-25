@@ -20,5 +20,8 @@ Date | Notes | Description | Additional Files | Homework Assigned
 9/21/2023 |  Lab 4 |  | Lab 4 found in BlueLine | Lab 4 due **Tuesday September 26** at 11:59 pm
 9/26/2023 | [Statistical Foundations](Week 7/statistical-foundations.html) | Sampling Distributions and Bootstrapping | [R Markdown File](Week 7/statistical-foundations-student.Rmd)| 
 9/28/2023 | [Linear Models](Week 7/linear-models.html) | Overview of Linear Regression | [R Markdown File](Week 7/linear-models-student.Rmd)| 
+10/3/2023 | Lab 5 |  | Lab 5 found in BlueLine | Lab 5 due **Tuesday October 17** at 11:59 pm
+10/5/2023 | Mini-Project 2 Work Day |  | | 
+10/17/2023 | [Decision Trees and Random Forests](Week 8/decision-trees-random-forests.html) | Basics of Decision Trees and Random Forests | [R Markdown File](Week 5/MTH365-Week9.Rmd)| 
 
 
