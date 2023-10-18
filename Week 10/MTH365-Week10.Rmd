@@ -1,0 +1,270 @@
+---
+title: "MTH365: Introduction to Data Science"
+author: "KNN And Classification"
+date: "October 24, 2023"
+output: 
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r echo=FALSE, message=FALSE, warning = FALSE}
+library(tidyverse)
+library(knitr)
+library(mosaic)
+
+```
+
+
+# Review on Random Forests
+
+__Random forest__ : Every time, only select a part of data and a part of variables to fit the tree model. Repeat for multiple times, the classification result will be majority of all tree models and the regression result will be the average prediction of all tree models. 
+
+Note: Random forest will expect you to have a relatively large number of input variables.  
+
+
+**When to use random forests?**
+
+1. When there are a lot of variables and you have no idea why one may be useful to explain the response variable.
+2. Potential collinearity in the predictors.
+
+Once the random forest tells you several potential important variables, you can try to fit linear model or decision tree for interpretation
+
+
+## "Lazy" learning
+
+So far we've focused on building models that can predict outcomes on a new set of data. Another approach is to just be _lazy_!
+
+__Lazy learning__: no assumptions necessary to classify data
+
+- How does that work?
+
+__Example__: Consider the plot below - describe the relationship between x and y.
+
+```{r, fig.align='center', fig.height=4.5, fig.width=7}
+set.seed(365)
+x1 <- runif(min=0.1, max=0.5, n=20)
+x2 <- runif(min=0.3, max=0.7, n=20)
+x3 <- runif(min=0.5, max=0.9, n=20)
+y1 <- runif(min=0.5, max=0.7, n=20)
+y2 <- runif(min=0.4, max=0.6, n=20)
+y3 <- runif(min=0.2, max=0.5, n=20)
+x <- c(x1, x2, x3)
+y <- c(y1, y2, y3)
+group <- c(rep('A', 20), rep('B', 20), rep('C', 20))
+data <- as.data.frame(cbind(x, y, group))
+colnames(data) <- c('x', 'y', 'group')
+data$x <- as.numeric(data$x)
+data$y <- as.numeric(data$y)
+ggplot(data, aes(x=x, y=y))+geom_point()
+```
+
+
+
+What if the data points belonged to three different groups, like this?
+
+```{r, fig.align='center', fig.height=6.5, fig.width=8}
+ggplot(data, aes(x=x, y=y, group=group))+
+  geom_point(aes(col=group,pch=group))+
+  scale_color_brewer(palette='Set1')
+```
+
+
+
+How should a new data point, $(0.2, 0.5)$ be classified? What about $(0.4, 0.2)$?
+
+```{r, fig.align='center', fig.height=6.5, fig.width=8}
+new.points <- data.frame(x = c(0.2, 0.4), y = c(0.5, 0.2), group=c('Point 1', 'Point 2'))
+data.new <- rbind(data, new.points)
+
+ggplot(data.new, aes(x=x, y=y, group=group))+
+  geom_point(aes(col=group,pch=group))+
+  scale_color_brewer(palette='Set1')
+```
+
+
+## $k$-nearest neighbor (k-NN or KNN): 
+
+1. In k-NN classification, the output is a class membership. An object is classified by a plurality vote of its neighbors, with the object being assigned to the class most common among its k nearest neighbors (k is a positive integer, typically small). 
+2. In k-NN regression, the output is the property value for the object. This value is the average of the values of k nearest neighbors.
+
+
+## k-NN Steps
+
+In the k-NN algorithm, $k$ specifies the number of neighbors and its algorithm is as follows:
+
+- Choose the number $k$ of neighbors
+- Find the $k$ Nearest Neighbor of an unknown data point using distance.
+  + Euclidean Distance
+- Among the $k$-neighbors, count the number of data points in each category.
+- Assign the new data point to a category, where you counted the most neighbors.
+
+
+## `knn()`
+
+__Example__: Let's classify our new points using $k=2$.
+
+```{r}
+library(class)
+
+knnModel = knn(train = data[,1:2], 
+               test = new.points[,1:2], 
+               cl = data$group, 
+               k = 2, prob = TRUE)
+knnModel
+```
+
+
+What if we use more points, $k=10$?
+
+```{r}
+
+```
+
+
+## Advantages and disadvantages of $k$-nearest neighbors
+
+The algorithm is easy to implement and straight forward. New data can be added seamlessly which will not impact the accuracy of the algorithm. No training period, relatively fast. 
+
+However, sometimes it is hard to decide the k value. With more variables included, the accuracy will be affected. Sensitive to the outliers, you need to scale the data sometimes. 
+
+
+## Example: Credit utilization
+
+__Example__: Can we use kNN to predict which utilization quantile a new customer falls into based on their application data?
+
+```{r}
+#install.packges("ISLR")
+library(ISLR)
+data(Credit)
+Credit <- Credit %>% mutate(Utilization = Balance/Limit) %>% 
+  mutate(Quartile = ifelse(Utilization<0.01851, 'Q1', 
+                           ifelse(Utilization<0.09873, 'Q2',
+                           ifelse(Utilization<0.14325, 'Q3',
+                                  'Q4'))))
+
+```
+
+
+
+We want to predict the utilization quantile based on two application characteristics: credit rating and age.
+
+```{r, fig.align='center', fig.height=6, fig.width=7}
+ggplot(Credit, aes(x=Age, y=Rating, group=Quartile)) + 
+  geom_point(aes(col=Quartile, pch=Quartile)) + 
+  scale_color_brewer(palette='Set1')
+```
+
+
+New applicants:
+
+Name|Age|Credit Rating
+---|---|---
+Lacey|33|750
+Zach|47|400
+Ashlee|21|250
+
+```{r}
+applicants <- data.frame(Age = c(33, 47, 21), 
+                         Rating = c(750, 400, 250), 
+                         Quartile=c('New', 'New', 'New'))
+```
+
+
+Plotting the new applicants. Use `fct_relevel()` to reorder the categories.
+
+```{r}
+old = Credit %>% dplyr::select(Age, Rating, Quartile)
+full = rbind(old, applicants)
+full = full %>%
+  mutate(Quartile = fct_relevel(Quartile,
+                                "Q1", "Q2", "Q3", "Q4", "New"))
+str(full$Quartile)
+
+```
+
+
+
+```{r, fig.align='center', fig.height=6, fig.width=7}
+ggplot(full, aes(x=Age, y=Rating, group=Quartile)) + 
+  geom_point(aes(col=Quartile, pch=Quartile)) + 
+  scale_color_brewer(palette='Set1')
+```
+
+Fit a first model with $k=10$.
+
+```{r}
+knn10 = knn(train = old[,1:2],
+            test = applicants[,1:2],
+            cl = old[,3], 
+            k = 10, prob = TRUE)
+knn10
+```
+
+
+What if we use $k=20$?
+
+```{r}
+
+```
+
+
+Going bigger: $k=100$
+
+```{r}
+
+```
+
+
+## Evaluate models with Cross-validation
+
+__Example__: Let's add some more dimensions to the model. We want to know if k-nearest neighbor is effective at predicting quartile membership using an applicant's age, credit rating, income, number of existing credit cards, and education level. I'll randomly select 100 observations for testing, and assign the other 300 to my training data set.
+
+```{r}
+
+```
+
+
+Now, we'll set the testing data as "new data", and make predictions using the k-nearest neighbors from the training data.
+
+```{r}
+
+
+```
+
+
+Now, we'll set the testing data as "new data", and make predictions using the k-nearest neighbors from the training data.
+
+```{r}
+#Create Confusion Matrix
+
+
+#Classification Accuracy
+
+```
+
+
+## Try by yourself
+
+Let's see whether we can predict people's ethnicity based on their credit card information (Age, Rating, Income, Cards, Education, Balance). Try to fit a KNN model with K = 5, 10, 25, 50, 100. See how the prediction values change and think about why.
+
+
+
+```{r}
+```
+
+
+## Summary 
+
+Linear model: The basic model for regression, easy for interpretation, but has strict assumption thus hard to get a better prediction
+
+Quadratic model: If you see a quadratic trend (in the EDA plot or residual plots) when fitting the linear model, you may consider quadratic model
+
+Decision tree: Can be applied to regression and classification. Has good data visualization but it has high variance. 
+
+Random Forest: a collection of tree models. Hard for interpretation but it can output variable importance. Can be useful if you have a lot of variable and what want to select the most useful ones. Also, if you have variables are not independent with each other, it performs better than the linear model. 
+
+KNN：Can be applied to regression and classification. relatively fast, no assumption need and add data anytime. May affect the accuracy if we have too many variables and need to use CV to decide the k value. 
