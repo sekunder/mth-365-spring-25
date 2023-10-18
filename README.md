@@ -24,6 +24,6 @@ Date | Notes | Description | Additional Files | Homework Assigned
 10/5/2023 | Mini-Project 2 Work Day |  | | 
 10/17/2023 | [Decision Trees and Random Forests](Week 8/decision-trees-random-forests.html) | Basics of Decision Trees and Random Forests | [R Markdown File](Week 8/MTH365-Week9.Rmd)| 
 10/19/2023 | Lab 6 |  | Lab 6 found in BlueLine | Lab 6 due **Tuesday October 24** at 11:59 pm
-10/24/2023 | [KNN](Week 19/knn-and-classification.html) | Classification with KNN | [R Markdown File](Week 5/MTH365-Week10.Rmd)| 
+10/24/2023 | [KNN](Week 10/knn-and-classification.html) | Classification with KNN | [R Markdown File](Week 5/MTH365-Week10.Rmd)| 
 
 
