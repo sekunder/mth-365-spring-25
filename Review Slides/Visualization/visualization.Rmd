@@ -1,0 +1,472 @@
+---
+title: "Visualization"
+author: "ggplot2 Review"
+date: ""
+output: 
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r echo=FALSE, message=FALSE, warning = FALSE}
+library(tidyverse)
+library(knitr)
+library(ggsci)
+library(gridExtra)
+
+hook_output = knit_hooks$get('output')
+knit_hooks$set(output = function(x, options) {
+  # this hook is used only when the linewidth option is not NULL
+  if (!is.null(n <- options$linewidth)) {
+    x = xfun::split_lines(x)
+    # any lines wider than n should be wrapped
+    if (any(nchar(x) > n)) x = strwrap(x, width = n)
+    x = paste(x, collapse = '\n')
+  }
+  hook_output(x, options)
+})
+
+```
+
+
+```{r, echo=FALSE}
+
+knitr::include_graphics("images/ggplot2.png")
+
+```
+
+
+---
+## Why visualize?
+
+**What are graphics useful for?**
++ Data cleaning
++ Exploring data structure
++ Communicating Information
+
+Visualization offers an alternative way of communicating numbers
+
+---
+## Grammar of Graphics
+
+The grammar of graphics is a set of grammatical rules for creating perceivable graphs
+  
+  - Developed by Leland Wilkison
+
+Rather than thinking about a limited set of graphs, think about graphical forms
+  
+  - Different types of graphs may appear completely distinct, but in actuality share many common elements
+
+By making different visual choices, you can use graphs to highlight different aspects of the same data.
+
+For example, here are three ways of displaying the same data:
+
+```{r plots-3, fig.align='bottom', fig.height=3.5, fig.width=15, echo = FALSE}
+data(diamonds)
+
+# bar chart
+gg1 <- ggplot(diamonds, aes(cut, fill=cut)) + 
+  geom_bar() + 
+  scale_x_discrete("") +
+  ggtitle(label = "Bar Chart", subtitle = "Cartesian coordinates") +
+  scale_fill_locuszoom() +
+  theme(aspect.ratio = 1)
+
+# stacked bar chart
+gg2 <- ggplot(diamonds, aes(x = factor(1), fill=cut)) + 
+  geom_bar(width = 1) + 
+  scale_x_discrete("") +
+  ggtitle(label = "Fill-Bar", subtitle = "Cartesian coordinates") +
+  scale_fill_locuszoom() +
+  theme(aspect.ratio = 1)
+
+# pie chart
+gg3 <- ggplot(diamonds, aes(x = factor(1), fill=cut)) + 
+  geom_bar(width=1) + 
+  coord_polar(theta = "y") + 
+  scale_x_discrete("") +
+  ggtitle(label = "Fill-Bar", subtitle = "Polar coordinates") +
+  scale_fill_locuszoom() +
+  theme(aspect.ratio = 1)
+
+grid.arrange(gg1, gg2, gg3, ncol = 3, nrow = 1)
+```
+
+
+---
+## ggplot
+
+`ggplot2` is based on The Grammar of Graphics where the components are independent, meaning we can generally change a component in isolation.
+
+[Help Information](https://rstudio.github.io/cheatsheets/html/data-visualization.html)
+
+
+```{r, echo=FALSE, out.width="40%", fig.align = "center"}
+
+knitr::include_graphics("images/ggplot-hex.png")
+
+```
+
+
+---
+## What is a graphic?
+
+`ggplot2` uses the idea that you can build every graph with graphical components from three sources:
+
+  1. The **data**, represented by **geoms**
+  2. The **scales** and **coordinate system**
+  3. The **plot annotations**
+    
+    + To display values, map variables in the data to visual properties of the geom (**aesthetics**) like **size**, **color**, and **x** and **y** locations.
+    
+    
+---
+## ggplot 2: specifications
+
+A plot consists of several mostly independent specifications:
+
+1. **aesthetics** - links between data variables and graphical features (position, color, shape, size)
+2. **layers** - geometric elements (points, lines, rectanges, text,...)
+3. **transformations** - transformations specify a functional link between the data and the displayed information (identity, count, bins, density, etc). Transformations act on the variables.
+4. **scales** - scales map values in data space values in the aesthetic space. Scales change the coordinate space of an aesthetic, but don't change the underlying value (change at visual level, not mathematical)
+5. **coordinate system** 
+6. **faceting** - facets allow you to split plot by other variables to produce many sub-plots
+7. **theme** - formating items, such as background color, fonts, margins...
+
+**Limitation**: tells us what words make up our graphical “sentences,” but offers no advice on how to write well
+
+
+---
+## Let's Build a Graph!
+
+```{r}
+library(tidyverse)
+head(diamonds)
+```
+
+---
+## We Begin with the Data
+
+```{r, fig.height=5, fig.width=10, echo = TRUE}
+ggplot(data=diamonds) #<<
+```
+
+---
+## Then we specify the aesthetic mappings
+
+```{r, fig.width=10, fig.height=5, echo = TRUE}
+ggplot(data=diamonds, aes(x=carat, y = price)) #<<
+```
+
+---
+## Then we choose a geom
+
+```{r, eval=FALSE, fig.height=5, fig.width=10, echo = TRUE}
+ggplot(data=diamonds, aes(x=carat, y = price)) +
+  geom_point() #<<
+```
+
+```{r, echo=FALSE, fig.width=10, fig.height=5}
+ggplot(data = diamonds, aes(x = carat, y = price)) +
+    geom_point() + 
+    scale_color_locuszoom()
+```
+
+---
+## We can then add an aesthetic
+
+```{r, eval=FALSE, fig.width=10, fig.height=5, echo = TRUE}
+ggplot(data = diamonds, aes(x = carat, y = price)) +
+    geom_point(aes(colour = cut)) #<<
+```
+
+```{r, echo=FALSE, fig.width=10, fig.height=5}
+ggplot(data = diamonds, aes(x = carat, y = price)) +
+    geom_point(aes(colour = cut)) + 
+    scale_color_locuszoom()
+```
+---
+## And add another layer
+
+```{r, eval = FALSE, fig.width=10, fig.height=5, echo = TRUE}
+ggplot(data = diamonds, aes(x = carat, y = price)) +
+    geom_point(aes(colour = cut)) +
+    geom_smooth() #<<
+```
+
+```{r, echo = FALSE, fig.width=10, fig.height=5}
+ggplot(data = diamonds, aes(x = carat, y = price)) +
+    geom_point(aes(colour = cut)) +
+    geom_smooth() + 
+    scale_color_locuszoom()
+```
+
+---
+## Mapping aesthetics vs setting aesthetics
+
+```{r, fig.width=10, fig.height=5, eval = FALSE, echo = TRUE}
+ggplot(data = diamonds, aes(x = carat, y = price) +
+    geom_point(aes(colour = cut), size = 2, alpha = .5) + #<<
+    geom_smooth(aes(fill = cut), colour = "lightgrey") #<<
+```
+
+```{r, fig.width=10, fig.height=5, echo = FALSE}
+ggplot(data = diamonds, aes(x = carat, y = price)) +
+    geom_point(aes(colour = cut), size = 2, alpha = .5) + 
+    scale_color_locuszoom() + 
+    scale_fill_locuszoom() +
+    geom_smooth(aes(fill = cut), colour = "lightgrey")
+```
+
+---
+## Can Facet
+
+```{r, fig.width=10, fig.height=5, eval = FALSE, echo = TRUE}
+ggplot(data = diamonds, aes(x = carat, y = price)) +
+    geom_point(aes(colour = cut), size = 2, alpha = .5) +
+    geom_smooth(aes(fill = cut), colour = "lightgrey") +
+    facet_wrap(~cut) #<<
+```
+
+```{r, fig.width=10, fig.height=5, echo = FALSE}
+ggplot(data = diamonds, aes(x = carat, y = price)) +
+    geom_point(aes(colour = cut), size = 2, alpha = .5) +
+    geom_smooth(aes(fill = cut), colour = "lightgrey") +
+    scale_color_locuszoom() + 
+    scale_fill_locuszoom() +
+    facet_wrap(~cut)
+```
+
+
+---
+## Another Example
+
+**Example: Hate crimes and income inequality**
+
+A FiveThirtyEight article published in 2017 claimed that higher rates of hate crimes were tied to greater income inequality.
+
+https://fivethirtyeight.com/features/higher-rates-of-hate-crimes-are-tied-to-income-inequality/
+
+- FiveThirtyEight publishes their data sets - let's investigate for ourselves.
+- Data set is posted in BlueLine. Download this data set, and save it to your computer.
+
+```{r}
+hate_crimes <- read.csv("hate_crimes.csv")
+```
+
+---
+## Another Example
+
+```{r}
+glimpse(hate_crimes)
+```
+
+---
+## A simple plot?
+
+__Basic Format of a Plot__:
+
+`data and aesthetics + plot type + options`
+
+The data, aesthetics, and plot type are necessary to create a plot. For example, below is what happens when we just specify the data and aesthetics.
+
+```{r, fig.height=4, fig.width=7, fig.align='center'}
+ggplot(hate_crimes, aes(x=median_income, y=hate_crimes_fbi))
+```
+
+---
+## Variable type
+
+After specifying the data and aesthetics, we need to decide the plot type. In order to do that, we need to know the variable type(s). There are two different ways to distinguish the variables. 
+
+By function: 
+
+1. response variable
+2. explanatory variable
+
+By value type:
+
+1. continuous variable
+2. categorical variable
+
+---
+## 1. Visualize one continuous variable, usually for the response variable using histograms and density plots
+
+.pull-left[
+```{r, fig.height=5, fig.width=7, fig.align='center', message=FALSE}
+hate_crimes %>% 
+  ggplot(aes(x=median_income)) +
+  geom_histogram()
+```
+].pull-right[
+```{r, fig.height=5, fig.width=7, fig.align='center', message=FALSE}
+hate_crimes %>% 
+  ggplot(aes(x=median_income)) +
+  geom_histogram(bins = 10)
+```
+]
+---
+## 1. Visualize one continuous variable, usually for the response variable using histograms and density plots
+
+.pull-left[
+```{r, fig.height=5, fig.width=7, fig.align='center', message=FALSE}
+hate_crimes %>% 
+  ggplot(aes(x=median_income)) +
+  geom_density()
+```
+].pull-right[
+```{r, fig.height=5, fig.width=7, fig.align='center', message=FALSE}
+hate_crimes %>% 
+  ggplot(aes(x=median_income)) +
+  geom_density(fill = "blue", alpha = 0.5)
+```
+
+]
+---
+## 2. Visualize one categorical variable, usually for the response variable using a bar-plot 
+.pull-left[
+```{r, fig.height=5, fig.width=7, fig.align='center', message=FALSE}
+hate_crimes %>% 
+  ggplot(aes(x=region)) +
+  geom_bar()
+```
+].pull-right[
+```{r, , fig.height=5, fig.width=7, fig.align='center', message=FALSE}
+hate_crimes %>% 
+  ggplot(aes(x=region)) +
+  geom_bar() +
+  coord_flip()
+```
+]
+---
+### 3. Visualize two continous variables. Focus on showing the relation between them. Can be response variable + explanatroy variable. Can also be explanatory variable + explanatory variable.
+
+**(a) Scatterplots**
+
+.pull-left[
+```{r, fig.height=5, fig.width=7, fig.align='center', message=FALSE}
+hate_crimes %>%
+  ggplot(aes(x=median_income, 
+             y=hate_crimes_fbi)) +
+  geom_point()
+```
+].pull-right[
+```{r, fig.height=5, fig.width=7, fig.align='center', message=FALSE}
+hate_crimes %>%
+  ggplot(aes(x=median_income, 
+             y=hate_crimes_fbi)) + 
+  geom_text(aes(label=state))
+```
+]
+---
+### 3. Visualize two continous variables. Focus on showing the relation between them. Can be response variable + explanatroy variable. Can also be explanatory variable + explanatory variable.
+
+**(b) Line plots and Smooth Line Plots to connect the points in the scatterplot. The Smooth Line Plots help show the trend due to smoothness**
+
+.pull-left[
+```{r, fig.height=5, fig.width=7, fig.align='center', message=FALSE}
+hate_crimes %>%
+  ggplot(aes(x=median_income, 
+             y=hate_crimes_fbi)) + 
+  geom_line()
+```
+].pull-right[
+```{r, fig.height=5, fig.width=7, fig.align='center', message=FALSE}
+hate_crimes %>%
+  ggplot(aes(x=median_income, 
+             y=hate_crimes_fbi)) + 
+  geom_smooth()
+```
+]
+---
+## 4. Visualize one continous variable using a box-plot
+
+What is the difference between box-plot and histogram/density plot? Box-plot shows the median but not the distribution. 
+
+.pull-left[
+```{r, fig.height=5, fig.width=7, fig.align='center', message=FALSE}
+hate_crimes %>%
+  ggplot(aes(x=median_income)) +
+  geom_boxplot()
+```
+].pull-right[
+```{r, fig.height=5, fig.width=7, fig.align='center', message=FALSE}
+hate_crimes %>%
+  ggplot(aes(y=median_income)) +
+  geom_boxplot()
+```
+]
+---
+## Multiple groups
+
+What if we want to visualize one continuous variable and one categorical variable? Sometimes we want to compare the variable(s) across multiple groups. eg: compare median income across different region. Which plots can compare multiple group?
+
+Theses are called side-by-side plots. 
+
+.pull-left[
+```{r, fig.height=4, fig.width=7, fig.align='center', message=FALSE}
+hate_crimes %>%
+  ggplot(aes(x=median_income, 
+             group = region)) +
+  geom_density()
+```
+].pull-right[
+```{r, fig.height=4, fig.width=7, fig.align='center', message=FALSE}
+hate_crimes %>%
+  ggplot(aes(y=median_income, 
+             group = region)) +
+  geom_boxplot()
+```
+]
+---
+## Wait, how can I know which group is which group?
+
+**Include options like color and size**
+
+.pull-left[
+```{r, fig.height=4, fig.width=7, fig.align='center', message=FALSE}
+hate_crimes %>%
+  ggplot(aes(y=median_income, 
+             group = region)) +
+  geom_boxplot(aes(color = region))
+```
+].pull-right[
+```{r, fig.height=4, fig.width=7, fig.align='center', message=FALSE}
+hate_crimes %>%
+  ggplot(aes(x=median_income, 
+             y=hate_crimes_fbi, 
+             group = region)) +
+  geom_point(aes(color = region, 
+                 size = unemployment))
+```
+
+]
+---
+## Other options
+
+Add x-axis, y-axis labels and title
+
+```{r, fig.height=4, fig.width=7, fig.align='center', message=FALSE}
+ggplot(hate_crimes, aes(x=gini_index, y=hate_crimes_fbi)) +
+  geom_point(aes(color=region, size=unemployment)) + 
+  xlab('Gini Index') + 
+  ylab('Hate Crimes (FBI, Sept. 2016)') +
+  ggtitle('The relation between Gini Index and Hate Crime rate in 2016')
+```
+
+---
+##Instead of putting all groups information into one page, you can do by each panel.
+
+```{r, fig.height=4, fig.width=7, fig.align='center', message=FALSE}
+ggplot(hate_crimes, aes(x=gini_index, y=hate_crimes_fbi)) +
+  geom_point(aes(color=region, size=unemployment)) + 
+  xlab('Gini Index') + 
+  ylab('Hate Crimes (FBI, Sept. 2016)') + 
+  ggtitle('The relation between Gini Index and Hate Crime rate in 2016')+
+  facet_wrap(~region, nrow=1)
+```
+
+

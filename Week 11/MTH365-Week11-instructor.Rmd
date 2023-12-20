@@ -73,6 +73,8 @@ There are some other basic information you can extract, like the length of the t
 ```{r}
 got = got %>% 
   mutate(length = str_length(lowertext))
+
+glimpse(got)
 summary(got$length)
 ```
 
@@ -102,7 +104,7 @@ got_sub = got[1:100,] %>%
 glimpse(got_sub)
 ```
 
-Other techinques like NER (Named entity recognition) can identify whether there is a Human name/Place in the text. See the tutorial if you are interested: https://rstudio-pubs-static.s3.amazonaws.com/230718_6d29404ebb2a444fa0d218917dd1ec67.html
+Other techniques like NER (Named entity recognition) can identify whether there is a Human name/Place in the text. See the tutorial if you are interested: https://rstudio-pubs-static.s3.amazonaws.com/230718_6d29404ebb2a444fa0d218917dd1ec67.html
 
 ### Sentimental analysis
 
@@ -133,6 +135,8 @@ Create some other variables based on this data:
 1. Whether the person is an actor
 2. How many profession that each person has
 3. Whether the person is still alive
+
+
 
 ```{r}
 imdb = imdb %>% 
@@ -186,12 +190,15 @@ tweet_words <- got %>%
   unnest_tokens(word,text)
 
 glimpse(tweet_words)
+head(tweet_words)
 ```
 
-```{r}
-top25 <- tweet_words %>% count(word,sort=T) %>% slice(1:10) 
 
-ggplot(top25, 
+
+```{r}
+top10 <- tweet_words %>% count(word,sort=T) %>% slice(1:10) 
+
+ggplot(top10, 
        aes(x = reorder(word, n, function(n) -n), y = n)) +
   geom_bar(stat = "identity") + 
   theme(axis.text.x = element_text(angle = 60, hjust = 1))

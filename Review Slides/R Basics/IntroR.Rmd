@@ -1,0 +1,411 @@
+---
+title: "R Basics"
+author: "Review"
+date: ""
+output: 
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r echo=FALSE, message=FALSE, warning = FALSE}
+library(tidyverse)
+library(knitr)
+
+knitr::knit_hooks$set(purl = knitr::hook_purl)
+knitr::opts_chunk$set(echo = TRUE)
+hook_output = knit_hooks$get('output')
+knit_hooks$set(output = function(x, options) {
+  # this hook is used only when the linewidth option is not NULL
+  if (!is.null(n <- options$linewidth)) {
+    x = xfun::split_lines(x)
+    # any lines wider than n should be wrapped
+    if (any(nchar(x) > n)) x = strwrap(x, width = n)
+    x = paste(x, collapse = '\n')
+  }
+  hook_output(x, options)
+})
+
+```
+
+
+## R Studio Set-Up
+
+```{r, echo=FALSE, out.width="80%"}
+
+knitr::include_graphics("images/rstudio.png")
+
+```
+
+To Create a Script, Click the Following: File -> New File -> R script
+
+[R Studio IDE Cheatsheet](cheatsheets/rstudio-ide.pdf)
+
+---
+
+## Giant Calculator!
+
+.pull-left[
+```{r}
+3+4 #Addition
+5-2 #Subtraction
+3*2 #Multiplication
+9/3 #Division 
+```
+].pull-right[
+```{r}
+sqrt(4)
+2^3
+exp(3)
+log(10)
+```
+]
+
+[Basics Cheatsheets](https://iqss.github.io/dss-workshops/R/Rintro/base-r-cheat-sheet.pdf)
+
+Note: Adding a "#" to your R Script creates a comment so can take notes
+
+---
+
+## Giant Calculator!
+
+.pull-left[
+```{r}
+log(10, base = 10)
+abs(-1)
+floor(3.7)
+ceiling(3.2)
+```
+].pull-right[
+```{r}
+pi
+sin(pi/2)
+5%%3 #division remainder
+```
+]
+
+---
+
+## Giant Calculator!
+
+```{r}
+a <- 2
+b <- 4
+c <- 3
+```
+
+
+**Note**: In R, the following will not work!
+```{r eval = FALSE}
+
+b(a+c)
+```
+*R* will assume the "b()" is indicating some function, NOT multiplication as we do in math and stats. 
+
+Thus, you MUST include the multiplication symbol.
+```{r}
+b*(a+c)
+```
+
+---
+
+## Creating Variables
+
+We can create variables using the assignment operator `<-`
+
+```{r}
+x <- 5
+```
+
+We can then perform any of the functions on the variables:
+
+```{r}
+log(x)
+```
+
+Rules of Naming Variables:
++ Variables can't start with a number
++ Case-sensitive
++ There are reserved words that *R* won't let you use for variables names
+  - for, in, while, if, else, repeat, break, next
+
+---
+## Vectors
+
+A variable does not need to be a single value. We can create a **vector** using the `c` function (combine- combines several objects into one)
+
+```{r}
+y <- c(1, 5, 3, 2)
+```
+
+
+Operations can then be done element-wise
+
+```{r}
+y/2
+```
+
+Determining number of objects in a vector
+
+```{r}
+length(y)
+```
+
+---
+## Vectors
+
+Can also have vectors of characters
+
+```{r}
+bulldogs <- c("american", "english", "french")
+bulldogs
+```
+
+
+```{r}
+length(bulldogs)
+       
+str(bulldogs)
+```
+
+---
+
+## Logical Values
+
+```{r}
+a <- 4
+a==5
+
+a <= 5
+a !=5
+```
+
+---
+
+## Creating a Sequence
+
+```{r}
+seq(1, 8, by= 0.5)
+
+seq(1, 8, length = 5)
+
+
+```
+
+---
+
+## Getting Help
+
+Let's talk about a couple ways to get help. The primary function to use is the `help` function. Just pass in the name of the function you need help with:
+
+```{r eval = FALSE}
+help(head)
+```
+
+The `?` also works
+```{r eval = FALSE}
+?head
+```
+
+This returns the help documentation for this function
+
+Googling for help can be difficult at first. You might need to search for R + CRAN +  to get good results
+
+Stackoverflow is VERY helpful!
+
+[R Reference Card](https://cran.r-project.org/doc/contrib/Short-refcard.pdf)
+
+---
+## R Packages
+
+- Commonly used *R* function are installed with base *R*
+- *R* packages containing more specialized *R* functions can be installed freely from CRAN servers using the function `install.packages()`
+  + Should now show up in *Packages* Tab
+- After packages are installed, their function can be loaded into the current *R* session using the function `library()`
+
+
+---
+
+## Installing Packages
+
+**Note**: To run code from your script:
++ Windows: Ctrl + Enter
++ Mac: Cmd + Enter
++ Highlight what you want to run and hit the “Run” button
+
+We will be installing the [tidyverse](https://www.tidyverse.org/) package.
+- Manipulates data structures (includes dplyr, tidyr, purr, tibble, etc packages)
+
+**Method 1**
+```{r, eval= FALSE}
+
+install.packages("tidyverse")
+
+```
+
+**Method 2** - Point and Click
+
++ Tools -> Install Packages
+
+Only have to do this once!!
+
+---
+## Load Package
+
+Let's load the package we just installed!
+
+```{r, eval = FALSE}
+library(tidyverse)
+```
+
+Will have to run this every time we are in a new session and want to use this package
+
+---
+
+## Load Data
+
+We usually work with .csv file in R. When you have a file that need to be read into the Rstudio, first save the data set to the same file folder as your R file, or set the working directory to the file. 
+
+First Check your working directory!
+
+Method 1:
+```{r, eval = FALSE}
+getwd() #What is your working directory
+setwd() # Change Working directory
+
+```
+
+Method 2 (recommendation):
+
+Session -> Set Working Directory -> Choose Directory -> Select folder data set is located -> Apply
+
+---
+## Load Data
+
+Second, then load in the data
+```{r, echo=FALSE}
+data = read.csv("../../Week 1/data/dc-wikia-data.csv")
+```
+
+```{r, eval=FALSE}
+data = read.csv("dc-wikia-data.csv")
+```
+
+```{r, linewidth=80}
+head(data, n = 3) #make sure data loads in correctly
+
+```
+
+Should see data in environment panel (upper right)
+---
+
+## Check Variable Types
+
+```{r}
+str(data)
+
+```
+
+<br>
+Note: The purpose of checking variable types is to make sure R is understanding what each column is representing.
+
+---
+
+## Change Variable Types
+
+*R* does not always read in the variables correctly. Let's pretend in this scenario, we wanted the `Year` variable to be a character. We can change this!
+
+```{r}
+#To change this column to a factor:
+data$year <- as.character(data$year)
+
+
+#Now Year is a character!
+class(data$year)
+
+```
+
+[More about Data Types](https://www.geeksforgeeks.org/r-data-types/)
+---
+
+## Selecting Specific Row/Column
+
+```{r}
+data[1,] #first row
+data[,1] #first column 
+
+```
+
+---
+
+## Selecting Specific Row/Column
+
+```{r}
+data[1:2,c(2,5,7)] #row: 1-2, column: 2,5,7
+```
+
+We can use `$` to specify columns as well
+
+```{r}
+head(data$page_id)
+```
+
+
+---
+
+## Some Basic Functions
+
+```{r}
+summary(data[,8:11])
+
+nrow(data)
+
+ncol(data)
+```
+
+---
+## Built-In Statistical Functions
+
+```{r}
+mean(data$APPEARANCES, na.rm = TRUE)
+sd(data$APPEARANCES, na.rm = TRUE)
+summary(data$APPEARANCES)
+quantile(data$APPEARANCES, c(0.025, 0.975), na.rm = TRUE) #na.rm removes missing values
+```
+
+---
+
+## Warnings vs. Errors
+
++ Routinely beginners to R panic if they see a red message as innocuous as confirming that a library loaded
+  - Not all red text means that there is an error!
+
++ A *warning* is a message that does not disturb the program flow but is displayed along with the output
+
+  - Not always a cause for concern
+
++ An *error* will terminate a program from being ran
+
++ Google is a beautiful thing
+
+
+<br>
+<br>
+Introduction points from: https://ourcodingclub.github.io/tutorials/intro-to-r/
+
+
+---
+## Learning to code can be challenging
+
+```{r, echo=FALSE}
+
+knitr::include_graphics("images/debug.png")
+
+```
+
+Artwork by @allison_horst
+
+

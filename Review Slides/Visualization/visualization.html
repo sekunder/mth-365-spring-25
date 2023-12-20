@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Visualization</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="ggplot2 Review" />
+    <script src="libs/header-attrs-2.23/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Visualization
+]
+.author[
+### ggplot2 Review
+]
+
+---
+
+
+
+
+
+&lt;img src="images/ggplot2.png" width="2356" /&gt;
+
+
+---
+## Why visualize?
+
+**What are graphics useful for?**
++ Data cleaning
++ Exploring data structure
++ Communicating Information
+
+Visualization offers an alternative way of communicating numbers
+
+---
+## Grammar of Graphics
+
+The grammar of graphics is a set of grammatical rules for creating perceivable graphs
+  
+  - Developed by Leland Wilkison
+
+Rather than thinking about a limited set of graphs, think about graphical forms
+  
+  - Different types of graphs may appear completely distinct, but in actuality share many common elements
+
+By making different visual choices, you can use graphs to highlight different aspects of the same data.
+
+For example, here are three ways of displaying the same data:
+
+&lt;img src="visualization_files/figure-html/plots-3-1.png"  /&gt;
+
+
+---
+## ggplot
+
+`ggplot2` is based on The Grammar of Graphics where the components are independent, meaning we can generally change a component in isolation.
+
+[Help Information](https://rstudio.github.io/cheatsheets/html/data-visualization.html)
+
+
+&lt;img src="images/ggplot-hex.png" width="40%" style="display: block; margin: auto;" /&gt;
+
+
+---
+## What is a graphic?
+
+`ggplot2` uses the idea that you can build every graph with graphical components from three sources:
+
+  1. The **data**, represented by **geoms**
+  2. The **scales** and **coordinate system**
+  3. The **plot annotations**
+    
+    + To display values, map variables in the data to visual properties of the geom (**aesthetics**) like **size**, **color**, and **x** and **y** locations.
+    
+    
+---
+## ggplot 2: specifications
+
+A plot consists of several mostly independent specifications:
+
+1. **aesthetics** - links between data variables and graphical features (position, color, shape, size)
+2. **layers** - geometric elements (points, lines, rectanges, text,...)
+3. **transformations** - transformations specify a functional link between the data and the displayed information (identity, count, bins, density, etc). Transformations act on the variables.
+4. **scales** - scales map values in data space values in the aesthetic space. Scales change the coordinate space of an aesthetic, but don't change the underlying value (change at visual level, not mathematical)
+5. **coordinate system** 
+6. **faceting** - facets allow you to split plot by other variables to produce many sub-plots
+7. **theme** - formating items, such as background color, fonts, margins...
+
+**Limitation**: tells us what words make up our graphical “sentences,” but offers no advice on how to write well
+
+
+---
+## Let's Build a Graph!
+
+
+```r
+library(tidyverse)
+head(diamonds)
+```
+
+```
+## # A tibble: 6 × 10
+##   carat cut       color clarity depth table price     x     y     z
+##   &lt;dbl&gt; &lt;ord&gt;     &lt;ord&gt; &lt;ord&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1  0.23 Ideal     E     SI2      61.5    55   326  3.95  3.98  2.43
+## 2  0.21 Premium   E     SI1      59.8    61   326  3.89  3.84  2.31
+## 3  0.23 Good      E     VS1      56.9    65   327  4.05  4.07  2.31
+## 4  0.29 Premium   I     VS2      62.4    58   334  4.2   4.23  2.63
+## 5  0.31 Good      J     SI2      63.3    58   335  4.34  4.35  2.75
+## 6  0.24 Very Good J     VVS2     62.8    57   336  3.94  3.96  2.48
+```
+
+---
+## We Begin with the Data
+
+
+```r
+*ggplot(data=diamonds)
+```
+
+![](visualization_files/figure-html/unnamed-chunk-5-1.png)&lt;!-- --&gt;
+
+---
+## Then we specify the aesthetic mappings
+
+
+```r
+*ggplot(data=diamonds, aes(x=carat, y = price))
+```
+
+![](visualization_files/figure-html/unnamed-chunk-6-1.png)&lt;!-- --&gt;
+
+---
+## Then we choose a geom
+
+
+```r
+ggplot(data=diamonds, aes(x=carat, y = price)) +
+* geom_point()
+```
+
+![](visualization_files/figure-html/unnamed-chunk-8-1.png)&lt;!-- --&gt;
+
+---
+## We can then add an aesthetic
+
+
+```r
+ggplot(data = diamonds, aes(x = carat, y = price)) +
+*   geom_point(aes(colour = cut))
+```
+
+![](visualization_files/figure-html/unnamed-chunk-10-1.png)&lt;!-- --&gt;
+---
+## And add another layer
+
+
+```r
+ggplot(data = diamonds, aes(x = carat, y = price)) +
+    geom_point(aes(colour = cut)) +
+*   geom_smooth()
+```
+
+
+```
+## `geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = "cs")'
+```
+
+![](visualization_files/figure-html/unnamed-chunk-12-1.png)&lt;!-- --&gt;
+
+---
+## Mapping aesthetics vs setting aesthetics
+
+
+```r
+ggplot(data = diamonds, aes(x = carat, y = price) +
+*   geom_point(aes(colour = cut), size = 2, alpha = .5) +
+*   geom_smooth(aes(fill = cut), colour = "lightgrey")
+```
+
+
+```
+## `geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = "cs")'
+```
+
+![](visualization_files/figure-html/unnamed-chunk-14-1.png)&lt;!-- --&gt;
+
+---
+## Can Facet
+
+
+```r
+ggplot(data = diamonds, aes(x = carat, y = price)) +
+    geom_point(aes(colour = cut), size = 2, alpha = .5) +
+    geom_smooth(aes(fill = cut), colour = "lightgrey") +
+*   facet_wrap(~cut)
+```
+
+
+```
+## `geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = "cs")'
+```
+
+![](visualization_files/figure-html/unnamed-chunk-16-1.png)&lt;!-- --&gt;
+
+
+---
+## Another Example
+
+**Example: Hate crimes and income inequality**
+
+A FiveThirtyEight article published in 2017 claimed that higher rates of hate crimes were tied to greater income inequality.
+
+https://fivethirtyeight.com/features/higher-rates-of-hate-crimes-are-tied-to-income-inequality/
+
+- FiveThirtyEight publishes their data sets - let's investigate for ourselves.
+- Data set is posted in BlueLine. Download this data set, and save it to your computer.
+
+
+```r
+hate_crimes &lt;- read.csv("hate_crimes.csv")
+```
+
+---
+## Another Example
+
+
+```r
+glimpse(hate_crimes)
+```
+
+```
+## Rows: 51
+## Columns: 13
+## $ state                                    &lt;chr&gt; "Alabama", "Alaska", "Arizona", "Arkansas", "Cal…
+## $ region                                   &lt;chr&gt; "South", "West", "West", "South", "West", "West"…
+## $ median_income                            &lt;int&gt; 42278, 67629, 49254, 44922, 60487, 60940, 70161,…
+## $ unemployment                             &lt;dbl&gt; 0.060, 0.064, 0.063, 0.052, 0.059, 0.040, 0.052,…
+## $ share_population_in_metro_areas          &lt;dbl&gt; 0.64, 0.63, 0.90, 0.69, 0.97, 0.80, 0.94, 0.90, …
+## $ share_population_with_high_school_degree &lt;dbl&gt; 0.821, 0.914, 0.842, 0.824, 0.806, 0.893, 0.886,…
+## $ share_non_citizen                        &lt;dbl&gt; 0.02, 0.04, 0.10, 0.04, 0.13, 0.06, 0.06, 0.05, …
+## $ share_white_poverty                      &lt;dbl&gt; 0.12, 0.06, 0.09, 0.12, 0.09, 0.07, 0.06, 0.08, …
+## $ gini_index                               &lt;dbl&gt; 0.472, 0.422, 0.455, 0.458, 0.471, 0.457, 0.486,…
+## $ share_non_white                          &lt;dbl&gt; 0.35, 0.42, 0.49, 0.26, 0.61, 0.31, 0.30, 0.37, …
+## $ share_voters_voted_trump                 &lt;dbl&gt; 0.63, 0.53, 0.50, 0.60, 0.33, 0.44, 0.41, 0.42, …
+## $ hate_crimes_splc                         &lt;dbl&gt; 0.12583893, 0.14374012, 0.22531995, 0.06906077, …
+## $ hate_crimes_fbi                          &lt;dbl&gt; 1.8064105, 1.6567001, 3.4139280, 0.8692089, 2.39…
+```
+
+---
+## A simple plot?
+
+__Basic Format of a Plot__:
+
+`data and aesthetics + plot type + options`
+
+The data, aesthetics, and plot type are necessary to create a plot. For example, below is what happens when we just specify the data and aesthetics.
+
+
+```r
+ggplot(hate_crimes, aes(x=median_income, y=hate_crimes_fbi))
+```
+
+&lt;img src="visualization_files/figure-html/unnamed-chunk-19-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+## Variable type
+
+After specifying the data and aesthetics, we need to decide the plot type. In order to do that, we need to know the variable type(s). There are two different ways to distinguish the variables. 
+
+By function: 
+
+1. response variable
+2. explanatory variable
+
+By value type:
+
+1. continuous variable
+2. categorical variable
+
+---
+## 1. Visualize one continuous variable, usually for the response variable using histograms and density plots
+
+.pull-left[
+
+```r
+hate_crimes %&gt;% 
+  ggplot(aes(x=median_income)) +
+  geom_histogram()
+```
+
+&lt;img src="visualization_files/figure-html/unnamed-chunk-20-1.png" style="display: block; margin: auto;" /&gt;
+].pull-right[
+
+```r
+hate_crimes %&gt;% 
+  ggplot(aes(x=median_income)) +
+  geom_histogram(bins = 10)
+```
+
+&lt;img src="visualization_files/figure-html/unnamed-chunk-21-1.png" style="display: block; margin: auto;" /&gt;
+]
+---
+## 1. Visualize one continuous variable, usually for the response variable using histograms and density plots
+
+.pull-left[
+
+```r
+hate_crimes %&gt;% 
+  ggplot(aes(x=median_income)) +
+  geom_density()
+```
+
+&lt;img src="visualization_files/figure-html/unnamed-chunk-22-1.png" style="display: block; margin: auto;" /&gt;
+].pull-right[
+
+```r
+hate_crimes %&gt;% 
+  ggplot(aes(x=median_income)) +
+  geom_density(fill = "blue", alpha = 0.5)
+```
+
+&lt;img src="visualization_files/figure-html/unnamed-chunk-23-1.png" style="display: block; margin: auto;" /&gt;
+
+]
+---
+## 2. Visualize one categorical variable, usually for the response variable using a bar-plot 
+.pull-left[
+
+```r
+hate_crimes %&gt;% 
+  ggplot(aes(x=region)) +
+  geom_bar()
+```
+
+&lt;img src="visualization_files/figure-html/unnamed-chunk-24-1.png" style="display: block; margin: auto;" /&gt;
+].pull-right[
+
+```r
+hate_crimes %&gt;% 
+  ggplot(aes(x=region)) +
+  geom_bar() +
+  coord_flip()
+```
+
+&lt;img src="visualization_files/figure-html/unnamed-chunk-25-1.png" style="display: block; margin: auto;" /&gt;
+]
+---
+### 3. Visualize two continous variables. Focus on showing the relation between them. Can be response variable + explanatroy variable. Can also be explanatory variable + explanatory variable.
+
+**(a) Scatterplots**
+
+.pull-left[
+
+```r
+hate_crimes %&gt;%
+  ggplot(aes(x=median_income, 
+             y=hate_crimes_fbi)) +
+  geom_point()
+```
+
+&lt;img src="visualization_files/figure-html/unnamed-chunk-26-1.png" style="display: block; margin: auto;" /&gt;
+].pull-right[
+
+```r
+hate_crimes %&gt;%
+  ggplot(aes(x=median_income, 
+             y=hate_crimes_fbi)) + 
+  geom_text(aes(label=state))
+```
+
+&lt;img src="visualization_files/figure-html/unnamed-chunk-27-1.png" style="display: block; margin: auto;" /&gt;
+]
+---
+### 3. Visualize two continous variables. Focus on showing the relation between them. Can be response variable + explanatroy variable. Can also be explanatory variable + explanatory variable.
+
+**(b) Line plots and Smooth Line Plots to connect the points in the scatterplot. The Smooth Line Plots help show the trend due to smoothness**
+
+.pull-left[
+
+```r
+hate_crimes %&gt;%
+  ggplot(aes(x=median_income, 
+             y=hate_crimes_fbi)) + 
+  geom_line()
+```
+
+&lt;img src="visualization_files/figure-html/unnamed-chunk-28-1.png" style="display: block; margin: auto;" /&gt;
+].pull-right[
+
+```r
+hate_crimes %&gt;%
+  ggplot(aes(x=median_income, 
+             y=hate_crimes_fbi)) + 
+  geom_smooth()
+```
+
+&lt;img src="visualization_files/figure-html/unnamed-chunk-29-1.png" style="display: block; margin: auto;" /&gt;
+]
+---
+## 4. Visualize one continous variable using a box-plot
+
+What is the difference between box-plot and histogram/density plot? Box-plot shows the median but not the distribution. 
+
+.pull-left[
+
+```r
+hate_crimes %&gt;%
+  ggplot(aes(x=median_income)) +
+  geom_boxplot()
+```
+
+&lt;img src="visualization_files/figure-html/unnamed-chunk-30-1.png" style="display: block; margin: auto;" /&gt;
+].pull-right[
+
+```r
+hate_crimes %&gt;%
+  ggplot(aes(y=median_income)) +
+  geom_boxplot()
+```
+
+&lt;img src="visualization_files/figure-html/unnamed-chunk-31-1.png" style="display: block; margin: auto;" /&gt;
+]
+---
+## Multiple groups
+
+What if we want to visualize one continuous variable and one categorical variable? Sometimes we want to compare the variable(s) across multiple groups. eg: compare median income across different region. Which plots can compare multiple group?
+
+Theses are called side-by-side plots. 
+
+.pull-left[
+
+```r
+hate_crimes %&gt;%
+  ggplot(aes(x=median_income, 
+             group = region)) +
+  geom_density()
+```
+
+&lt;img src="visualization_files/figure-html/unnamed-chunk-32-1.png" style="display: block; margin: auto;" /&gt;
+].pull-right[
+
+```r
+hate_crimes %&gt;%
+  ggplot(aes(y=median_income, 
+             group = region)) +
+  geom_boxplot()
+```
+
+&lt;img src="visualization_files/figure-html/unnamed-chunk-33-1.png" style="display: block; margin: auto;" /&gt;
+]
+---
+## Wait, how can I know which group is which group?
+
+**Include options like color and size**
+
+.pull-left[
+
+```r
+hate_crimes %&gt;%
+  ggplot(aes(y=median_income, 
+             group = region)) +
+  geom_boxplot(aes(color = region))
+```
+
+&lt;img src="visualization_files/figure-html/unnamed-chunk-34-1.png" style="display: block; margin: auto;" /&gt;
+].pull-right[
+
+```r
+hate_crimes %&gt;%
+  ggplot(aes(x=median_income, 
+             y=hate_crimes_fbi, 
+             group = region)) +
+  geom_point(aes(color = region, 
+                 size = unemployment))
+```
+
+&lt;img src="visualization_files/figure-html/unnamed-chunk-35-1.png" style="display: block; margin: auto;" /&gt;
+
+]
+---
+## Other options
+
+Add x-axis, y-axis labels and title
+
+
+```r
+ggplot(hate_crimes, aes(x=gini_index, y=hate_crimes_fbi)) +
+  geom_point(aes(color=region, size=unemployment)) + 
+  xlab('Gini Index') + 
+  ylab('Hate Crimes (FBI, Sept. 2016)') +
+  ggtitle('The relation between Gini Index and Hate Crime rate in 2016')
+```
+
+&lt;img src="visualization_files/figure-html/unnamed-chunk-36-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+##Instead of putting all groups information into one page, you can do by each panel.
+
+
+```r
+ggplot(hate_crimes, aes(x=gini_index, y=hate_crimes_fbi)) +
+  geom_point(aes(color=region, size=unemployment)) + 
+  xlab('Gini Index') + 
+  ylab('Hate Crimes (FBI, Sept. 2016)') + 
+  ggtitle('The relation between Gini Index and Hate Crime rate in 2016')+
+  facet_wrap(~region, nrow=1)
+```
+
+&lt;img src="visualization_files/figure-html/unnamed-chunk-37-1.png" style="display: block; margin: auto;" /&gt;
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
