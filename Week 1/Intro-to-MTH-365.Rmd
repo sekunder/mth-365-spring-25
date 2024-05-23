@@ -1,7 +1,7 @@
 ---
 title: "Welcome to MTH365: Introduction to Data Science!"
 author: "Alison Kleffner"
-date: "August 15, 2023"
+date: "August 20, 2024"
 output: 
   xaringan::moon_reader:
     lib_dir: libs
@@ -32,16 +32,17 @@ knit_hooks$set(output = function(x, options) {
 ## Agenda
 
 - Introductions
+- What is Data Science
 - Syllabus/Course Specifics
 - Software Set-up
   + What is `R`?
 
 ---
-## Announcements
+## Homework
 
-- Introduction Questionnaire in BlueLine due **Thursday August 24 at 11:59 pm**
+- Introduction Questionnaire in BlueLine due **Thursday August 29 at 11:59 pm**
   + Should take approximately 5 minutes
-- Software Downloaded by class on **Thursday August 17 at 11:59 pm**
+- Software Downloaded by class on **Thursday August 22**
   + Should hopefully have time at end of class
 
 
@@ -53,14 +54,44 @@ knit_hooks$set(output = function(x, options) {
 - BS in Applied Mathematics and Economics at Rockhurst University
 - Master and PhD in Statistics at University of Nebraska at Lincoln
 - Thesis: *Visualization and Modeling of Multivariate Data in Environmental Applications*
-- New Faculty! So I am learning and open to student research projects
 
 --
 
-**Now let introduce yourselves!**
+**Now let introduce yourselves! Get into groups of 2-3**
 
 - Name
-- Something fun you did this summer
+- Something your group has in common (besides these like major ...)
+
+---
+class:inverse
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+.center[
+## What is Data Science?
+]
+
+
+---
+### Data Science
+
+Data science is an exciting discipline that allows you to turn raw data into understanding, insight, and knowledge.
+
+- Data science is a vast field, and there’s no way you can master it all by taking a single course. But we are going to lay a solid foundation.
+
+.center[
+```{r, echo=FALSE}
+
+knitr::include_graphics("../Week 1/images/data-flowchart.png")
+
+```
+]
 
 ---
 class:inverse
@@ -85,7 +116,7 @@ class:inverse
 - This is a programming course using *R*, the most commonly used statistical language
 - We will also cover some statistical concepts (different than math!)
 - In this course you will complete in-class labs, projects, and presentations.
-- Since this course invovles using *R*, please bring your laptops to class with you
+- Since this course involves using *R*, please bring your laptops to class with you
 
 ---
 
@@ -178,7 +209,6 @@ More reasons to do your programming in a reproducible way:
 2. **Time elapsed**: even the best programmers forget how their code runs eventually
 
 ---
-
 ### Reproducible Research with R Markdown
 
 R Markdown provides “an authoring framework for data science”. In an R Markdown document, you can:
@@ -206,3 +236,8 @@ https://www.xquartz.org/
 
 
 Go with all default options
+
+<br>
+<br>
+
+**Other Option**: If you would prefer to not download it to your computer: https://posit.cloud
