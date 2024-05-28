@@ -4,31 +4,28 @@
     <title>MTH365: Introduction to Data Science</title>
     <meta charset="utf-8" />
     <meta name="author" content="Introduction to R" />
-    <meta name="date" content="2023-08-17" />
-    <script src="libs/header-attrs-2.23/header-attrs.js"></script>
+    <meta name="date" content="2024-08-22" />
+    <script src="libs/header-attrs-2.27/header-attrs.js"></script>
     <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
-    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/metropolis-fonts.css" rel="stylesheet" />
+    <link rel="stylesheet" href="modal.css" type="text/css" />
+    <link rel="stylesheet" href="sizeformat.css" type="text/css" />
   </head>
   <body>
     <textarea id="source">
-class: center, middle, inverse, title-slide
 
-.title[
-# MTH365: Introduction to Data Science
-]
-.author[
+
+
+
+
+class:inverse
+
+&lt;br&gt;&lt;br&gt;&lt;br&gt;
+## MTH365: Intro to Data Science
 ### Introduction to R
-]
-.date[
-### August 17, 2023
-]
+#### August 22, 2024
 
 ---
-
-
-
-
-
 ## Agenda
 
 - R Studio Set-Up
@@ -44,28 +41,87 @@ class: center, middle, inverse, title-slide
 ---
 ## Announcements
 
-- Introduction Questionnaire in BlueLine due **Thursday August 24 at 11:59 pm**
+- Introduction Questionnaire in BlueLine due **Thursday August 29 at 11:59 pm**
   + Should take approximately 5 minutes
 
 ---
+### R Studio Set-Up
 
-## R Studio Set-Up
-
-&lt;img src="../Week 1/images/rstudio.png" width="80%" /&gt;
+&lt;img src="../Week 1/images/rstudio.png" width="100%" style="display: block; margin: auto;" /&gt;
 
 To Create a Script, Click the Following: File -&gt; New File -&gt; R script
 
 [R Studio IDE Cheatsheet](cheatsheets/rstudio-ide.pdf)
 
-[More Information](https://srvanderplas.github.io/stat-computing-r-python/part-tools/03-Rstudio-interface.html)
+---
+### R Studio Set-Up - Editor (Top Left)
 
+&lt;img src="../Week 1/images/editor.jpeg" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;br&gt;
+**Shortcuts for running code**: To run code from your script:
++ Windows: Ctrl + Enter
++ Mac: Cmd + Enter
+
+---
+### R Studio Set-Up - Console (Bottom Left)
+
+&lt;img src="../Week 1/images/console.jpeg" width="100%" style="display: block; margin: auto;" /&gt;
+
+---
+### R Studio Set-Up - Environment  (Top Right)
+
+&lt;img src="../Week 1/images/environment.jpeg" width="100%" style="display: block; margin: auto;" /&gt;
+
+---
+### R Studio Set-Up - Environment  (Bottom Right)
+
+&lt;!-- Trigger the Modal --&gt;
+&lt;img id='imgfiles' src='../Week 1/images/files.png' alt='Files' width='30%'&gt;
+&lt;!-- Trigger the Modal --&gt;
+&lt;img id='imgpackages' src='../Week 1/images/packages.png' alt='Packages' width='30%'&gt;
+&lt;!-- Trigger the Modal --&gt;
+&lt;img id='imghelp' src='../Week 1/images/help.png' alt='Help' width='30%'&gt;
+&lt;!-- The Modal --&gt;
+&lt;div id='modalfiles' class='modal'&gt;
+  &lt;!-- Modal Content (The Image) --&gt;
+  &lt;img class='modal-content' id='imgmodalfiles'&gt;
+  &lt;!-- Modal Caption (Image Text) --&gt;
+  &lt;div id='captionfiles' class='modal-caption'&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;!-- The Modal --&gt;
+&lt;div id='modalpackages' class='modal'&gt;
+  &lt;!-- Modal Content (The Image) --&gt;
+  &lt;img class='modal-content' id='imgmodalpackages'&gt;
+  &lt;!-- Modal Caption (Image Text) --&gt;
+  &lt;div id='captionpackages' class='modal-caption'&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;!-- The Modal --&gt;
+&lt;div id='modalhelp' class='modal'&gt;
+  &lt;!-- Modal Content (The Image) --&gt;
+  &lt;img class='modal-content' id='imgmodalhelp'&gt;
+  &lt;!-- Modal Caption (Image Text) --&gt;
+  &lt;div id='captionhelp' class='modal-caption'&gt;&lt;/div&gt;
+&lt;/div&gt;
+
+
+---
+## Writing Code for People
+
+-  A **comment** is a part of computer code which is intended only for people to read. It is not evaluated or run by the computing language. 
+  - In `R` we use `#`
+
+``` r
+# This is a comment
+```
+-  **Literate Programming**: interspersing text and code in the same document
+  - We will learn more about this next week.
 ---
 
 ## Giant Calculator!
 
 .pull-left[
 
-```r
+``` r
 3+4 #Addition
 ```
 
@@ -73,7 +129,7 @@ To Create a Script, Click the Following: File -&gt; New File -&gt; R script
 ## [1] 7
 ```
 
-```r
+``` r
 5-2 #Subtraction
 ```
 
@@ -81,7 +137,7 @@ To Create a Script, Click the Following: File -&gt; New File -&gt; R script
 ## [1] 3
 ```
 
-```r
+``` r
 3*2 #Multiplication
 ```
 
@@ -89,7 +145,7 @@ To Create a Script, Click the Following: File -&gt; New File -&gt; R script
 ## [1] 6
 ```
 
-```r
+``` r
 9/3 #Division 
 ```
 
@@ -98,7 +154,7 @@ To Create a Script, Click the Following: File -&gt; New File -&gt; R script
 ```
 ].pull-right[
 
-```r
+``` r
 sqrt(4)
 ```
 
@@ -106,7 +162,7 @@ sqrt(4)
 ## [1] 2
 ```
 
-```r
+``` r
 2^3
 ```
 
@@ -114,7 +170,7 @@ sqrt(4)
 ## [1] 8
 ```
 
-```r
+``` r
 exp(3)
 ```
 
@@ -122,7 +178,7 @@ exp(3)
 ## [1] 20.08554
 ```
 
-```r
+``` r
 log(10)
 ```
 
@@ -133,15 +189,13 @@ log(10)
 
 [Basics Cheatsheets](https://iqss.github.io/dss-workshops/R/Rintro/base-r-cheat-sheet.pdf)
 
-Note: Adding a "#" to your R Script creates a comment so can take notes
-
 ---
 
 ## Giant Calculator!
 
 .pull-left[
 
-```r
+``` r
 log(10, base = 10)
 ```
 
@@ -149,7 +203,7 @@ log(10, base = 10)
 ## [1] 1
 ```
 
-```r
+``` r
 abs(-1)
 ```
 
@@ -157,7 +211,7 @@ abs(-1)
 ## [1] 1
 ```
 
-```r
+``` r
 floor(3.7)
 ```
 
@@ -165,7 +219,7 @@ floor(3.7)
 ## [1] 3
 ```
 
-```r
+``` r
 ceiling(3.2)
 ```
 
@@ -174,7 +228,7 @@ ceiling(3.2)
 ```
 ].pull-right[
 
-```r
+``` r
 pi
 ```
 
@@ -182,7 +236,7 @@ pi
 ## [1] 3.141593
 ```
 
-```r
+``` r
 sin(pi/2)
 ```
 
@@ -190,7 +244,7 @@ sin(pi/2)
 ## [1] 1
 ```
 
-```r
+``` r
 5%%3 #division remainder
 ```
 
@@ -204,7 +258,7 @@ sin(pi/2)
 ## Giant Calculator!
 
 
-```r
+``` r
 a &lt;- 2
 b &lt;- 4
 c &lt;- 3
@@ -213,14 +267,14 @@ c &lt;- 3
 
 **Note**: In R, the following will not work!
 
-```r
+``` r
 b(a+c)
 ```
 *R* will assume the "b()" is indicating some function, NOT multiplication as we do in math and stats. 
 
 Thus, you MUST include the multiplication symbol.
 
-```r
+``` r
 b*(a+c)
 ```
 
@@ -235,14 +289,14 @@ b*(a+c)
 We can create variables using the assignment operator `&lt;-`
 
 
-```r
+``` r
 x &lt;- 5
 ```
 
 We can then perform any of the functions on the variables:
 
 
-```r
+``` r
 log(x)
 ```
 
@@ -262,7 +316,7 @@ Rules of Naming Variables:
 A variable does not need to be a single value. We can create a **vector** using the `c` function (combine- combines several objects into one)
 
 
-```r
+``` r
 y &lt;- c(1, 5, 3, 2)
 ```
 
@@ -270,7 +324,7 @@ y &lt;- c(1, 5, 3, 2)
 Operations can then be done element-wise
 
 
-```r
+``` r
 y/2
 ```
 
@@ -281,7 +335,7 @@ y/2
 Determining number of objects in a vector
 
 
-```r
+``` r
 length(y)
 ```
 
@@ -295,7 +349,7 @@ length(y)
 Can also have vectors of characters
 
 
-```r
+``` r
 bulldogs &lt;- c("american", "english", "french")
 bulldogs
 ```
@@ -306,7 +360,7 @@ bulldogs
 
 
 
-```r
+``` r
 length(bulldogs)
 ```
 
@@ -314,7 +368,7 @@ length(bulldogs)
 ## [1] 3
 ```
 
-```r
+``` r
 str(bulldogs)
 ```
 
@@ -327,7 +381,7 @@ str(bulldogs)
 ## Logical Values
 
 
-```r
+``` r
 a &lt;- 4
 a==5
 ```
@@ -336,7 +390,7 @@ a==5
 ## [1] FALSE
 ```
 
-```r
+``` r
 a &lt;= 5
 ```
 
@@ -344,7 +398,7 @@ a &lt;= 5
 ## [1] TRUE
 ```
 
-```r
+``` r
 a !=5
 ```
 
@@ -354,39 +408,18 @@ a !=5
 
 ---
 
-## Creating a Sequence
-
-
-```r
-seq(1, 8, by= 0.5)
-```
-
-```
-##  [1] 1.0 1.5 2.0 2.5 3.0 3.5 4.0 4.5 5.0 5.5 6.0 6.5 7.0 7.5 8.0
-```
-
-```r
-seq(1, 8, length = 5)
-```
-
-```
-## [1] 1.00 2.75 4.50 6.25 8.00
-```
-
----
-
 ## Getting Help
 
 Let's talk about a couple ways to get help. The primary function to use is the `help` function. Just pass in the name of the function you need help with:
 
 
-```r
+``` r
 help(head)
 ```
 
 The `?` also works
 
-```r
+``` r
 ?head
 ```
 
@@ -401,6 +434,7 @@ Stackoverflow is VERY helpful!
 ---
 ## R Packages
 
+- **Packages** are the fundamental units of reproducible R code. They include reusable R functions, the documentation that describes how to use them, and sample data.
 - Commonly used *R* function are installed with base *R*
 - *R* packages containing more specialized *R* functions can be installed freely from CRAN servers using the function `install.packages()`
   + Should now show up in *Packages* Tab
@@ -421,7 +455,7 @@ We will be installing the [tidyverse](https://www.tidyverse.org/) package.
 
 **Method 1**
 
-```r
+``` r
 install.packages("tidyverse")
 ```
 
@@ -437,7 +471,7 @@ Only have to do this once!!
 Let's load the package we just installed!
 
 
-```r
+``` r
 library(tidyverse)
 ```
 
@@ -453,7 +487,7 @@ First Check your working directory!
 
 Method 1:
 
-```r
+``` r
 getwd() #What is your working directory
 setwd() # Change Working directory
 ```
@@ -462,6 +496,11 @@ Method 2 (recommendation):
 
 Session -&gt; Set Working Directory -&gt; Choose Directory -&gt; Select folder data set is located -&gt; Apply
 
+
+Method 3: Import Data set in Environment Tab
+
+- Works well for .csv/.xlsx files
+
 ---
 ## Load Data
 
@@ -469,76 +508,84 @@ Second, then load in the data
 
 
 
-```r
-data = read.csv("dc-wikia-data.csv")
+``` r
+data = read.csv("movie-2018.csv")
 ```
 
 
-```r
+``` r
 head(data, n = 3) #make sure data loads in correctly
 ```
 
 ```
-## page_id name urlslug ID ALIGN EYE
-## 1 1422 Batman (Bruce Wayne) \\/wiki\\/Batman_(Bruce_Wayne) Secret Identity
-Good Characters Blue Eyes
-## 2 23387 Superman (Clark Kent) \\/wiki\\/Superman_(Clark_Kent) Secret
-Identity Good Characters Blue Eyes
-## 3 1458 Green Lantern (Hal Jordan) \\/wiki\\/Green_Lantern_(Hal_Jordan)
-Secret Identity Good Characters Brown Eyes
-## HAIR SEX ALIVE APPEARANCES FIRST.APPEARANCE year
-## 1 Black Hair Male Characters Living Characters 3093 1939, May 1939
-## 2 Black Hair Male Characters Living Characters 2496 1986, October 1986
-## 3 Brown Hair Male Characters Living Characters 1565 1959, October 1959
+##                Film           Script.Type Average.critics Average.audience
+## 1         12 Strong            adaptation              54               64
+## 2 7 Days in Entebbe based on a true story              38               49
+## 3     A Quiet Place   original screenplay              89               79
+##   Primary.Genre Opening.Weekend Domestic.Gross Foreign.Gross Worldwide.Gross
+## 1         drama        15815025       45500164      21533253        67033417
+## 2      thriller         1592645        3189220       5465548         8654768
+## 3        horror        50203562      188024361     144559086       332583447
+##   Budget...million. Release.Date..US.
+## 1                35         19-Jan-18
+## 2                NA         16-Mar-18
+## 3                17          6-Apr-18
 ```
 
 Should see data in environment panel (upper right)
+
 ---
 
 ## Check Variable Types
 
 
-```r
+``` r
 str(data)
 ```
 
 ```
-## 'data.frame':	6896 obs. of  12 variables:
-##  $ page_id         : int  1422 23387 1458 1659 1576 1448 1486 1451 71760 1380 ...
-##  $ name            : chr  "Batman (Bruce Wayne)" "Superman (Clark Kent)" "Green Lantern (Hal Jordan)" "James Gordon (New Earth)" ...
-##  $ urlslug         : chr  "\\/wiki\\/Batman_(Bruce_Wayne)" "\\/wiki\\/Superman_(Clark_Kent)" "\\/wiki\\/Green_Lantern_(Hal_Jordan)" "\\/wiki\\/James_Gordon_(New_Earth)" ...
-##  $ ID              : chr  "Secret Identity" "Secret Identity" "Secret Identity" "Public Identity" ...
-##  $ ALIGN           : chr  "Good Characters" "Good Characters" "Good Characters" "Good Characters" ...
-##  $ EYE             : chr  "Blue Eyes" "Blue Eyes" "Brown Eyes" "Brown Eyes" ...
-##  $ HAIR            : chr  "Black Hair" "Black Hair" "Brown Hair" "White Hair" ...
-##  $ SEX             : chr  "Male Characters" "Male Characters" "Male Characters" "Male Characters" ...
-##  $ ALIVE           : chr  "Living Characters" "Living Characters" "Living Characters" "Living Characters" ...
-##  $ APPEARANCES     : int  3093 2496 1565 1316 1237 1231 1121 1095 1075 1028 ...
-##  $ FIRST.APPEARANCE: chr  "1939, May" "1986, October" "1959, October" "1987, February" ...
-##  $ year            : int  1939 1986 1959 1987 1940 1941 1941 1989 1969 1956 ...
+## 'data.frame':	160 obs. of  11 variables:
+##  $ Film             : chr  "12 Strong" "7 Days in Entebbe" "A Quiet Place" "A Simple Favor" ...
+##  $ Script.Type      : chr  "adaptation" "based on a true story" "original screenplay" "adaptation" ...
+##  $ Average.critics  : chr  "54" "38" "89" "76" ...
+##  $ Average.audience : chr  "64" "49" "79" "74" ...
+##  $ Primary.Genre    : chr  "drama" "thriller" "horror" "thriller" ...
+##  $ Opening.Weekend  : chr  "15815025" "1592645" "50203562" "16011689" ...
+##  $ Domestic.Gross   : int  45500164 3189220 188024361 53548586 202110867 100478608 3000943 5059608 31445011 21083037 ...
+##  $ Foreign.Gross    : chr  "21533253" "5465548" "144559086" "41285014" ...
+##  $ Worldwide.Gross  : int  67033417 8654768 332583447 94833600 390110867 132675864 3000943 5059608 53345012 29835860 ...
+##  $ Budget...million.: num  35 NA 17 20 36 125 10 19 35 51 ...
+##  $ Release.Date..US.: chr  "19-Jan-18" "16-Mar-18" "6-Apr-18" "14-Sep-18" ...
 ```
 
 &lt;br&gt;
 Note: The purpose of checking variable types is to make sure R is understanding what each column is representing.
 
+&lt;br&gt;
+Can also use `glimpse()` from `tidyverse`
 ---
 
 ## Change Variable Types
 
-*R* does not always read in the variables correctly. Let's pretend in this scenario, we wanted the `Year` variable to be a character. We can change this!
+*R* does not always read in the variables correctly. For example, `Opening.Weekend` is being read in as a character, when it should be a number. We can change this!
 
 
-```r
-#To change this column to a factor:
-data$year &lt;- as.character(data$year)
-
-
-#Now Year is a character!
-class(data$year)
+``` r
+#To change this column to a number:
+data$Opening.Weekend &lt;- as.numeric(data$Opening.Weekend)
 ```
 
 ```
-## [1] "character"
+## Warning: NAs introduced by coercion
+```
+
+``` r
+#Now Opening.Weekend is a number!
+class(data$Opening.Weekend)
+```
+
+```
+## [1] "numeric"
 ```
 
 [More about Data Types](https://www.geeksforgeeks.org/r-data-types/)
@@ -547,86 +594,184 @@ class(data$year)
 ## Selecting Specific Row/Column
 
 
-```r
+``` r
 data[1,] #first row
 ```
 
 ```
-##   page_id                 name                        urlslug              ID           ALIGN       EYE       HAIR
-## 1    1422 Batman (Bruce Wayne) \\/wiki\\/Batman_(Bruce_Wayne) Secret Identity Good Characters Blue Eyes Black Hair
-##               SEX             ALIVE APPEARANCES FIRST.APPEARANCE year
-## 1 Male Characters Living Characters        3093        1939, May 1939
+##        Film Script.Type Average.critics Average.audience Primary.Genre
+## 1 12 Strong  adaptation              54               64         drama
+##   Opening.Weekend Domestic.Gross Foreign.Gross Worldwide.Gross Budget...million.
+## 1        15815025       45500164      21533253        67033417                35
+##   Release.Date..US.
+## 1         19-Jan-18
 ```
 
-```r
+``` r
 data[,1] #first column 
 ```
 
 ```
-##    [1]   1422  23387   1458   1659   1576   1448   1486   1451  71760   1380 403631   1459   1905   1386  23383   1456
-##   [17]   1849   4320   1706   1480   1556   1580   4849   1611   1479   1582  14006   1484  23391   1478   1455  10163
-##   [33]   1872   1616   1577   6791   1481   1559   1607   1680   1662   1864  37696   1981   1514   1560  23652   2433
-##   [49]   1704   1995   1684   1687   1564   1488   1554   1619   1549   1599   1723   1528   1625   4030   3458  39947
-##   [65] 261362   8856   1471   1696   1894   1700   1825   1870   7155   1681   1464   1685   1885   2657   1568 173437
-##   [81]   1839  21110  13108  24301   1462   1788   4079  11039   1848   1866   1900   1547   1585   1494   1445   1483
-##   [97]   1468  14823   1785   1574  12766  14002   1645  12672   1897   1522   1606   1675   1519 174276   1953   8056
-##  [113]  38764   1557   2698   1868  65039   1682   8049   1862  13358   5384  64094   7288   1453   1865  47056   1579
-##  [129]   1940   1620  11867   1434  16667   8235   1658  37701  12408   1518   4778   1829  11870   1909 327940   2736
-##  [145]  13102   2606   1717   3628   1583   1461 144959  11604   3622   4895   1566   1482   7585   2612   3473   3719
-##  [161]   1679  10969   4637   9652  11609  11871  13463  12225   1798   1858   9655   9656   1709   1597   1450   4430
-##  [177]   2755  31787   1463   2766   9653  17885   8734   1469   1835   3656   1558   5315   1699  51559   9654   1708
-##  [193]  12024   1840  37939   1881  16146  22057  24162   1800  13261   1853  42572 113540  10339   1945   1716   1660
-##  [209]   1467   1846   1573  70786   1603   1789   3610  32739  37941   1830   2607   6417   6063   3680  37934   1569
-##  [225]   5959  69033   1843   5302   4874  22705   1904   1702   1578   2611   1970   1584   5336   9907   2609   1693
-##  [241]   9039   1791  12290   9908  11851  14503   8335   1520  47920   2776   1718   1841  14510  10139  38844   1845
-##  [257]  16382   8107   6748  13644   6408   4837   2762   1610  14454   7230   1792   1880   2624   1648   2702   2623
-##  [273]  40081  45837   8530   1914  14345 341732   1470  80244   1924 112409  18697 341733  14501  12204   1643   2645
-##  [289]  11879  14753  15618 144550   1614  10481   1869   1797   2780   4170   1623   1903  69043  16693   2085   1851
-##  [305]  16836   1850  27613  14777   1977   1847   1967   1921  11733   1713  11164   1618   1673  39459   1902   1527
-##  [321]   1826  16274   1691   2742  18276  17519  10235  14508   1876  69502   1503   1399   4858  17524 177671   1938
-##  [337]   2604   2620  15333   1689   1489   1683  39182 174719  22096  14511  16376   1895  56388   2718  14118   1598
-##  [353]   1906 153779 143236  11872  18466  24160   2610  19791  90828  35885  11169   7581  11249   2701  49419   5443
-##  [369]  13011   1707   4814   1794   1703  15841  23988 153775  11438   8012   7041   1492   2660  28158   4899   1854
-##  [385]   7518  17834   1891   1523  13336   1934   8818   1993  12149   5878   3996   4903   8809   2708  95201  36677
-##  [401]  19150 111450   7103  15926  18743  11942  11247  17913  19703   2655  16733  12382   8260   1927  41263   1671
-##  [417]   1676   4888   5113   3648  40593  10335  31603   2777  17742   5420   2745  35472   4779   2862   7694   7937
-##  [433]   1555  61438   1565   5266 113190 173412   7576  81146  60567  69315   2618 127582  64122   4862   6968  13339
-##  [449]  11173   1859  11848  11528   1672   4798 117854   5212  19788   1521  11356   1852  11858   1647  62317  63742
-##  [465] 117843  86563   3415   1529  30097  18180  21226  33255  19629  13337   4425  13691 144724  52340   2605  17114
-##  [481]   9901  11611   4878   2781  73382   1497  50010   4789   1946   3068  11857  14748  63434   4856   5294   2656
-##  [497]   2773  12177  18907 147267   4805  69672  60260   1454 174205   4869  11843  65388   1973   4850   7571   4917
-##  [513]   8730   1992   2751   9076   9846   5274   1587  10570  14617   5273   1793   5276  14507  12138   5152  66420
-##  [529]  88731   5275  53426   1889 117817  62760   1487  88211   4317   2005 149411   5423  40601  40595 245864 164815
-##  [545]  80255 140650   5047   2485   2775   4889  24090   2785   5439  25942  51016   4780  19714  61046   1922  23000
-##  [561]   1892  40065   9049  70553  11377  40599   1923  11333  23831   8883   5304 118190  13106  13072  63305  18070
-##  [577]  18074   2754   7099   4870  44198  99957   2002  35327 127606   6754   2756   8810  18063   2613   4860 112193
-##  [593]  24463  39544  18657  19058   4788   8808   4824 139909  11189  21644   4803  29823  28714  10484   5270  89251
-##  [609]   1963   4826  97475  13715   2772  14144 139914   5114  43008   2625 174421  61503   2713  44273   9324   6176
-##  [625]  14759   7567   7521  14509  34418   8339   4721  13099  42747   2749  11730   1842  13333  18451  27819  11878
-##  [641] 127455   2778 143233  19057  56362  69859  60205   1999   4815   2758   1690   1563   4790  11952 136770  12347
-##  [657]  74171  23377  27904 117847  83558  14421 119434   1686  22237  34212  89373   7100   3631  13989  11861 147289
-##  [673]   7587  48180   6410  46871  19047  18760  47507   3899  11437 119915   9552  23001   1834  27565  26747   9571
-##  [689]  55875  27355   7605 135316  23733  21443   5645   1856  17792  41928 190194  14504   7751   5271   2746 172451
-##  [705]  14502 158200  91760  27905 133348   1944 120324  34278  19054  41021  14914 294688  81716  19050 127294  15332
-##  [721]  81489   5272   2712   7102 148635  16804  10703  70400  98945   1724  67213   5048   2000  98220  50861   4857
-##  [737]  37256  23971   1861  14350  80825  30297  10267   1790 154011 117848 117844  28334   1677  69421   4829   2608
-##  [753] 142775  81581   2757  81133  22310  62431  55783  14497  71700  12013   2769  60112 118298  45486  16969  11434
-##  [769]   5269   1987   4876  11856  65483  58120   8132 178609  16813  11834  27852  11835 116529  74170 160988 181844
-##  [785]  90908   5509  68282   1668 136610  63571 205575  16461   5268  10550   1567   5111  43227  14506  10488 146989
-##  [801] 113460 124943  11753  11405  57834  34313 294689  40878   1948  57932   4894  50426  11025  45367   4922   4839
-##  [817]   4109 274638 173440  69801   4807   5210  96395  37670  10546 135976  40929  14995  81503  47725   1962  64697
-##  [833]  69577 227332  17691  20506 145132  27110  18564  18084   4823  48831  56462   3624   2715 119894  83651  29043
-##  [849]  64815  30351  65941 128698   4785  11845   8673  61669   1871   1646  98600  96384  95812   4842   1998  27834
-##  [865]  41758  10716  40916  65749   2728  48417   1961  80313  80676 166392  82916 336900  96451   4799 125189  12703
-##  [881]  63250   4795   2753   5880   1674  22162  19048  61422  14505  96496 159874 113949  11832  13066 279711  11407
-##  [897]  68186  95321   4832  11241  62280   7570  11859  23974  83846 117065  20222   4820  63046   3640 141718  94995
-##  [913] 145071  65079  23343 154815   1836  12005 264300  95727  54126  85183 343269  24091   1833   1784   2759 131078
-##  [929]  27830  13722  18112   6753 174429 257424  64377  74143  69060 146367 141089 146366 146364  92264  92263 135725
-##  [945]  58117  61662   1935 143363 115005  10517  61433 109052  14420  44511 260750 160273 116628 119892 100920   2771
-##  [961] 111666 126490   1626 222072  14622  27578 310265  17256  51173 122098  18835  14906  11742   1896 101904  62221
-##  [977]   1477 139776  20212 117851  41121 100180  73532  68548  81100  16792  63266  11948  13375   4808  12369  81132
-##  [993]   1474 284232  61906 336532 161364 200072 177614 132809
-##  [ reached getOption("max.print") -- omitted 5896 entries ]
+##   [1] "12 Strong"                                  
+##   [2] "7 Days in Entebbe"                          
+##   [3] "A Quiet Place"                              
+##   [4] "A Simple Favor"                             
+##   [5] "A Star is Born"                             
+##   [6] "A Wrinkle in Time"                          
+##   [7] "A.X.L."                                     
+##   [8] "Action Point"                               
+##   [9] "Adrift"                                     
+##  [10] "Alpha"                                      
+##  [11] "American Animals"                           
+##  [12] "Annihilation"                               
+##  [13] "Ant-Man and the Wasp"                       
+##  [14] "Aquaman "                                   
+##  [15] "Avengers: Infinity War"                     
+##  [16] "Baaghi 2"                                   
+##  [17] "Bad Samaritan"                              
+##  [18] "Bad Times at the El Royale"                 
+##  [19] "Beirut (aka The Negotiator)"                
+##  [20] "Black Panther"                              
+##  [21] "BlacKkKlansman"                             
+##  [22] "Blindspotting"                              
+##  [23] "Blockers"                                   
+##  [24] "Bohemian Rhapsody"                          
+##  [25] "Book Club"                                  
+##  [26] "Breaking In"                                
+##  [27] "Bumblebee"                                  
+##  [28] "Call Me By Your Name"                       
+##  [29] "Chappaquiddick"                             
+##  [30] "Christopher Robin"                          
+##  [31] "Crazy Rich Asians"                          
+##  [32] "Creed II"                                   
+##  [33] "Deadpool 2"                                 
+##  [34] "Death Wish"                                 
+##  [35] "Den of Thieves"                             
+##  [36] "Detective Chinatown 2"                      
+##  [37] "Disobedience"                               
+##  [38] "Dog Days"                                   
+##  [39] "Dr Seuss' The Grinch"                       
+##  [40] "Early Man"                                  
+##  [41] "Eighth Grade"                               
+##  [42] "Every Day"                                  
+##  [43] "Fantastic Beasts: The Crimes of Grindelwald"
+##  [44] "Fifty Shades Freed"                         
+##  [45] "Finding Your Feet"                          
+##  [46] "First Man"                                  
+##  [47] "First Reformed"                             
+##  [48] "Forever My Girl"                            
+##  [49] "Game Night"                                 
+##  [50] "God's Not Dead: A Light in Darkness"        
+##  [51] "Goosebumps 2: Haunted Halloween"            
+##  [52] "Gotti"                                      
+##  [53] "Green Book"                                 
+##  [54] "Gringo"                                     
+##  [55] "Halloween "                                 
+##  [56] "Hearts Beat Loud"                           
+##  [57] "Hereditary"                                 
+##  [58] "Holmes and Watson"                          
+##  [59] "Hostiles"                                   
+##  [60] "Hotel Artemis"                              
+##  [61] "Hotel Transylvania 3: Summer Vacation"      
+##  [62] "Hunter Killer"                              
+##  [63] "I Can Only Imagine"                         
+##  [64] "I Feel Pretty"                              
+##  [65] "Incredibles 2"                              
+##  [66] "Insidious: The Last Key"                    
+##  [67] "Instant Family"                             
+##  [68] "Isle of Dogs"                               
+##  [69] "Jurassic World: Fallen Kingdom"             
+##  [70] "La Boda de Valentina"                       
+##  [71] "Lean on Pete"                               
+##  [72] "Leave No Trace"                             
+##  [73] "Life of the Party"                          
+##  [74] "Love, Simon"                                
+##  [75] "Mamma Mia: Here We Go Again!"               
+##  [76] "Mary Poppins Returns"                       
+##  [77] "Maze Runner: The Death Cure"                
+##  [78] "Midnight Sun"                               
+##  [79] "Mile 22"                                    
+##  [80] "Mission: Impossible - Fallout"              
+##  [81] "Molly's Game"                               
+##  [82] "Mortal Engines"                             
+##  [83] "Night School"                               
+##  [84] "Nobody's Fool"                              
+##  [85] "Ocean’s 8"                                  
+##  [86] "Operation Finale"                           
+##  [87] "Operation Red Sea"                          
+##  [88] "Overboard"                                  
+##  [89] "Overlord"                                   
+##  [90] "Pacific Rim: Uprising"                      
+##  [91] "Paddington 2"                               
+##  [92] "Papillon"                                   
+##  [93] "Paul, Apostle of Christ"                    
+##  [94] "Peppermint"                                 
+##  [95] "Peter Rabbit"                               
+##  [96] "Proud Mary"                                 
+##  [97] "Puzzle"                                     
+##  [98] "Raid"                                       
+##  [99] "Ralph Breaks the Internet"                  
+## [100] "Rampage"                                    
+## [101] "Ready Player One"                           
+## [102] "Red Sparrow"                                
+## [103] "Robin Hood"                                 
+## [104] "Samson"                                     
+## [105] "Searching"                                  
+## [106] "Second Act"                                 
+## [107] "Sgt. Stubby: An American Hero"              
+## [108] "Sherlock Gnomes"                            
+## [109] "Show Dogs"                                  
+## [110] "Sicario: Day of the Soldado"                
+## [111] "Skyscraper"                                 
+## [112] "Slender Man"                                
+## [113] "Smallfoot"                                  
+## [114] "Solo: A Star Wars Story"                    
+## [115] "Sorry to Bother You"                        
+## [116] "Spider-man: Into the Spider-verse"          
+## [117] "Super Troopers 2"                           
+## [118] "Superfly"                                   
+## [119] "Tag"                                        
+## [120] "Teen Titans Go! To The Movies"              
+## [121] "The 15:17 to Paris"                         
+## [122] "The Commuter"                               
+## [123] "The Darkest Minds"                          
+## [124] "The Death of Stalin"                        
+## [125] "The Equalizer 2"                            
+## [126] "The Favourite"                              
+## [127] "The First Purge"                            
+## [128] "The Girl in the Spider's Web"               
+## [129] "The Happytime Murders"                      
+## [130] "The Hate U Give"                            
+## [131] "The House with a Clock in its Walls"        
+## [132] "The Hurricane Heist"                        
+## [133] "The Leisure Seeker"                         
+## [134] "The Meg"                                    
+## [135] "The Miracle Season"                         
+## [136] "The Mule"                                   
+## [137] "The Nun"                                    
+## [138] "The Nutcracker and the Four Realms"         
+## [139] "The Post"                                   
+## [140] "The Predator"                               
+## [141] "The Rider"                                  
+## [142] "The Seagull"                                
+## [143] "The Spy Who Dumped Me"                      
+## [144] "The Strangers: Prey at Night"               
+## [145] "Thoroughbreds"                              
+## [146] "Tomb Raider"                                
+## [147] "Traffik"                                    
+## [148] "Truth or Dare"                              
+## [149] "Tully"                                      
+## [150] "Tyler Perry's Acrimony"                     
+## [151] "Uncle Drew"                                 
+## [152] "Unfriended: Dark Web"                       
+## [153] "Unsane"                                     
+## [154] "Upgrade"                                    
+## [155] "Venom"                                      
+## [156] "Vice"                                       
+## [157] "White Boy Rick"                             
+## [158] "Widows"                                     
+## [159] "Winchester"                                 
+## [160] "You Were Never Really Here"
 ```
 
 ---
@@ -634,100 +779,122 @@ data[,1] #first column
 ## Selecting Specific Row/Column
 
 
-```r
+``` r
 data[1:2,c(2,5,7)] #row: 1-2, column: 2,5,7
 ```
 
 ```
-##                    name           ALIGN       HAIR
-## 1  Batman (Bruce Wayne) Good Characters Black Hair
-## 2 Superman (Clark Kent) Good Characters Black Hair
+##             Script.Type Primary.Genre Domestic.Gross
+## 1            adaptation         drama       45500164
+## 2 based on a true story      thriller        3189220
 ```
 
 We can use `$` to specify columns as well
 
 
-```r
-head(data$page_id)
+``` r
+head(data$Film)
 ```
 
 ```
-## [1]  1422 23387  1458  1659  1576  1448
+## [1] "12 Strong"         "7 Days in Entebbe" "A Quiet Place"     "A Simple Favor"   
+## [5] "A Star is Born"    "A Wrinkle in Time"
 ```
 
 
 ---
-
 ## Some Basic Functions
 
 
-```r
-summary(data[,8:11])
+``` r
+summary(data[,7:10])
 ```
 
 ```
-##      SEX               ALIVE            APPEARANCES      FIRST.APPEARANCE  
-##  Length:6896        Length:6896        Min.   :   1.00   Length:6896       
-##  Class :character   Class :character   1st Qu.:   2.00   Class :character  
-##  Mode  :character   Mode  :character   Median :   6.00   Mode  :character  
-##                                        Mean   :  23.63                     
-##                                        3rd Qu.:  15.00                     
-##                                        Max.   :3093.00                     
-##                                        NA's   :355
+##  Domestic.Gross      Foreign.Gross      Worldwide.Gross     Budget...million.
+##  Min.   :  1010385   Length:160         Min.   :1.010e+06   Min.   :  1.00   
+##  1st Qu.:  9477580   Class :character   1st Qu.:1.622e+07   1st Qu.: 10.50   
+##  Median : 32354347   Mode  :character   Median :5.294e+07   Median : 33.00   
+##  Mean   : 65923100                      Mean   :1.624e+08   Mean   : 50.99   
+##  3rd Qu.: 68929494                      3rd Qu.:1.623e+08   3rd Qu.: 62.00   
+##  Max.   :700059566                      Max.   :2.046e+09   Max.   :321.00   
+##                                                             NA's   :18
 ```
 
-```r
+``` r
 nrow(data)
 ```
 
 ```
-## [1] 6896
+## [1] 160
 ```
 
-```r
+``` r
 ncol(data)
 ```
 
 ```
-## [1] 12
+## [1] 11
 ```
+
+---
+## Some Basic Functions
+
+``` r
+table(data$Script.Type)
+```
+
+```
+## 
+##                    adaptation            adaptation, sequel 
+##                            37                             2 
+##         based on a true story based on a true story, remake 
+##                            22                             1 
+##           original screenplay                       prequel 
+##                            58                             2 
+##                        remake                   semi-sequel 
+##                             6                             1 
+##                        sequel 
+##                            31
+```
+
 
 ---
 ## Built-In Statistical Functions
 
 
-```r
-mean(data$APPEARANCES, na.rm = TRUE)
+``` r
+mean(data$Domestic.Gross, na.rm = TRUE) #na.rm removes missing values
 ```
 
 ```
-## [1] 23.62513
+## [1] 65923100
 ```
 
-```r
-sd(data$APPEARANCES, na.rm = TRUE)
-```
-
-```
-## [1] 87.37851
-```
-
-```r
-summary(data$APPEARANCES)
+``` r
+sd(data$Domestic.Gross, na.rm = TRUE)
 ```
 
 ```
-##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-##    1.00    2.00    6.00   23.63   15.00 3093.00     355
+## [1] 105900308
 ```
 
-```r
-quantile(data$APPEARANCES, c(0.025, 0.975), na.rm = TRUE) #na.rm removes missing values
+``` r
+summary(data$Domestic.Gross)
 ```
 
 ```
-##  2.5% 97.5% 
-##     1   164
+##      Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+##   1010385   9477580  32354347  65923100  68929494 700059566
+```
+
+``` r
+quantile(data$Domestic.Gross, c(0.025, 0.975), na.rm = TRUE) 
+```
+
+```
+##      2.5%     97.5% 
+##   1251400 320769577
 ```
 
 ---
@@ -770,7 +937,7 @@ Artwork by @allison_horst
 <script>var slideshow = remark.create({
 "highlightStyle": "github",
 "highlightLines": true,
-"countIncrementalSlides": false
+"countIncrementalSlides": true
 });
 if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   window.dispatchEvent(new Event('resize'));
@@ -867,6 +1034,262 @@ if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   }
   preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
 })(document);</script>
+
+<script>
+        /* Get the modal*/
+          var modalfiles = document.getElementById('modalfiles');
+        /* Get the image and insert it inside the modal - use its 'alt' text as a caption*/
+        var imgfiles = document.getElementById('imgfiles');
+          var modalImgfiles = document.getElementById('imgmodalfiles');
+          var captionTextfiles = document.getElementById('captionfiles');
+          imgfiles.onclick = function(){
+            modalfiles.style.display = 'block';
+            modalImgfiles.src = this.src;
+            captionTextfiles.innerHTML = this.alt;
+          }
+          /* When the user clicks on the modalImg, close it*/
+          modalImgfiles.onclick = function() {
+            modalfiles.style.display = 'none';
+          }
+</script>
+<script>
+        /* Get the modal*/
+          var modalpackages = document.getElementById('modalpackages');
+        /* Get the image and insert it inside the modal - use its 'alt' text as a caption*/
+        var imgpackages = document.getElementById('imgpackages');
+          var modalImgpackages = document.getElementById('imgmodalpackages');
+          var captionTextpackages = document.getElementById('captionpackages');
+          imgpackages.onclick = function(){
+            modalpackages.style.display = 'block';
+            modalImgpackages.src = this.src;
+            captionTextpackages.innerHTML = this.alt;
+          }
+          /* When the user clicks on the modalImg, close it*/
+          modalImgpackages.onclick = function() {
+            modalpackages.style.display = 'none';
+          }
+</script>
+<script>
+        /* Get the modal*/
+          var modalhelp = document.getElementById('modalhelp');
+        /* Get the image and insert it inside the modal - use its 'alt' text as a caption*/
+        var imghelp = document.getElementById('imghelp');
+          var modalImghelp = document.getElementById('imgmodalhelp');
+          var captionTexthelp = document.getElementById('captionhelp');
+          imghelp.onclick = function(){
+            modalhelp.style.display = 'block';
+            modalImghelp.src = this.src;
+            captionTexthelp.innerHTML = this.alt;
+          }
+          /* When the user clicks on the modalImg, close it*/
+          modalImghelp.onclick = function() {
+            modalhelp.style.display = 'none';
+          }
+</script>
+<script>
+        /* Get the modal*/
+          var modalfiles = document.getElementById('modalfiles');
+        /* Get the image and insert it inside the modal - use its 'alt' text as a caption*/
+        var imgfiles = document.getElementById('imgfiles');
+          var modalImgfiles = document.getElementById('imgmodalfiles');
+          var captionTextfiles = document.getElementById('captionfiles');
+          imgfiles.onclick = function(){
+            modalfiles.style.display = 'block';
+            modalImgfiles.src = this.src;
+            captionTextfiles.innerHTML = this.alt;
+          }
+          /* When the user clicks on the modalImg, close it*/
+          modalImgfiles.onclick = function() {
+            modalfiles.style.display = 'none';
+          }
+</script>
+<script>
+        /* Get the modal*/
+          var modalpackages = document.getElementById('modalpackages');
+        /* Get the image and insert it inside the modal - use its 'alt' text as a caption*/
+        var imgpackages = document.getElementById('imgpackages');
+          var modalImgpackages = document.getElementById('imgmodalpackages');
+          var captionTextpackages = document.getElementById('captionpackages');
+          imgpackages.onclick = function(){
+            modalpackages.style.display = 'block';
+            modalImgpackages.src = this.src;
+            captionTextpackages.innerHTML = this.alt;
+          }
+          /* When the user clicks on the modalImg, close it*/
+          modalImgpackages.onclick = function() {
+            modalpackages.style.display = 'none';
+          }
+</script>
+<script>
+        /* Get the modal*/
+          var modalhelp = document.getElementById('modalhelp');
+        /* Get the image and insert it inside the modal - use its 'alt' text as a caption*/
+        var imghelp = document.getElementById('imghelp');
+          var modalImghelp = document.getElementById('imgmodalhelp');
+          var captionTexthelp = document.getElementById('captionhelp');
+          imghelp.onclick = function(){
+            modalhelp.style.display = 'block';
+            modalImghelp.src = this.src;
+            captionTexthelp.innerHTML = this.alt;
+          }
+          /* When the user clicks on the modalImg, close it*/
+          modalImghelp.onclick = function() {
+            modalhelp.style.display = 'none';
+          }
+</script>
+<script>
+        /* Get the modal*/
+          var modalfiles = document.getElementById('modalfiles');
+        /* Get the image and insert it inside the modal - use its 'alt' text as a caption*/
+        var imgfiles = document.getElementById('imgfiles');
+          var modalImgfiles = document.getElementById('imgmodalfiles');
+          var captionTextfiles = document.getElementById('captionfiles');
+          imgfiles.onclick = function(){
+            modalfiles.style.display = 'block';
+            modalImgfiles.src = this.src;
+            captionTextfiles.innerHTML = this.alt;
+          }
+          /* When the user clicks on the modalImg, close it*/
+          modalImgfiles.onclick = function() {
+            modalfiles.style.display = 'none';
+          }
+</script>
+<script>
+        /* Get the modal*/
+          var modalpackages = document.getElementById('modalpackages');
+        /* Get the image and insert it inside the modal - use its 'alt' text as a caption*/
+        var imgpackages = document.getElementById('imgpackages');
+          var modalImgpackages = document.getElementById('imgmodalpackages');
+          var captionTextpackages = document.getElementById('captionpackages');
+          imgpackages.onclick = function(){
+            modalpackages.style.display = 'block';
+            modalImgpackages.src = this.src;
+            captionTextpackages.innerHTML = this.alt;
+          }
+          /* When the user clicks on the modalImg, close it*/
+          modalImgpackages.onclick = function() {
+            modalpackages.style.display = 'none';
+          }
+</script>
+<script>
+        /* Get the modal*/
+          var modalhelp = document.getElementById('modalhelp');
+        /* Get the image and insert it inside the modal - use its 'alt' text as a caption*/
+        var imghelp = document.getElementById('imghelp');
+          var modalImghelp = document.getElementById('imgmodalhelp');
+          var captionTexthelp = document.getElementById('captionhelp');
+          imghelp.onclick = function(){
+            modalhelp.style.display = 'block';
+            modalImghelp.src = this.src;
+            captionTexthelp.innerHTML = this.alt;
+          }
+          /* When the user clicks on the modalImg, close it*/
+          modalImghelp.onclick = function() {
+            modalhelp.style.display = 'none';
+          }
+</script>
+<script>
+        /* Get the modal*/
+          var modalfiles = document.getElementById('modalfiles');
+        /* Get the image and insert it inside the modal - use its 'alt' text as a caption*/
+        var imgfiles = document.getElementById('imgfiles');
+          var modalImgfiles = document.getElementById('imgmodalfiles');
+          var captionTextfiles = document.getElementById('captionfiles');
+          imgfiles.onclick = function(){
+            modalfiles.style.display = 'block';
+            modalImgfiles.src = this.src;
+            captionTextfiles.innerHTML = this.alt;
+          }
+          /* When the user clicks on the modalImg, close it*/
+          modalImgfiles.onclick = function() {
+            modalfiles.style.display = 'none';
+          }
+</script>
+<script>
+        /* Get the modal*/
+          var modalpackages = document.getElementById('modalpackages');
+        /* Get the image and insert it inside the modal - use its 'alt' text as a caption*/
+        var imgpackages = document.getElementById('imgpackages');
+          var modalImgpackages = document.getElementById('imgmodalpackages');
+          var captionTextpackages = document.getElementById('captionpackages');
+          imgpackages.onclick = function(){
+            modalpackages.style.display = 'block';
+            modalImgpackages.src = this.src;
+            captionTextpackages.innerHTML = this.alt;
+          }
+          /* When the user clicks on the modalImg, close it*/
+          modalImgpackages.onclick = function() {
+            modalpackages.style.display = 'none';
+          }
+</script>
+<script>
+        /* Get the modal*/
+          var modalhelp = document.getElementById('modalhelp');
+        /* Get the image and insert it inside the modal - use its 'alt' text as a caption*/
+        var imghelp = document.getElementById('imghelp');
+          var modalImghelp = document.getElementById('imgmodalhelp');
+          var captionTexthelp = document.getElementById('captionhelp');
+          imghelp.onclick = function(){
+            modalhelp.style.display = 'block';
+            modalImghelp.src = this.src;
+            captionTexthelp.innerHTML = this.alt;
+          }
+          /* When the user clicks on the modalImg, close it*/
+          modalImghelp.onclick = function() {
+            modalhelp.style.display = 'none';
+          }
+</script>
+<script>
+        /* Get the modal*/
+          var modalfiles = document.getElementById('modalfiles');
+        /* Get the image and insert it inside the modal - use its 'alt' text as a caption*/
+        var imgfiles = document.getElementById('imgfiles');
+          var modalImgfiles = document.getElementById('imgmodalfiles');
+          var captionTextfiles = document.getElementById('captionfiles');
+          imgfiles.onclick = function(){
+            modalfiles.style.display = 'block';
+            modalImgfiles.src = this.src;
+            captionTextfiles.innerHTML = this.alt;
+          }
+          /* When the user clicks on the modalImg, close it*/
+          modalImgfiles.onclick = function() {
+            modalfiles.style.display = 'none';
+          }
+</script>
+<script>
+        /* Get the modal*/
+          var modalpackages = document.getElementById('modalpackages');
+        /* Get the image and insert it inside the modal - use its 'alt' text as a caption*/
+        var imgpackages = document.getElementById('imgpackages');
+          var modalImgpackages = document.getElementById('imgmodalpackages');
+          var captionTextpackages = document.getElementById('captionpackages');
+          imgpackages.onclick = function(){
+            modalpackages.style.display = 'block';
+            modalImgpackages.src = this.src;
+            captionTextpackages.innerHTML = this.alt;
+          }
+          /* When the user clicks on the modalImg, close it*/
+          modalImgpackages.onclick = function() {
+            modalpackages.style.display = 'none';
+          }
+</script>
+<script>
+        /* Get the modal*/
+          var modalhelp = document.getElementById('modalhelp');
+        /* Get the image and insert it inside the modal - use its 'alt' text as a caption*/
+        var imghelp = document.getElementById('imghelp');
+          var modalImghelp = document.getElementById('imgmodalhelp');
+          var captionTexthelp = document.getElementById('captionhelp');
+          imghelp.onclick = function(){
+            modalhelp.style.display = 'block';
+            modalImghelp.src = this.src;
+            captionTexthelp.innerHTML = this.alt;
+          }
+          /* When the user clicks on the modalImg, close it*/
+          modalImghelp.onclick = function() {
+            modalhelp.style.display = 'none';
+          }
+</script>
 
 <script>
 slideshow._releaseMath = function(el) {

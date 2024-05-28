@@ -3,9 +3,9 @@
   <head>
     <title>MTH365: Introduction to Data Science!</title>
     <meta charset="utf-8" />
-    <meta name="author" content="Basic R and R Markdown" />
-    <meta name="date" content="2023-08-22" />
-    <script src="libs/header-attrs-2.23/header-attrs.js"></script>
+    <meta name="author" content="Basic R and Quarto" />
+    <meta name="date" content="2024-08-27" />
+    <script src="libs/header-attrs-2.27/header-attrs.js"></script>
     <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
   </head>
@@ -17,10 +17,10 @@ class: center, middle, inverse, title-slide
 # MTH365: Introduction to Data Science!
 ]
 .author[
-### Basic R and R Markdown
+### Basic R and Quarto
 ]
 .date[
-### August 22, 2023
+### August 27, 2024
 ]
 
 ---
@@ -31,9 +31,9 @@ class: center, middle, inverse, title-slide
 
 ## Agenda
 
-- What is R Markdown?
-- R Markdown set-up
-- Looking at an actual R Markdown Document
+- What is Quarto?
+- Quarto set-up
+- Looking at an actual Quarto Document
 
 **Notes Document**: MTH-365-Week2.Rmd
 
@@ -41,17 +41,10 @@ class: center, middle, inverse, title-slide
 ---
 ## Announcements
 
-- Introduction Questionnaire in BlueLine due **Thursday August 24 at 11:59 pm**
+- Introduction Questionnaire in BlueLine due **Thursday August 29 at 11:59 pm**
   + Should take approximately 5 minutes
 - Start Lab 1 in class on Thursday!
-  + Due **Tuesday August 29th, 2023 at 11:59 pm**
-
-**TA Information**: Kaylee Van Handel
-  - Office Hours starting next week: Tuesdays 6:30-7:30 and Wednesdays 5:00-6:00
-  - Office TBA, but she will post an announcement once she has this information
-
-
-
+  + Due **Tuesday September 3rd, 2024 at 11:59 pm**
 
 ---
 ## What do you use to write?
@@ -64,108 +57,144 @@ class: center, middle, inverse, title-slide
 How do we get your results from `R` into those documents?
 
 ---
+## Literate Prograaming
+
+A programming method where you intersperse text and code in the same document using structured text to indicate which lines are code and which lines are intended for human consumption.
+  - Use it to explain the purpose of our code and how to use it
+
+&lt;br&gt;
+
+Available Literate Programming options with R
+
+- `knitr` is primarily focused on the creation of Rnw (r no weave) files, which are essentially LaTeX files with R code inside. Rnw files are compiled into pdfs.
+- `rmarkdown` uses Rmd or Rmarkdown files, which can then be compiled into many different formats: pdf, html, markdown, Microsoft Word.
+- `quarto` uses qmd files, which are compiled into many different formats: pdf, html, markdown, Microsoft Word.
+
+
+
+
+---
 ## Knit what?
 
-- R Markdown adds (knits) `R` code into your document so that all of the files for a particular experiment are in one place.
+- Quarto adds (renders) `R` code into your document so that all of the files for a particular experiment are in one place.
 - Compiling the document also runs the `R` code, so one button press runs your statistical analysis and places it in your document.
-- Integrates `R` output with the document text so that pictures, tables, and numerical data are all depdendent on the `R` code.
-- Produces beautiful, seamless integration of statistical analysis with scientifc writing
+- Integrates `R` output with the document text so that pictures, tables, and numerical data are all dependent on the `R` code.
+- Produces beautiful, seamless integration of statistical analysis with scientific writing
+
+&lt;img src="../Week 2/images/render-process.png" width="90%" height="65%" style="display: block; margin: auto;" /&gt;
+
 
 ---
 ## Reproduceable Research
 
 - Journals often require code and data to be included in a paper submission so the analysis can be reproduced
 - Statistical analyses are often re-used for multiple similar experiments
-- We don't always comment code when we write it (though we should) - `knitr` provides context for the code by including the writeup with the code.
+- We don't always comment code when we write it (though we should) - `quarto` provides context for the code by including the writeup with the code.
 
 ---
-## What is *R* Markdown?
+## What is Quarto?
 
-* Straight from the [R Markdown home page](http://rmarkdown.rstudio.com/):
+- Allows you to "weave together narrative text and code to produce elegantly formatted output as documents, web pages, blog posts, books and more!" ([source](https://quarto.org/docs/faq/rmarkdown.html))
+- R developed *R Markdown* to create documents that include R code, and *Quarto* is their attempt to bring *R Markdown* to everyone.
+  - Developed to be multilingual, beginning with R, Python and Javascript.
 
-  - R Markdown documents are fully reproducible. Use a productive *notebook interface* to weave together narrative text and code to produce elegantly formatted output. Use multiple languages including `R`, Python, and SQL.
 
-A lot of what is presented here can be found on the [R Markdown Cheatsheet](https://www.rstudio.com/wp-content/uploads/2015/02/rmarkdown-cheatsheet.pdf). 
+Most of what we do today can be found in the [Quarto Website](https://quarto.org/docs/get-started/hello/rstudio.html) 
 
 ---
 
 ## Set-Up
 
-Install the `R Markdown` Package
-
-
-```r
-install.packages("rmarkdown")
-```
-
++ [Install Quarto](https://quarto.org/docs/get-started/)
   - This alone will allow you to create `HTML` and Word documents (if you have Word installed)
   
-If you want to create pdfs: install TinyTex
++ Install the Necessary Packages
 
+``` r
+install.packages(c("knitr", "rmarkdown", "quarto"))
+```
 
-```r
++ If you want to create pdfs (and don't have a Latex installation): install TinyTex
+
+``` r
 install.packages("tinytex")
 library(tinytex)
 install_tinytex()
 ```
 
-- [Installation Help](https://bookdown.org/yihui/rmarkdown/installation.html)
-
 ---
-## Creating a *R* Markdown Document
+## Creating a Quarto Document
 
-File -&gt; New File -&gt; R Markdown (This tells RStudio to use knitr to compile the document)
+File -&gt; New File -&gt; Quarto Document 
 
-
-&lt;img src="../Week 2/images/markdown.png" width="60%" height="40%" /&gt;
+&lt;img src="../Week 2/images/quarto.jpg" width="90%" height="65%" style="display: block; margin: auto;" /&gt;
 
 ---
 
-## Contents of a .Rmd
+## Contents of a .qmd
 
 1. An (optional) YAML header surrounded by `---s`
 2. Code chunks beginning with ````{r}`
 3. Text mixed with simple text formatting (the markdown)
 
+&lt;img src="../Week 2/images/quarto-document.png" width="90%" height="65%" style="display: block; margin: auto;" /&gt;
 
 ---
-## YAML Front Matter
+## Let's Render this document
+
+&lt;img src="../Week 2/images/quarto-run.png" width="3432" style="display: block; margin: auto;" /&gt;
+
+
+
+---
+## YAML
 
 The stuff at the top of the .Rmd file (called YAML front matter) tells **rmarkdown** what output format you want. 
 
-&lt;img src="../Week 2/images/yaml.png" width="60%" height="40%" /&gt;
+&lt;img src="../Week 2/images/yaml.png" width="60%" height="40%" style="display: block; margin: auto;" /&gt;
 
+&lt;br&gt;
 
-In this case, when you click "Knit", RStudio calls `rmarkdown::render("file.Rmd", html_document())`. You can certainly change these default values. 
+In this case, when you click "Render", RStudio calls `quarto::quarto_render("document-name.qmd", , output_format = "html")`. You can certainly change these default values. 
 
 ---
 ## What is a code chunk?
 
-In .Rmd files, you can start/end a code chunk with three back-ticks. `knitr` knows that text is R code if it is included in a chunk.
+In .qmd files, you can start/end a code chunk with three back-ticks. `quarto` knows that text is R code if it is included in a chunk.
 
 
-&lt;img src="../Week 2/images/code-chunk.png" width="2596" /&gt;
+&lt;img src="../Week 2/images/code-chunk.png" width="2120" /&gt;
 
 
-When you render your .Rmd file, R Markdown will run each code chunk and embed the results beneath the code chunk in your final report.
+When you render your .qmd file, Quarto will run each code chunk and embed the results beneath the code chunk in your final report.
 
 
 ---
 ## Create Code Chunk:
 
-&lt;img src="../Week 2/images/create-code-chunk.png" width="304" /&gt;
+.pull-left[
+Option 1:
 
+&lt;img src="../Week 2/images/create-code-chunk.png" width="70%" height="70%" /&gt;
+].pull-right[
+Option 2:
+
+- Mac: `option+command+i`
+- Windows: `control+alt+i`
+]
 ---
-## knitr Code Chunk Options
+## Code Chunk Options
 
 We may want to remove the messages (the italic text) from our R output in the pdf. Or, we might not want to show the code at all. `\(\\\)`
 
-knitr has options to give you greater control over what is shown in the compiled document. 
+There are many options to give you greater control over what is shown in the compiled document. 
 
 Let's look at these options in [the documentation](https://yihui.org/knitr/options/) 
 
 ---
-## knitr Code Chunk Options
+## Common Code Chunk Options
+
+Identified by `#|` at the beginning of the line.
 
 - eval=FALSE: don't run the code
 
@@ -180,9 +209,7 @@ Let's look at these options in [the documentation](https://yihui.org/knitr/optio
 - cache=FALSE: re-run all of the code every time.
 
 ---
-## Markdown
-
-Any writing, written using the Markup syntax 
+## Markdown: Any Writing
 
 ```
 This is a really smart sentence you wrote. 
@@ -198,15 +225,18 @@ This is a really smart sentence you wrote.
 You also emphasize *important* words. `\(\\\)`
 You can also **bold** important words
 
----
-## Run Document
+&lt;br&gt;
 
-Click `Knit`
-
-&lt;img src="../Week 2/images/KnitNotebook.png" width="1367" /&gt;
+More Markdown Basics: &lt;https://quarto.org/docs/authoring/markdown-basics.html#source-code&gt; 
 
 ---
-## Next: Go to Markdown Document in BlueLine
+## Visual Editor
+
+&lt;img src="../Week 2/images/visual-editor.png" width="2515" style="display: block; margin: auto;" /&gt;
+
+
+---
+## Next: Download Quarto Document from BlueLine
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
