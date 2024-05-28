@@ -70,6 +70,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="MTH365-Week2_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="MTH365-Week2_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 </head>
 
@@ -108,26 +110,159 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </header>
 
-<section id="quarto" class="level2">
-<h2 class="anchored" data-anchor-id="quarto">Quarto</h2>
-<p>Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <a href="https://quarto.org" class="uri">https://quarto.org</a>.</p>
+<section id="getting-started" class="level2">
+<h2 class="anchored" data-anchor-id="getting-started">Getting started</h2>
+<p>We have briefly discussed R, Rstudio and Quarto. Let’s continue to build some basic fluency in R. Today we begin with the fundamental building blocks of R and RStudio: the interface, reading in data, and basic commands.</p>
+<p>Each week, I’ll provide you with a Quarto document (like this) containing the code for in-class examples. Here’s what I suggest:</p>
+<ol type="1">
+<li>Take notes in this Quarto document. You can write anywhere in the white spaces.</li>
+<li>Run the code on your machines as we run it in class. The code “chunks” are in grey.</li>
+<li>After class, “Render” this document into an HTML, PDF, or Word (your choice) file to use later.</li>
+</ol>
+<p>Of course, you can take notes however you choose! However, this isn’t one of those courses that you can just “follow along” during. Actively taking notes and running code is the best way to learn data science!</p>
 </section>
-<section id="running-code" class="level2">
-<h2 class="anchored" data-anchor-id="running-code">Running Code</h2>
-<p>When you click the <strong>Render</strong> button a document will be generated that includes both content and the output of embedded code. You can embed code like this:</p>
+<section id="packages" class="level2">
+<h2 class="anchored" data-anchor-id="packages">Packages</h2>
+<p>Today we will work with two packages: <code>datasauRus</code> which contains the data set, and <code>tidyverse</code> which is a collection of packages for doing data analysis in a “tidy” way.</p>
+<p>Install these packages by running the following code. You can do that in a Quarto document by clicking the green arrow “Run” button. You should have installed <code>tidyverse</code> already last week.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">+</span> <span class="dv">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 2</code></pre>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#install.packages("tidyverse")</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co">#install.packages("datasauRus")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</div>
-<p>You can add options to executable code like this</p>
+<p>Another way to install the package: Click on the “Packages” tab, and click the Install button. Type the package name and click install.</p>
+<p>You only need to do this one time! Once a package is installed on your computer, you don’t need to install it again. So, make sure the code chunk is commented out before your run the whole document.</p>
+<p>Now that the packages are installed, you’ll need to load them to work with the functions and data within. You can load packages using the <code>library()</code> command.</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   3.5.1     ✔ tibble    3.2.1
+✔ lubridate 1.9.3     ✔ tidyr     1.3.1
+✔ purrr     1.0.2     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(datasauRus)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>When creating your own <code>Quarto</code> document, I recommend having a code chunk at the beginning with all the packages you plan on using.</p>
+<p><strong>Note</strong>: Your environment when you run your Quarto document is separate from the current session on your computer. Meaning, even if you have <code>tidyverse</code> loaded, you still need to included the <code>library(tidyverse)</code> command so when your document renders it knows it requires the <code>tidyverse</code> package.</p>
+</section>
+<section id="data" class="level2">
+<h2 class="anchored" data-anchor-id="data">Data</h2>
+<p>In data science, of course, we will work with data. Then, what is data? In fact, data can have multiple formats. Numbers, categories, and even text and videos are all forms of data. However, in order to analyze the data in an easy way, we usually organize the data into a data frame. For example, this is a data frame, it looks like a matrix:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"datasaurus_dozen"</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># show the first 6 rows of the data</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>In a data frame, each row is an <em>observation</em> and each column is a <em>variable</em>. Each observation should have the same number of variables. If not, we have a <em>list</em>, which we will not cover in this course.</p>
+<p>In the last class, we went through a couple of ways to extract certain variable/observation from the data frame in basic R. The data frame you’ll work with today is called <code>datasaurus_dozen</code> and it’s in the <code>datasauRus</code> package. Actually, this single data frame contains 13 datasets. The different datasets are marked by the <code>dataset</code> variable.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Extract the second observation in the data</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">#Extract the second variable in the data</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Once you extract the information, sometimes you need to save it for the later use. You can assign the extracted information to a new variable.</p>
+<p>If you run the above line, nothing will show as the result but if you check the environment, we now have a new variable called <em>x_value</em> which you can use later. For example, you can print it out below.</p>
+<section id="try-it-for-yourself" class="level3">
+<h3 class="anchored" data-anchor-id="try-it-for-yourself">Try it for yourself</h3>
+<ol type="1">
+<li>Extract the y variable from the data and assign it to a new variable</li>
+</ol>
+<ol start="2" type="1">
+<li>Extract the 100th observation from the data, assign it to a new variable and print it out. (Can I name the new variable as 100obs? or does it have to be obs100? )</li>
+</ol>
+</section>
+</section>
+<section id="basic-data-summary" class="level2">
+<h2 class="anchored" data-anchor-id="basic-data-summary">Basic data summary</h2>
+<p>Another piece of information people want to know is how many rows and how many columns does the <code>datasaurus_dozen</code> file have? What are the variables included in the data frame? To answer those questions, we can do:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Show the row number and column number</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Show the variable list</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co"># basic summary of the whole dataset</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Let’s take a look at what these datasets are. To do so we can make a <em>frequency table</em> of the dataset variable:</p>
+</section>
+<section id="demo-summary-statistics-and-data-visualization" class="level2">
+<h2 class="anchored" data-anchor-id="demo-summary-statistics-and-data-visualization">Demo: summary statistics and data visualization</h2>
+<p>Note: we will go over the functions and concepts in this section again in the next two weeks. Today’s goal is just to show you:</p>
+<ol type="1">
+<li><p>why data visualization is important and</p></li>
+<li><p>how summary statistics alone can be misleading.</p></li>
+</ol>
+<p>The original Datasaurus (<code>dino</code>) was created by Alberto Cairo in <a href="http://www.thefunctionalart.com/2016/08/download-datasaurus-never-trust-summary.html">this blog post</a>. The other Dozen were generated using simulated annealing and the process is described in the paper <em>Same Stats, Different Graphs: Generating Datasets with Varied Appearance and Identical Statistics through Simulated Annealing</em> by Justin Matejka and George Fitzmaurice. In the paper, the authors simulate a variety of datasets that have the same summary statistics as the Datasaurus but have very different distributions (visualizations).</p>
+<p>Start with the <code>datasaurus_dozen</code> and pipe it into the <code>filter</code> function to filter for observations where <code>dataset == "dino"</code>. Store the resulting filtered data frame as a new data frame called <code>dino_data</code>.</p>
+<p>There is a lot going on here, so let’s slow down and unpack it a bit. First, the pipe operator: <code>%&gt;%</code>, takes what comes before it and sends it as the first argument to what comes after it. So here, we’re saying <code>filter</code> the <code>datasaurus_dozen</code> data frame into only the observations where <code>dataset == "dino"</code>. Second, the assignment operator: <code>&lt;-</code>, assigns the name <code>dino_data</code> to the filtered data frame.</p>
+<p>Next, we need to visualize this data. We’ll use the <code>ggplot</code> function for this. Its first argument is the data you’re visualizing. Next we define the <code>aes</code>thetic mappings. In other words, the columns of the data that get mapped to certain aesthetic features of the plot, e.g.&nbsp;the <code>x</code> axis will represent the variable called <code>x</code> and the <code>y</code> axis will represent the variable called <code>y</code>. Then, we add another layer to this plot where we define which <code>geom</code>etric shapes we want to use to represent each observation in the data. In this case we want these to be points, hence <code>geom_point</code>.</p>
+<p>If this seems like a lot, it is. And we’ll learn about the philosophy of building data visualizations by layering in detail next week. For now, follow along with the code that is provided.</p>
+<p>For the second part of this exercise, we need to calculate a summary statistic: the correlation coefficient. Correlation coefficient, often referred to as <span class="math inline">\(r\)</span> in statistics, measures the linear association between two variables. You will see that some of the pairs of variables we plot do not have a linear relationship between them. This is exactly why we want to visualize first: visualize to assess the form of the relationship, and calculate <span class="math inline">\(r\)</span> only if relevant. In this case, calculating a correlation coefficient really doesn’t make sense since the relationship between <code>x</code> and <code>y</code> is definitely not linear – it’s dinosaurial!</p>
+<p>But, for illustrative purposes, let’s calculate correlation coefficient between <code>x</code> and <code>y</code>. Correlation coefficients are used to measure how strong a relationship is between two variables. There are several types of correlation coefficient, but the most popular is Pearson’s.</p>
+<p>Start with <code>dino_data</code> and calculate a summary statistic that we will call <code>r</code> as the <code>cor</code>relation between <code>x</code> and <code>y</code>.</p>
+<p>Let’s try again with the circle dataset. Plot <code>y</code> vs.&nbsp;<code>x</code> for the <code>circle</code> dataset. You can (and should) reuse code we introduced above, just replace the dataset name with the desired dataset. Then, calculate the correlation coefficient between <code>x</code> and <code>y</code> for this dataset. How does this value compare to the <code>r</code> of <code>dino</code>?</p>
+<p>Finally, let’s plot all datasets at once. In order to do this we will make use of faceting.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(datasaurus_dozen, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">color =</span> dataset)) <span class="sc">+</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> dataset, <span class="at">ncol =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a> <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="MTH365-Week2_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>And we can use the <code>group_by</code> function to generate all the summary correlation coefficients.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>datasaurus_dozen <span class="sc">%&gt;%</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(dataset) <span class="sc">%&gt;%</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">r =</span> <span class="fu">cor</span>(x, y))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 4</code></pre>
+<pre><code># A tibble: 13 × 2
+   dataset          r
+   &lt;chr&gt;        &lt;dbl&gt;
+ 1 away       -0.0641
+ 2 bullseye   -0.0686
+ 3 circle     -0.0683
+ 4 dino       -0.0645
+ 5 dots       -0.0603
+ 6 h_lines    -0.0617
+ 7 high_lines -0.0685
+ 8 slant_down -0.0690
+ 9 slant_up   -0.0686
+10 star       -0.0630
+11 v_lines    -0.0694
+12 wide_lines -0.0666
+13 x_shape    -0.0656</code></pre>
 </div>
 </div>
-<p>The <code>echo: false</code> option disables the printing of code (only output is displayed).</p>
+</section>
+<section id="render-your-work" class="level2">
+<h2 class="anchored" data-anchor-id="render-your-work">Render your work</h2>
+<p>Click “Render” at the top of your R Markdown document and see what happens!</p>
+</section>
+<section id="if-time-lets-play-with-the-code-chunk-options" class="level2">
+<h2 class="anchored" data-anchor-id="if-time-lets-play-with-the-code-chunk-options">If Time: Let’s play with the Code Chunk Options</h2>
+<p>Some Options:</p>
+<ul>
+<li><p>eval=FALSE: don’t run the code</p></li>
+<li><p>echo=FALSE: don’t show the code</p></li>
+<li><p>warning=FALSE: don’t add R’s warnings to the pdf</p></li>
+<li><p>message=FALSE: don’t show messages from R in the pdf</p></li>
+<li><p>include=FALSE: don’t include any R output in the document.</p></li>
+<li><p>cache=FALSE: re-run all of the code every time.</p></li>
+<li><p>fig.align = ‘left’, ‘right’, or ‘center’</p></li>
+</ul>
+<p>How does adding these to the code chunks change the output?</p>
+<ul>
+<li>Output each graph so they display centered on the page.</li>
+<li>Remove the message that occurs when you load in <code>tidyverse</code></li>
+</ul>
 </section>
 
 </main>

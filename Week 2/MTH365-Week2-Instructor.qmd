@@ -1,22 +1,19 @@
 ---
 title: 'Week 2 Lecture: Hello R!'
-author: 'MTH 365: Basic R and R Markdown'
-date: "August 22, 2023"
-output:
-  pdf_document: default
+author: 'MTH 365: Basic R Markdown'
+date: "August 27, 2024"
+format: html
 ---
-
-## Announcement
 
 ## Getting started
 
-We have briefly discussed R, Rstudio and RMarkdown. This week, we will continue to build some basic fluency in R. Today we begin with the fundamental building blocks of R and RStudio: the interface, reading in data, and basic commands.
+We have briefly discussed R, Rstudio and Quarto. Let's continue to build some basic fluency in R. Today we begin with the fundamental building blocks of R and RStudio: the interface, reading in data, and basic commands.
 
-Each week, I'll provide you with an RMarkdown document (like this) containing the code for in-class examples. Here's what I suggest:
+Each week, I'll provide you with a Quarto document (like this) containing the code for in-class examples. Here's what I suggest:
 
-1. Take notes in this RMarkdown document. You can write anywhere in the white spaces.
+1. Take notes in this Quarto document. You can write anywhere in the white spaces.
 2. Run the code on your machines as we run it in class. The code "chunks" are in grey.
-3. After class, "Knit" this document into an HTML, PDF, or Word (your choice) file to use later.
+3. After class, "Render" this document into an HTML, PDF, or Word (your choice) file to use later.
 
 Of course, you can take notes however you choose! However, this isn't one of those courses that you can just "follow along" during. Actively taking notes and running code is the best way to learn data science!
 
@@ -24,7 +21,7 @@ Of course, you can take notes however you choose! However, this isn't one of tho
 
 Today we will work with two packages: `datasauRus` which contains the data set, and `tidyverse` which is a collection of packages for doing data analysis in a "tidy" way.
 
-Install these packages by running the following code. You can do that in a R Markdown document by clicking the green arrow "Run" button. You should have installed `tidyverse` already last week.
+Install these packages by running the following code. You can do that in a Quarto document by clicking the green arrow "Run" button. You should have installed `tidyverse` already last week.
 
 ```{r}
 #install.packages("tidyverse")
@@ -37,12 +34,14 @@ You only need to do this one time! Once a package is installed on your computer,
 
 Now that the packages are installed, you'll need to load them to work with the functions and data within. You can load packages using the `library()` command.
 
-```{r, message=FALSE}
+```{r}
 library(tidyverse) 
 library(datasauRus)
 ```
 
-When creating your own `R Markdown` document, I recommend having a code chunk at the beginning with all the packages you plan on using. 
+When creating your own `Quarto` document, I recommend having a code chunk at the beginning with all the packages you plan on using. 
+
+**Note**: Your environment when you run your Quarto document is separate from the current session on your computer. Meaning, even if you have `tidyverse` loaded, you still need to included the `library(tidyverse)` command so when your document renders it knows it requires the `tidyverse` package. 
 
 ## Data
 
@@ -53,23 +52,21 @@ data("datasaurus_dozen")
 
 # show the first 6 rows of the data
 head(datasaurus_dozen)
-
 ```
 In a data frame, each row is an *observation* and each column is a *variable*. Each observation should have the same number of variables. If not, we have a *list*, which we will not cover in this course. 
 
 In the last class, we went through a couple of ways to extract certain variable/observation from the data frame in basic R. The data frame you'll work with today is called `datasaurus_dozen` and it's in the `datasauRus` package. Actually, this single data frame contains 13 datasets. The different datasets are marked by the `dataset` variable.
 
-- If it's confusing that the data frame is called `datasaurus_dozen` when it contains 13 datasets, you're not alone! Have you heard of a baker's dozen?
-
-```{r, eval=FALSE}
+```{r}
 #Extract the second observation in the data
 
 datasaurus_dozen[2,]
 
 #Extract the second variable in the data
-datasaurus_dozen[,2] #OR
-datasaurus_dozen$x
 
+datasaurus_dozen[,2]
+#or
+datasaurus_dozen$x
 ```
 
 Once you extract the information, sometimes you need to save it for the later use. You can assign the extracted information to a new variable. 
@@ -80,7 +77,7 @@ x_value <- datasaurus_dozen$x
 
 If you run the above line, nothing will show as the result but if you check the environment, we now have a new variable called *x_value* which you can use later. For example, you can print it out below. 
 
-```{r, eval=FALSE}
+```{r}
 x_value
 ```
 
@@ -95,10 +92,7 @@ y_value <- datasaurus_dozen$y
 2. Extract the 100th observation from the data, assign it to a new variable and print it out. (Can I name the new variable as 100obs? or does it have to be obs100? )
 
 ```{r}
-
 obs100 <- datasaurus_dozen[100,]
-obs100
-
 ```
 
 ## Basic data summary
@@ -108,31 +102,23 @@ Another piece of information people want to know is how many rows and how many c
 ```{r}
 # Show the row number and column number
 dim(datasaurus_dozen)
-
-# OR
 nrow(datasaurus_dozen)
 ncol(datasaurus_dozen)
-
 # Show the variable list
-
 glimpse(datasaurus_dozen)
-
 str(datasaurus_dozen)
-
-# basic summary of whole dataset
+# basic summary of the whole dataset
 summary(datasaurus_dozen)
-
 ```
 
 Let's take a look at what these datasets are. To do so we can make a *frequency table* of the dataset variable:
 
 ```{r}
-
 count(datasaurus_dozen, dataset)
-
-#count() lets you quickly count the unique values of one or more variables: 
-
+#or
+table(datasaurus_dozen$dataset)
 ```
+
 
 ## Demo: summary statistics and data visualization
 
@@ -147,8 +133,7 @@ The original Datasaurus (`dino`) was created by Alberto Cairo in [this blog post
 Start with the `datasaurus_dozen` and pipe it into the `filter` function to filter for observations where `dataset == "dino"`. Store the resulting filtered data frame as a new data frame called `dino_data`.
 
 ```{r}
-
-dino_data <- datasaurus_dozen %>% 
+dino_data <- datasaurus_dozen %>%
   filter(dataset == "dino")
 ```
 
@@ -156,10 +141,10 @@ There is a lot going on here, so let's slow down and unpack it a bit. First, the
 
 Next, we need to visualize this data. We'll use the `ggplot` function for this. Its first argument is the data you're visualizing. Next we define the `aes`thetic mappings. In other words, the columns of the data that get mapped to certain aesthetic features of the plot, e.g. the `x` axis will represent the variable called `x` and the `y` axis will represent the variable called `y`. Then, we add another layer to this plot where we define which `geom`etric shapes we want to use to represent each observation in the data. In this case we want these to be points, hence `geom_point`.
 
-```{r fig.fullwidth=TRUE}
-
-dino_data %>% ggplot(aes(x=x, y=y)) + geom_point()
-
+```{r}
+dino_data %>%
+  ggplot(aes(x=x, y=y)) +
+  geom_point()
 ```
 
 If this seems like a lot, it is. And we'll learn about the philosophy of building data visualizations by layering in detail next week. For now, follow along with the code that is provided.
@@ -171,23 +156,22 @@ But, for illustrative purposes, let's calculate correlation coefficient between 
 Start with `dino_data` and calculate a summary statistic that we will call `r` as the `cor`relation between `x` and `y`.
 
 ```{r}
-
-dino_data %>% summarise(r = cor(x, y))
-
+dino_data %>%
+  summarise(r = cor(x,y))
 ```
 
 Let's try again with the circle dataset.  Plot `y` vs. `x` for the `circle` dataset. You can (and should) reuse code we introduced above, just replace the dataset name with the desired dataset. Then, calculate the correlation coefficient between `x` and `y` for this dataset. How does this value compare to the `r` of `dino`?
 
 ```{r}
-
-circle <- datasaurus_dozen %>% 
+circle <- datasaurus_dozen %>%
   filter(dataset == "circle")
 
+circle %>%
+  ggplot(aes(x=x, y=y)) +
+  geom_point()
 
-circle %>% ggplot(aes(x=x, y=y)) + geom_point()
-
-circle %>% summarise(r = cor(x, y))
-
+circle %>%
+  summarise(r = cor(x,y))
 ```
 
 Finally, let's plot all datasets at once. In order to do this we will make use of faceting.
@@ -207,113 +191,10 @@ datasaurus_dozen %>%
   summarize(r = cor(x, y))
 ```
 
-## Other things you need to know
 
-Even though tidyverse and ggplot are the most commonly use things in the R world right now. There are other things you should know.
+## Render your work
 
-One of these is two important functions: if and for. These are not tidyverse functions that use for the data cleaning and visualization but they are pretty useful, as we may want to control when and how particular parts of our code are executed. We can do that using control structures like if statements and for loops.
-
-Control structures are blocks of code that determine how other sections of code are executed based on setting a condition. They also tell R what to do when that condition has met or has not been met.
-
-*if* function returns two results, True or False. If the condition is true, do the things in the curly brackets
-
-```{r}
-# if(condition){
-#    do something 
-# }
-
-if(datasaurus_dozen[1,2] > 50){
-  print("x value is larger than 50")
-}
-
-if(datasaurus_dozen[1,2] > 60){
-  print("x value is larger than 60")}
-
-if(datasaurus_dozen[1,2] > 60){
-  print("x value is larger than 60")} else{
-    print("x value is not larger than 60")
-  }
-
-```
-
-However, if statement can only take one element. It cannot take all observations
-
-```{r, eval = FALSE}
-
-if(datasaurus_dozen[,2] > 60){
-  print("x value is larger than 60")
-}
-
-```
-
-If you want to iterate all observations, you have to use the *for loop*. A *for loop* repeats a chunk of code multiple times for each element within an object.
-
-```{r}
-#for(iterator){
-#  do someting for each iterator
-#}
-
-#we usually use i,j,k to represent the iterator
-
-
-for(i in 1:10){
-  print(i)
-}
-
-for(k in 1:ncol(datasaurus_dozen)){
-  print(k)
-}
-
-
-```
-
-Let's move to a higher level to combine them. Suppose I want to calculate how many x values are larger than 50. (There are much easier ways to do that in tidyverse but let's practice the if and for function a little bit)
-
-```{r}
-# The general logic is that I use for loop to go through each x value and if it is larger than 50, I count one, otherwise I skip it. # Hint: usually you will need a counter before the for loop.
-
-counter = 0
-for(i in 1: nrow(datasaurus_dozen)){
-  if(datasaurus_dozen[i, 2] > 50){
-    counter = counter + 1
-  }
-}
-counter
-
-```
-
-### Try it for yourself
-
-Now it is your turn. Write a if + for loop combination that calculate how many observations belong to the *star* dataset. Check your answer with the previous section. Even though copy and paste is an easy way to start, I do recommend to type the answer by yourself so that you can get a better understanding of coding logic.  
-
-```{r}
-counter = 0
-for(i in 1: nrow(datasaurus_dozen)){
-  if(datasaurus_dozen[i, 1] == "star"){
-    counter = counter + 1
-  }
-}
-counter
-```
-
-If you have more time, try to replicate the demo in previous section for the star data (or any one you are interested in). 
-
-```{r}
-
-star_data = datasaurus_dozen %>% 
-  filter(dataset == "star")
-ggplot(data = star_data, mapping = aes(x = x, y = y)) + geom_point()
-star_data %>%
-  summarize(r = cor(x, y))
-
-```
-
-
-[More information on if statements and for loops in R](https://www.r-bloggers.com/2019/06/how-to-use-if-else-statements-and-loops-in-r/)
-
-## Knit your work
-
-Click "Knit" at the top of your R Markdown document and see what happens!
+Click "Render" at the top of your R Markdown document and see what happens!
 
 ## If Time: Let's play with the Code Chunk Options
 
@@ -331,4 +212,14 @@ Some Options:
 
 - cache=FALSE: re-run all of the code every time.
 
+- fig.align = 'left', 'right', or 'center'
+
 How does adding these to the code chunks change the output?
+
+  + Output each graph so they display centered on the page.
+  + Remove the message that occurs when you load in `tidyverse`
+
+
+
+
+

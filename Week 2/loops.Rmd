@@ -1,0 +1,167 @@
+---
+title: 'Loops'
+author: 'MTH 365: Basic R Markdown'
+date: "August 22, 2023"
+output:
+  html_document: default
+---
+
+## Other things you need to know
+
+Even though tidyverse and ggplot are the most commonly use things in the R world right now. There are other things you should know.
+
+One of these is two important functions: if and for. These are not tidyverse functions that use for the data cleaning and visualization but they are pretty useful, as we may want to control when and how particular parts of our code are executed. We can do that using control structures like if statements and for loops.
+
+Control structures are blocks of code that determine how other sections of code are executed based on setting a condition. They also tell R what to do when that condition has met or has not been met.
+
+*if* function returns two results, True or False. If the condition is true, do the things in the curly brackets
+
+```{r}
+# if(condition){
+#    do something 
+# }
+
+```
+
+However, `if` statements can only take one element. It cannot take all observations
+
+```{r, eval = FALSE}
+
+```
+
+If you want to iterate all observations, you have to use the *for loop*. A *for loop* repeats a chunk of code multiple times for each element within an object.
+
+```{r}
+#for(iterator){
+#  do someting for each iterator
+#}
+
+#we usually use i,j,k to represent the iterator
+```
+
+Let's move to a higher level to combine them. Suppose I want to calculate how many x values are larger than 50. (There are much easier ways to do that in tidyverse but let's practice the if and for function a little bit)
+
+```{r}
+# The general logic is that I use for loop to go through each x value and if it is larger than 50, I count one, otherwise I skip it. # Hint: usually you will need a counter before the for loop.
+
+```
+
+### Try it for yourself
+
+Now it is your turn. Write a if + for loop combination that calculate how many observations belong to the *star* dataset. Check your answer with the previous section. Even though copy and paste is an easy way to start, I do recommend to type the answer by yourself so that you can get a better understanding of coding logic.  
+
+```{r}
+
+```
+
+If you have more time, try to replicate the demo in previous section for the star data (or any one you are interested in). 
+
+```{r}
+
+```
+
+
+[More information on if statements and for loops in R](https://www.r-bloggers.com/2019/06/how-to-use-if-else-statements-and-loops-in-r/)
+
+## Other things you need to know
+
+Even though tidyverse and ggplot are the most commonly use things in the R world right now. There are other things you should know.
+
+One of these is two important functions: if and for. These are not tidyverse functions that use for the data cleaning and visualization but they are pretty useful, as we may want to control when and how particular parts of our code are executed. We can do that using control structures like if statements and for loops.
+
+Control structures are blocks of code that determine how other sections of code are executed based on setting a condition. They also tell R what to do when that condition has met or has not been met.
+
+*if* function returns two results, True or False. If the condition is true, do the things in the curly brackets
+
+```{r}
+# if(condition){
+#    do something 
+# }
+
+if(datasaurus_dozen[1,2] > 50){
+  print("x value is larger than 50")
+}
+
+if(datasaurus_dozen[1,2] > 60){
+  print("x value is larger than 60")}
+
+if(datasaurus_dozen[1,2] > 60){
+  print("x value is larger than 60")} else{
+    print("x value is not larger than 60")
+  }
+
+```
+
+However, if statement can only take one element. It cannot take all observations
+
+```{r, eval = FALSE}
+
+if(datasaurus_dozen[,2] > 60){
+  print("x value is larger than 60")
+}
+
+```
+
+If you want to iterate all observations, you have to use the *for loop*. A *for loop* repeats a chunk of code multiple times for each element within an object.
+
+```{r}
+#for(iterator){
+#  do someting for each iterator
+#}
+
+#we usually use i,j,k to represent the iterator
+
+
+for(i in 1:10){
+  print(i)
+}
+
+for(k in 1:ncol(datasaurus_dozen)){
+  print(k)
+}
+
+
+```
+
+Let's move to a higher level to combine them. Suppose I want to calculate how many x values are larger than 50. (There are much easier ways to do that in tidyverse but let's practice the if and for function a little bit)
+
+```{r}
+# The general logic is that I use for loop to go through each x value and if it is larger than 50, I count one, otherwise I skip it. # Hint: usually you will need a counter before the for loop.
+
+counter = 0
+for(i in 1: nrow(datasaurus_dozen)){
+  if(datasaurus_dozen[i, 2] > 50){
+    counter = counter + 1
+  }
+}
+counter
+
+```
+
+### Try it for yourself
+
+Now it is your turn. Write a if + for loop combination that calculate how many observations belong to the *star* dataset. Check your answer with the previous section. Even though copy and paste is an easy way to start, I do recommend to type the answer by yourself so that you can get a better understanding of coding logic.  
+
+```{r}
+counter = 0
+for(i in 1: nrow(datasaurus_dozen)){
+  if(datasaurus_dozen[i, 1] == "star"){
+    counter = counter + 1
+  }
+}
+counter
+```
+
+If you have more time, try to replicate the demo in previous section for the star data (or any one you are interested in). 
+
+```{r}
+
+star_data = datasaurus_dozen %>% 
+  filter(dataset == "star")
+ggplot(data = star_data, mapping = aes(x = x, y = y)) + geom_point()
+star_data %>%
+  summarize(r = cor(x, y))
+
+```
+
+
