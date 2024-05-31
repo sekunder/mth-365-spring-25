@@ -1,7 +1,7 @@
 ---
 title: "MTH365: Introduction to Data Science"
 author: "ggplot2"
-date: "August 29, 2023"
+date: "September 3, 2024"
 output: 
   xaringan::moon_reader:
     lib_dir: libs
@@ -40,9 +40,6 @@ knit_hooks$set(output = function(x, options) {
 
 ---
 ## Announcements
-
-- Lab 2 on Thursday
-- Will try to have Lab 1 graded by the end of the week
 
 
 ---

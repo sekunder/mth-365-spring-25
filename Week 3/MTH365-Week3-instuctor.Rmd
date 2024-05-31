@@ -3,7 +3,6 @@ title: 'Week 3: Data Visualization'
 author: 'MTH 365: Introduction to Data Science'
 date: "`r format(Sys.time(), '%B %d, %Y')`"
 output:
-  html_document: default
   pdf_document: default
 ---
 
@@ -46,7 +45,7 @@ Another way to do this:
 See ?read.csv for more information about this function
 
 ```{r}
-hate_crimes <- read.csv("../data/hate_crimes.csv")
+hate_crimes <- read.csv("./data/hate_crimes.csv")
 glimpse(hate_crimes)
 head(hate_crimes)
 ```
@@ -79,7 +78,12 @@ By value type:
 
 ## Type of plots
 
-#### 1. Visualize one continous variable, usually for the response variable using histograms and density plots
+#### 1. Visualize one continous variable.
+
+Usually for the response variable using histograms and density plots
+
+
+#### (a) Histograms
 
 ```{r}
 ggplot(hate_crimes, aes(x=median_income)) +
@@ -89,6 +93,8 @@ ggplot(hate_crimes, aes(x=median_income)) +
   geom_histogram(bins = 10)
 ```
 
+#### (b) Density Plots
+
 ```{r}
 ggplot(hate_crimes, aes(x=median_income)) +
   geom_density()
@@ -97,6 +103,17 @@ ggplot(hate_crimes, aes(x=median_income)) +
   geom_density(fill = "blue", alpha = 0.5)
 ```
 
+#### (c) Box Plots
+
+What is the difference between box-plot and histogram/density plot? Box-plot shows the median but not the distribution. 
+
+```{r}
+ggplot(hate_crimes, aes(x=median_income)) +
+  geom_boxplot()
+
+ggplot(hate_crimes, aes(y=median_income)) +
+  geom_boxplot()
+```
 
 #### 2. Visualize one categorical variable, usually for the response variable using a bar-plot 
 
@@ -109,11 +126,13 @@ ggplot(hate_crimes, aes(x=region)) +
   coord_flip()
 ```
 
-#### 3. Visualize two continous variables. Focus on showing the relation between them. Can be response variable + explanatroy variable. Can also be explanatory variable + explanatory variable.
+#### 3. Visualize two continous variables. 
+
+Focus on showing the relation between them. Can be response variable + explanatroy variable. Can also be explanatory variable + explanatory variable.
 
 #### (a) Scatterplots
 
-```{r}
+```{r, fig.align='center'}
 ggplot(hate_crimes, aes(x=median_income, y=hate_crimes_fbi)) +
   geom_point()
 
@@ -121,7 +140,9 @@ ggplot(hate_crimes, aes(x=median_income, y=hate_crimes_fbi)) +
   geom_text(aes(label=state))
 ```
 
-#### (b) Line plots and Smooth Line Plots to connect the points in the scatterplot. The Smooth Line Plots help show the trend due to smoothness
+#### (b) Line plots and Smooth Line Plots to connect the points in the scatterplot. 
+
+The Smooth Line Plots help show the trend due to smoothness
 
 ```{r}
 ggplot(hate_crimes, aes(x=median_income, y=hate_crimes_fbi)) + 
@@ -132,17 +153,66 @@ ggplot(hate_crimes, aes(x=median_income, y=hate_crimes_fbi)) +
 ```
 
 
-#### 4. Visualize one continous variable using a box-plot
+## 5. Visualize one continuous variable and one categorical variable (Multiple groups)
 
-What is the difference between box-plot and histogram/density plot? Box-plot shows the median but not the distribution. 
+Sometimes we want to compare the variable(s) across multiple groups. eg: compare median income across different region. Which plots can compare multiple group?
 
-```{r}
-ggplot(hate_crimes, aes(x=median_income)) +
-  geom_boxplot()
+Theses are called side-by-side plots. 
 
-ggplot(hate_crimes, aes(y=median_income)) +
+```{r, fig.align='center'}
+ggplot(hate_crimes, aes(x=median_income, group = region)) +
+  geom_density()
+
+ggplot(hate_crimes, aes(y=median_income, group = region)) +
   geom_boxplot()
 ```
+
+Wait, how can I know which group is which group?
+
+#### Include options like color and size
+
+```{r, fig.align='center'}
+ggplot(hate_crimes, aes(y=median_income, x = region)) +
+  geom_boxplot()
+
+ggplot(hate_crimes, aes(y=median_income, group = region)) +
+  geom_boxplot(aes(color = region))
+
+ggplot(hate_crimes, aes(x=median_income, group = region)) +
+  geom_density(aes(color = region))
+
+ggplot(hate_crimes, aes(x=median_income, y=hate_crimes_fbi, group = region)) +
+  geom_point(aes(color = region))
+
+ggplot(hate_crimes, aes(x=median_income, y=hate_crimes_fbi, group = region)) +
+  geom_point(aes(color = region, size = unemployment))
+```
+
+#### Adding plot title and changing axis titles
+
+Add x-axis, y-axis labels and title
+
+```{r}
+ggplot(hate_crimes, aes(x=gini_index, y=hate_crimes_fbi)) +
+  geom_point(aes(color=region, size=unemployment)) + 
+  xlab('Gini Index') + 
+  ylab('Hate Crimes (FBI, Sept. 2016)') +
+  ggtitle('The relation between Gini Index and Hate Crime rate in 2016')
+```
+
+#### Faceting by groups
+
+Instead of putting all groups information into one page, you can do by each panel.
+
+```{r}
+ggplot(hate_crimes, aes(x=gini_index, y=hate_crimes_fbi)) +
+  geom_point(aes(color=region, size=unemployment)) + 
+  xlab('Gini Index') + 
+  ylab('Hate Crimes (FBI, Sept. 2016)') + 
+  ggtitle('The relation between Gini Index and Hate Crime rate in 2016')+
+  facet_wrap(~region, nrow=1)
+```
+
 
 #### Try it for yourself
 
@@ -167,74 +237,14 @@ ggplot(hate_crimes, aes(y=unemployment)) +
   geom_boxplot()
 ```
 
-## Multiple groups
-
-What if we want to visualize one continuous variable and one categorical variable? Sometimes we want to compare the variable(s) across multiple groups. eg: compare median income across different region. Which plots can compare multiple group?
-
-Theses are called side-by-side plots. 
-
-```{r}
-ggplot(hate_crimes, aes(x=median_income, group = region)) +
-  geom_density()
-
-ggplot(hate_crimes, aes(y=median_income, group = region)) +
-  geom_boxplot()
-```
-
-Wait, how can I know which group is which group?
-
-## Include options like color and size
-
-```{r}
-ggplot(hate_crimes, aes(y=median_income, x = region)) +
-  geom_boxplot()
-
-ggplot(hate_crimes, aes(y=median_income, group = region)) +
-  geom_boxplot(aes(color = region))
-
-ggplot(hate_crimes, aes(x=median_income, group = region)) +
-  geom_density(aes(color = region))
-
-ggplot(hate_crimes, aes(x=median_income, y=hate_crimes_fbi, group = region)) +
-  geom_point(aes(color = region))
-
-ggplot(hate_crimes, aes(x=median_income, y=hate_crimes_fbi, group = region)) +
-  geom_point(aes(color = region, size = unemployment))
-```
-
-## Other options
-
-Add x-axis, y-axis labels and title
-
-```{r}
-ggplot(hate_crimes, aes(x=gini_index, y=hate_crimes_fbi)) +
-  geom_point(aes(color=region, size=unemployment)) + 
-  xlab('Gini Index') + 
-  ylab('Hate Crimes (FBI, Sept. 2016)') +
-  ggtitle('The relation between Gini Index and Hate Crime rate in 2016')
-```
-
-Instead of putting all groups information into one page, you can do by each panel.
-
-```{r}
-ggplot(hate_crimes, aes(x=gini_index, y=hate_crimes_fbi)) +
-  geom_point(aes(color=region, size=unemployment)) + 
-  xlab('Gini Index') + 
-  ylab('Hate Crimes (FBI, Sept. 2016)') + 
-  ggtitle('The relation between Gini Index and Hate Crime rate in 2016')+
-  facet_wrap(~region, nrow=1)
-```
-
-### Try it for yourself
-
-1. Show the unemployment rate across different region. Use color to indicate different regions.
+4. Show the unemployment rate across different region. Use color to indicate different regions.
 
 ```{r}
 ggplot(hate_crimes, aes(y = unemployment, x = region)) + 
   geom_boxplot(aes(color = region))
 ```
 
-2. Show the relation between unemployment rate and FBI hate crime rate. Use size to indicate gini index. Make sure to include axis labels and title. 
+5. Show the relation between unemployment rate and FBI hate crime rate. Use size to indicate gini index. Make sure to include axis labels and title. 
 
 ```{r}
 ggplot(hate_crimes, aes(x=unemployment, y=hate_crimes_fbi)) +
@@ -244,7 +254,7 @@ ggplot(hate_crimes, aes(x=unemployment, y=hate_crimes_fbi)) +
   ggtitle('The relation between unemplyment rate and Hate Crime rate in 2016')
 ```
 
-3. Plot the distribution of gini index and put differnet region on different panel. 
+6. Plot the distribution of gini index and put differnet region on different panel. 
 
 ```{r}
 ggplot(hate_crimes, aes(x = gini_index)) + 
@@ -254,7 +264,7 @@ ggplot(hate_crimes, aes(x = gini_index)) +
 
 ## Weather patterns
 
-The data set `Weather` contains data on weather-related variables for several world cities.
+(a). The data set `Weather` contains data on weather-related variables for several world cities.
 
 ```{r}
 #install.packages(mosaicData)
@@ -263,7 +273,7 @@ data(Weather)
 glimpse(Weather)
 ```
 
-We want to study the average temperature. First, we want to see its distribution.
+(b). We want to study the average temperature. First, we want to see its distribution. How would we do this?
 
 ```{r}
 ggplot(Weather, aes(x=avg_temp)) +
@@ -276,7 +286,7 @@ ggplot(Weather, aes(y=avg_temp)) +
   geom_boxplot()
 ```
 
-The box-plot of average temperature across by different cities. 
+(c). Next, we want to study the distribution of average temperature across different cities. How would we do this?
 
 ```{r}
 ggplot(Weather, aes(y=avg_temp, group=city)) + 
@@ -289,21 +299,21 @@ ggplot(Weather, aes(y=avg_temp, x = city, group=city)) +
   geom_boxplot(aes(color=city)) + theme(legend.position = "none")
 ```
 
-The average temperature may be related to date. How to show the relation between temperature and date?
+(d). The average temperature may be related to date. How to show the relation between temperature and date?
 
 ```{r}
 ggplot(Weather, aes(x=date, y=avg_temp)) +
   geom_point()
 ```
 
-Maybe different city has totally different trend on average temperature. 
+(e). Maybe different city has totally different trend on average temperature (ie. relationship between temperature and date grouped by city). 
 
 ```{r}
 ggplot(Weather, aes(x=date, y=avg_temp)) +
   geom_point(aes(color=city))
 ```
 
-## Weather patterns in Beijing
+(f). What if we only care about one city? Show the relationship between temperature and date for Beijing only.
 
 ```{r}
 Beijing <- Weather %>% filter(city=='Beijing')
@@ -320,9 +330,7 @@ ggplot(Beijing, aes(x=date, y=avg_temp)) +
 ```
 
 
-## Weather by month
-
-Instead of the date, we can also use the month. If I want to show the relation between month and temperature. 
+(g). Instead of the date, we can also use the month. Show the relationship between month and temperature (for Beijing). 
 
 ```{r}
 ggplot(Beijing, aes(y=avg_temp, x = month)) + 
@@ -331,6 +339,9 @@ ggplot(Beijing, aes(y=avg_temp, x = month)) +
 ggplot(Beijing, aes(y=avg_temp, x = as.factor(month))) + 
   geom_point()
 ```
+
+
+(h). Show the distribution of average temperature for the Beijing data set by month.
 
 ```{r}
 ggplot(Beijing, aes(x=avg_temp)) + 
@@ -344,31 +355,10 @@ ggplot(Beijing, aes(x=avg_temp, group=month)) +
   facet_wrap(~month, nrow=3)
 ```
 
-We can also use the lowest temperature and highest temperature, instead of the average. 
+(i). Show the relationship between the low temperature and the high temperature colored by month
 
 ```{r}
 ggplot(Beijing, aes(x=low_temp, y=high_temp)) +
   geom_point(aes(color=as.factor(month)))
 ```
 
-## Weather events
-
-What else we can explore? How about events?
-
-```{r}
-ggplot(Beijing, aes(x=date, y=avg_temp)) +
-  geom_point(aes(color=events))
-```
-
-```{r}
-ggplot(Beijing, aes(x=events)) +
-  geom_bar() +
-  coord_flip()
-```
-
-```{r}
-ggplot(Beijing, aes(x=events)) +
-  geom_bar() +
-  coord_flip() +
-  facet_wrap(~year, nrow=2)
-```

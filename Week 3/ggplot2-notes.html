@@ -4,8 +4,8 @@
     <title>MTH365: Introduction to Data Science</title>
     <meta charset="utf-8" />
     <meta name="author" content="ggplot2" />
-    <meta name="date" content="2023-08-29" />
-    <script src="libs/header-attrs-2.23/header-attrs.js"></script>
+    <meta name="date" content="2024-09-03" />
+    <script src="libs/header-attrs-2.27/header-attrs.js"></script>
     <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
   </head>
@@ -20,7 +20,7 @@ class: center, middle, inverse, title-slide
 ### ggplot2
 ]
 .date[
-### August 29, 2023
+### September 3, 2024
 ]
 
 ---
@@ -37,9 +37,6 @@ class: center, middle, inverse, title-slide
 
 ---
 ## Announcements
-
-- Lab 2 on Thursday
-- Will try to have Lab 1 graded by the end of the week
 
 
 ---
@@ -142,7 +139,7 @@ A plot consists of several mostly independent specifications:
 ## Let's Build a Graph!
 
 
-```r
+``` r
 library(tidyverse)
 head(diamonds)
 ```
@@ -163,7 +160,7 @@ head(diamonds)
 ## We Begin with the Data
 
 
-```r
+``` r
 *ggplot(data=diamonds)
 ```
 
@@ -173,7 +170,7 @@ head(diamonds)
 ## Then we specify the aesthetic mappings
 
 
-```r
+``` r
 *ggplot(data=diamonds, aes(x=carat, y = price))
 ```
 
@@ -183,7 +180,7 @@ head(diamonds)
 ## Then we choose a geom
 
 
-```r
+``` r
 ggplot(data=diamonds, aes(x=carat, y = price)) +
 * geom_point()
 ```
@@ -194,7 +191,7 @@ ggplot(data=diamonds, aes(x=carat, y = price)) +
 ## We can then add an aesthetic
 
 
-```r
+``` r
 ggplot(data = diamonds, aes(x = carat, y = price)) +
 *   geom_point(aes(colour = cut))
 ```
@@ -204,7 +201,7 @@ ggplot(data = diamonds, aes(x = carat, y = price)) +
 ## And add another layer
 
 
-```r
+``` r
 ggplot(data = diamonds, aes(x = carat, y = price)) +
     geom_point(aes(colour = cut)) +
 *   geom_smooth()
@@ -221,7 +218,7 @@ ggplot(data = diamonds, aes(x = carat, y = price)) +
 ## Mapping aesthetics vs setting aesthetics
 
 
-```r
+``` r
 ggplot(data = diamonds, aes(x = carat, y = price) +
 *   geom_point(aes(colour = cut), size = 2, alpha = .5) +
 *   geom_smooth(aes(fill = cut), colour = "lightgrey")
@@ -238,7 +235,7 @@ ggplot(data = diamonds, aes(x = carat, y = price) +
 ## Can Facet
 
 
-```r
+``` r
 ggplot(data = diamonds, aes(x = carat, y = price)) +
     geom_point(aes(colour = cut), size = 2, alpha = .5) +
     geom_smooth(aes(fill = cut), colour = "lightgrey") +
