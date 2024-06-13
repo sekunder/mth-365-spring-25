@@ -1,21 +1,25 @@
 ---
 title: "MTH365: Introduction to Data Science"
-author: "Graphical Perception"
-date: "September 12, 2023"
+author: "Data Communication and Ethics"
+date: "September 17, 2024"
 output: 
   xaringan::moon_reader:
     lib_dir: libs
+    seal: false
+    css: ["default", "metropolis-fonts", "modal.css", "sizeformat.css"]
+    includes:
+      after_body:
+        "js-addins.html"
     nature:
       highlightStyle: github
       highlightLines: true
-      countIncrementalSlides: false
+      countIncrementalSlides: true
 ---
 
 ```{r echo=FALSE, message=FALSE, warning = FALSE}
 library(tidyverse)
 library(knitr)
 library(RColorBrewer)
-
 
 hook_output = knit_hooks$get('output')
 knit_hooks$set(output = function(x, options) {
@@ -31,24 +35,89 @@ knit_hooks$set(output = function(x, options) {
 
 ```
 
+```{r, include = F, eval = T, cache = T}
+clean_file_name <- function(x) {
+  basename(x) %>% str_remove("\\..*?$") %>% str_remove_all("[^[A-z0-9_]]")
+}
+img_modal <- function(src, alt = "", id = clean_file_name(src), other = "") {
+  
+  other_arg <- paste0("'", as.character(other), "'") %>%
+    paste(names(other), ., sep = "=") %>%
+    paste(collapse = " ")
+  
+  js <- glue::glue("<script>
+        /* Get the modal*/
+          var modal{id} = document.getElementById('modal{id}');
+        /* Get the image and insert it inside the modal - use its 'alt' text as a caption*/
+        var img{id} = document.getElementById('img{id}');
+          var modalImg{id} = document.getElementById('imgmodal{id}');
+          var captionText{id} = document.getElementById('caption{id}');
+          img{id}.onclick = function(){{
+            modal{id}.style.display = 'block';
+            modalImg{id}.src = this.src;
+            captionText{id}.innerHTML = this.alt;
+          }}
+          /* When the user clicks on the modalImg, close it*/
+          modalImg{id}.onclick = function() {{
+            modal{id}.style.display = 'none';
+          }}
+</script>")
+  
+  html <- glue::glue(
+     " <!-- Trigger the Modal -->
+<img id='img{id}' src='{src}' alt='{alt}' {other_arg}>
+<!-- The Modal -->
+<div id='modal{id}' class='modal'>
+  <!-- Modal Content (The Image) -->
+  <img class='modal-content' id='imgmodal{id}'>
+  <!-- Modal Caption (Image Text) -->
+  <div id='caption{id}' class='modal-caption'></div>
+</div>
+"
+  )
+  write(js, file = "js-addins.html", append = T)
+  return(html)
+}
+# Clean the file out at the start of the compilation
+write("", file = "js-addins.html")
+```
 
+class:inverse
+
+<br><br><br>
+## MTH365: Introduction to Data Science
+### Data Communication and Ethics
+#### September 17, 2024
+
+---
 ## Agenda
 
 - Introduction to Graphical Perception
-  + General Guidelines
-  + Color
+- Data Misrepresentation
 - Data Writing
-  + Figure Captions
-  + Descriptive Paragraphs
+- Data Science Ethics
 
 ---
 ## Announcements
 
-+ Mini-Project 1 is due tonight!
-  + Presentations on Thursday
-+ Lab 3 due Tuesday September 19 at 11:59 pm 
-  + No additional Lab this week
 
+
+---
+class:inverse
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+.center[
+# Graphical Perception
+]
 
 ---
 ## Graphical Perception
@@ -153,7 +222,6 @@ diamonds %>% ggplot() + geom_bar(aes(x=cut,fill = cut)) + ggtitle("Bar Chart")
 ```
 ]
 
---
 
 Anything that can be put into a pie chart can also be put into a bar chart
 
@@ -261,45 +329,24 @@ Suggestions:
 
 The data `HairEyeColor` provides the information of hair colors and eye colors in a statistics class. The data is recorded in a three-way table. The first step is to convert the data into a column-wise data frame.
 
---
-.pull-left[
-```{r}
+```{r, echo = FALSE}
 data(HairEyeColor)
-HairEyeColor[,,1] #Male
-```
-].pull-right[
-```{r}
-data(HairEyeColor)
-HairEyeColor[,,2] #Female
-```
+#HairEyeColor[,,1] #Male
+#HairEyeColor[,,2] #Female
 
-]
---
-
-```{r}
 newdata_male = as.data.frame(HairEyeColor[,,1]) 
 newdata_female = as.data.frame(HairEyeColor[,,2]) 
 newdata = rbind(newdata_male, newdata_female)
 newdata = newdata %>% 
   mutate(Gender = rep(c("Male", "Female"), each  = 16))
-```
 
-
----
-## Example: Hair Color
-
-```{r}
-head(newdata, n = 2)
-```
---
-```{r}
 hairData = newdata %>% 
   group_by(Hair) %>%
   summarise(Freq = sum(Freq))
+
 hairData
 ```
 
---
 Suppose now we want to see the distribution of hair color in this class. What kind of the plot we should use?
 
 ---
@@ -392,6 +439,161 @@ data(iris)
 
 (e). Besides of the color, use different shape of the points to represents the difference (Hint: Use Google or the Help Documentation).
 
+
+---
+class:inverse
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+.center[
+# Data Misrepresentation
+]
+
+---
+## Common Ways to Misreprsent Data
+
+- Scales!
+- Omitting Data
+- Cherry picking the data
+- Misleading pie chart/Using the wrong chart type
+
+
+```{r, results='asis', echo=FALSE, fig.align='center'}
+
+i1 <- img_modal(src = "./images/comp-graphs.PNG", alt = "")
+
+c(str_split(i1, "\\n", simplify = T)[1:2],
+  str_split(i1, "\\n", simplify = T)[3:9]
+  ) %>% paste(collapse = "\n") %>% cat()
+
+```
+
+---
+## What's Wrong with These Plots?
+
+Identify the issues with the plots, and talk about how you would fix them?
+
+.pull-left[
+```{r, results='asis', echo=FALSE, fig.align='center'}
+
+i1 <- img_modal(src = "./images/bad-pie.PNG", alt = "")
+i3 <- img_modal(src = "./images/bad-gas.PNG", alt = "")
+
+c(str_split(i1, "\\n", simplify = T)[1:2],
+  str_split(i3, "\\n", simplify = T)[1:2],
+  str_split(i1, "\\n", simplify = T)[3:9],
+  str_split(i3, "\\n", simplify = T)[3:9]
+  ) %>% paste(collapse = "\n") %>% cat()
+
+```
+].pull-right[
+
+```{r, results='asis', echo=FALSE, fig.align='center'}
+
+i2 <- img_modal(src = "./images/bad-line.PNG", alt = "")
+i4 <- img_modal(src = "./images/bad-bar.PNG", alt = "")
+
+
+c(str_split(i2, "\\n", simplify = T)[1:2],
+  str_split(i4, "\\n", simplify = T)[1:2],
+  str_split(i2, "\\n", simplify = T)[3:9],
+  str_split(i4, "\\n", simplify = T)[3:9]
+  ) %>% paste(collapse = "\n") %>% cat()
+
+```
+
+]
+
+
+---
+### Election Maps
+
+.pull-left[
+```{r, results='asis', echo=FALSE, fig.align='center'}
+
+i1 <- img_modal(src = "./images/election-state.PNG", alt = "")
+i3 <- img_modal(src = "./images/election-pop.PNG", alt = "")
+
+c(str_split(i1, "\\n", simplify = T)[1:2],
+  str_split(i3, "\\n", simplify = T)[1:2],
+  str_split(i1, "\\n", simplify = T)[3:9],
+  str_split(i3, "\\n", simplify = T)[3:9]
+  ) %>% paste(collapse = "\n") %>% cat()
+
+```
+].pull-right[
+
+```{r, results='asis', echo=FALSE, fig.align='center'}
+
+i2 <- img_modal(src = "./images/electoral.PNG", alt = "")
+
+
+c(str_split(i2, "\\n", simplify = T)[1:2],
+  str_split(i2, "\\n", simplify = T)[3:9]
+  ) %>% paste(collapse = "\n") %>% cat()
+
+```
+
+]
+
+.center[
+[Source 1](https://storymaps.arcgis.com/stories/427c500cfa5f459590671a8d060c4ab4) and [Source 2](https://medium.com/swlh/the-problem-with-election-maps-443b3a941dc7)
+]
+---
+## Visualzing Uncertainty
+
+- Uncertainty is fundamental to data analysis and models
+- Effectively communicating uncertainty in visualization is hard and is still being researched. 
+- Can be important to include, but don't present the. uncertainty information, without describing in detail what it means.
+
+
+.pull-left[
+```{r, results='asis', echo=FALSE, fig.align='center'}
+
+i1 <- img_modal(src = "./images/mean-interval.PNG", alt = "")
+
+c(str_split(i1, "\\n", simplify = T)[1:2],
+  str_split(i1, "\\n", simplify = T)[3:9]
+  ) %>% paste(collapse = "\n") %>% cat()
+
+```
+].pull-right[
+```{r, results='asis', echo=FALSE, fig.align='center'}
+
+i3 <- img_modal(src = "./images/hurricane.PNG", alt = "")
+
+c(str_split(i3, "\\n", simplify = T)[1:2],
+  str_split(i3, "\\n", simplify = T)[3:9]
+  ) %>% paste(collapse = "\n") %>% cat()
+
+```
+]
+
+---
+class:inverse
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+.center[
+# Writing about Visualizations
+]
+
 ---
 ## Writing About Your Figure
 
@@ -425,7 +627,6 @@ There are two ways of writing a caption:
 ```{r, fig.height=3.5, fig.width=8, fig.align='center'}
 ggplot(iris, aes(x=Sepal.Length, y=Petal.Length, group=Species)) + 
   geom_point(aes(color = Species, shape = Species)) + 
-  scale_color_manual(values=cbPalette) +
   xlab("Sepal Length") + 
   ylab("Patal Length") +
   ggtitle("Relation between Sepal Length and Petal Length") #<<
@@ -434,7 +635,7 @@ ggplot(iris, aes(x=Sepal.Length, y=Petal.Length, group=Species)) +
 ---
 ## Captions
 
-Formal report style: descriptive caption
+2.. Formal report style: use descriptive caption
 
 1. It is not included in the figure. Usually placed below the figure.
 2. Starts with the word “figure” or “table” followed by a number and a colon
@@ -442,7 +643,7 @@ Formal report style: descriptive caption
 4. One sentence to summarize the main conclusion.
 5. Any other necessary context
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, fig.align='center'}
 knitr::include_graphics("../Week 5/images/fig-caption.png")
 ```
 
@@ -451,15 +652,9 @@ knitr::include_graphics("../Week 5/images/fig-caption.png")
 
 What this then looks like:
 
-```{r fig1, fig.cap="Scatter plot between Iris sepal length and Iris petal length. Different species are indicated by different color and shapes. In general, the length of sepal and petal for Iris have a strong positive linear relationship.", echo=FALSE, fig.height=3.5, fig.width=8, fig.align='center'}
-ggplot(iris, aes(x=Sepal.Length, y=Petal.Length, group=Species)) + 
-  geom_point(aes(color = Species, shape = Species)) + 
-  scale_color_manual(values=cbPalette) +
-  xlab("Sepal Length") + 
-  ylab("Patal Length") +
-  ggtitle("Relation between Sepal Length and Petal Length")
+```{r, echo = FALSE, fig.align='center'}
+knitr::include_graphics("../Week 5/images/with-caption.png")
 ```
-
 ---
 ## Captions
 
@@ -482,29 +677,6 @@ Once you generate one figures, here is what you should do:
 - Provide potential reasons and explain the conclusion
 
 Note: *HTML* documents do not automatically generate "Figure 1", you must add that into the caption for referencing. However, *PDF* documents do. 
-
----
-## Example: Writing About Figures in Reports
-
-Figure 2 indicates that there is no linear relationship between iris sepal width and petal width since the scatter plot did not show a clear linear shape on the distribution of the point.
-
-Meanwhile, the three species does have clear different distributions of the sepal width and petal width and within a species, the the sepal width and petal width may have a positive linear relationship except Setosa, which does not have a clear trend.
-
-The relative size of different iris species is similar to what we have found in Figure 1, where Virginica tends to have the largest size among all three while Setosa is the smallest. One of the potential reasons for the different sizes may be the habitat condition while Virginica tends to grow in the places with enough sunshine but Setosa prefers relatively dark and wet environment.
-
----
-## Your turn!
-
-Try to write a paragraph the following figure:
-
-```{r , fig.cap="Scatter plot between Iris sepal length and Iris petal length. Different species are indicated by different color and shapes. In general, the length of sepal and petal for Iris have a strong positive linear relationship.", echo=FALSE, fig.height=3.5, fig.width=8, fig.align='center'}
-ggplot(iris, aes(x=Sepal.Length, y=Petal.Length, group=Species)) + 
-  geom_point(aes(color = Species, shape = Species)) + 
-  scale_color_manual(values=cbPalette) +
-  xlab("Sepal Length") + 
-  ylab("Patal Length") +
-  ggtitle("Relation between Sepal Length and Petal Length")
-```
 
 ---
 ## Word Choice
@@ -530,9 +702,79 @@ In data writing, it is quite important that you know how to use different word t
 `seems to suggest`
 
 ---
-## Referencing Figures: Optional
+## Example: Writing About Figures in Reports
 
-The `bookdown` package in R allows cross-referencing, which is a useful way of directing your readers through your document 
+Figure 2 indicates that there is no linear relationship between iris sepal width and petal width since the scatter plot did not show a clear linear shape on the distribution of the point.
 
-More information can be found [here](https://bookdown.org/yihui/rmarkdown-cookbook/cross-ref.html)
+Meanwhile, the three species does have clear different distributions of the sepal width and petal width and within a species, the the sepal width and petal width may have a positive linear relationship except Setosa, which does not have a clear trend.
 
+The relative size of different iris species is similar to what we have found in Figure 1, where Virginica tends to have the largest size among all three while Setosa is the smallest. One of the potential reasons for the different sizes may be the habitat condition while Virginica tends to grow in the places with enough sunshine but Setosa prefers relatively dark and wet environment.
+
+---
+class:inverse
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+.center[
+# Data Science Ethics
+
+]
+---
+## Data Science Ethics
+
+Ethics in Data Science refers to the responsible and ethical use of the data throughout the entire data lifecycle. This includes the collection, storage, processing, analysis, and interpretation of various data
+
+One of the best selling "statistics" books is called *How to Lie with Statistics* by Darrell Huff (1954)
+  - Shows graphical tools to fool people even with accurate data that are still in use. 
+  
+As data scientists, we can play a role in shape discourse, so what responsibilities do we have?
+
+---
+## ASA Guidelines for Statistical Practice
+
+Revised in 2022: [Link](https://www.amstat.org/docs/default-source/amstat-documents/ethicalguidelines.pdf?Status=Master&sfvrsn=bdeeafdd_6/)
+
+Some highlights: 
+
+- Protect and respect the rights and interests of human and animal subjects
+  + Data privacy (ex. HIPAA)
+  + Consider how your study would impact society, groups, and individuals (Remember the numbers are real people)
+- Uses methodology and data that are valid, relevant, and appropriate, without favoritism or prejudice.
+  + Ask for help if you don't know how to do something properly
+- Promotes reproducibility and replication, whether results are “significant” or not, by sharing data, methods, and documentation to the extent possible.
+- Don't only present significant results
+
+---
+## Algorithmic Bias
+
+Algorithmic bias occurs when algorithms make decisions that systematically disadvantage certain groups of people
+
+- Biased data -> biased algorithms
+  + Ex. Some groups of people may be underrepresented or systematically excluded from data science efforts
+  
+  
+Some examples:
+
+- Gender data gap
+  + Products, services and strategies are being generalized to women when the research behind them is not based on data involving women
+- Facial Recognition software: 
+  + Joy Buolamwini, a Ghanaian-American graduate student at MIT discovered that the dataset on which many of facial-recognition algorithms are tested contains 78 percent male faces and 84 percent white faces [(further reading)](http://proceedings.mlr.press/v81/buolamwini18a/buolamwini18a.pdf)
+
+---
+### Is this Ethical? Discuss.
+
+In the United States, most students apply for grants or subsidized loans to finance their college education. Part of this process involves filling in a federal government form called the Free Application for Federal Student Aid (FAFSA). The form asks for information about family income and assets. The form also includes a place for listing the universities to which the information is to be sent. The data collected by FAFSA includes confidential financial information (listing the schools eligible to receive the information is effectively giving permission to share the data with them).
+
+It turns out that the order in which the schools are listed carries important information. Students typically apply to several schools, but can attend only one of them. Until recently, admissions offices at some universities used the information as an important part of their models of whether an admitted student will accept admissions. The earlier in a list a school appears, the more likely the student is to attend that school.
+
+Here’s the catch from the student’s point of view. Some institutions use statistical models to allocate grant aid where it is most likely to help ensure that a student enrolls. For these schools, the more likely a student is deemed to accept admissions, the lower the amount of grant aid they are likely to receive.
+
+[Resource](https://mdsr-book.github.io/mdsr2e/ch-ethics.html)
