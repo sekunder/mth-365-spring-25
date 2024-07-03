@@ -1,0 +1,1251 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>MTH365: Introduction to Data Science</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="tidyr and Function Writing" />
+    <meta name="date" content="2024-09-24" />
+    <script src="libs/header-attrs-2.27/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# MTH365: Introduction to Data Science
+]
+.author[
+### tidyr and Function Writing
+]
+.date[
+### September 24, 2024
+]
+
+---
+
+
+
+
+## Agenda
+
+- `tidyr`
+ + `pivot_longer`
+ + `pivot_wider`
+- Data Types
+- Function Writing
+- Lists
+
+
+---
+## Announcements
+
+
+
+---
+class:inverse
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+.center[
+## tidyr
+]
+
+---
+### Throwback: What is tidy data?
+
+&lt;img src="../Week 6/images/tidy-data-illustration.png" width="2339" /&gt;
+
+
+---
+### What Makes Data tidy? Key-Value Pairs
+
+.pull-left[
+&lt;img src="../Week 6/images/tidy-data.png" width="696" /&gt;
+].pull-right[
+
++ Treatment and Patient uniquely describe a single row in the dataset.
+
++ Treatment and Patient are key variables,
+
++ Score is a measurement variable
+
++ This makes Treatment-Patient and Score a key-value pair
+]
+
+
+---
+### Key-Value Pairs
+
+Key-Value pairs (KVP) - also attribute-value, field-value, name-value: abstract data representation that allows a lot of flexibility
+
+One way of telling whether a data set is tidy is to check that all keys for a value are aligned in one row:
+
+.pull-left[
+&lt;div class="figure"&gt;
+&lt;img src="../Week 6/images/kp-tidy.png" alt="Tidy Data" width="70%" height="70%" /&gt;
+&lt;p class="caption"&gt;Tidy Data&lt;/p&gt;
+&lt;/div&gt;
+].pull-right[
+
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="../Week 6/images/kp-untidy.png" alt="Untidy Data" width="90%" /&gt;
+&lt;p class="caption"&gt;Untidy Data&lt;/p&gt;
+&lt;/div&gt;
+]
+
+---
+### Example: Untidy Data
+
+
+``` r
+library(reshape2)
+data("french_fries")
+head(french_fries)
+```
+
+```
+##    time treatment subject rep potato buttery grassy rancid painty
+## 61    1         1       3   1    2.9     0.0    0.0    0.0    5.5
+## 25    1         1       3   2   14.0     0.0    0.0    1.1    0.0
+## 62    1         1      10   1   11.0     6.4    0.0    0.0    0.0
+## 26    1         1      10   2    9.9     5.9    2.9    2.2    0.0
+## 63    1         1      15   1    1.2     0.1    0.0    1.1    5.1
+## 27    1         1      15   2    8.8     3.0    3.6    1.5    2.3
+```
+
+---
+### This format is not ideal for Data Analysis
+
+
+``` r
+ggplot(french_fries) + 
+geom_boxplot(aes(x="1_buttery", y=buttery), fill = "cyan4") +
+geom_boxplot(aes(x = "2_grassy", y = grassy), fill = "darkorange2") +
+geom_boxplot(aes(x = "3_painty", y = painty), fill = "darkorchid1") +
+geom_boxplot(aes(x = "4_potato", y = potato), fill = "chartreuse3") +
+geom_boxplot(aes(x = "5_rancid", y = rancid), fill = "deeppink") +
+xlab("variable") + ylab("rating")
+```
+
+&lt;img src="tidyr-and-functions_files/figure-html/unnamed-chunk-7-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+### Tidy your data using pivot_longer
+
+&lt;img src="../Week 6/images/pivot_longer.png" width="80%" /&gt;
+
+
+When pivoting longer, you need to specify:
+
++ the cols (identifiers)
++ the names_to (new column name)
++ the values_to (measures from cols)
+
+
+---
+### `pivot_longer`
+
+
+``` r
+french_fries_long &lt;- french_fries %&gt;% 
+  pivot_longer(cols = potato:painty, #5:9
+               names_to = "variable", 
+               values_to = "rating")
+
+head(french_fries_long)
+```
+
+```
+## # A tibble: 6 × 6
+##   time  treatment subject   rep variable rating
+##   &lt;fct&gt; &lt;fct&gt;     &lt;fct&gt;   &lt;dbl&gt; &lt;chr&gt;     &lt;dbl&gt;
+## 1 1     1         3           1 potato      2.9
+## 2 1     1         3           1 buttery     0  
+## 3 1     1         3           1 grassy      0  
+## 4 1     1         3           1 rancid      0  
+## 5 1     1         3           1 painty      5.5
+## 6 1     1         3           2 potato     14
+```
+
+---
+### This format is better for Data Analysis
+
+
+``` r
+ggplot(french_fries_long) + 
+  geom_boxplot(aes(x = variable, y = rating, fill = variable))
+```
+
+&lt;img src="tidyr-and-functions_files/figure-html/unnamed-chunk-10-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+### And reverse: `pivot_wider`
+
+Useful if we want to display things as a table:
+
+&lt;img src="../Week 6/images/pivot_wider.png" width="80%" /&gt;
+
+
+When pivoting wider, you need to specify:
+
+- the names_from (column name that we want to widen)
+- the values_from (measures from column we want to widen)
+
+---
+### `pivot_wider`
+
+
+``` r
+french_fries_wide &lt;- french_fries_long %&gt;% 
+  pivot_wider(names_from = variable, 
+              values_from = rating, 
+              values_fill = NA)
+
+head(french_fries_wide)
+```
+
+```
+## # A tibble: 6 × 9
+##   time  treatment subject   rep potato buttery grassy rancid painty
+##   &lt;fct&gt; &lt;fct&gt;     &lt;fct&gt;   &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+## 1 1     1         3           1    2.9     0      0      0      5.5
+## 2 1     1         3           2   14       0      0      1.1    0  
+## 3 1     1         10          1   11       6.4    0      0      0  
+## 4 1     1         10          2    9.9     5.9    2.9    2.2    0  
+## 5 1     1         15          1    1.2     0.1    0      1.1    5.1
+## 6 1     1         15          2    8.8     3      3.6    1.5    2.3
+```
+
+Now we are back to your original dataset
+
+---
+class:inverse
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+.center[
+## Data Types
+]
+
+---
+## Data types in R
+
+R is (usually) good at figuring out the best data type, but sometimes we'll need to take corrective action! The five data types we'll interact with the most are:
+
+- Logical: Can take on values of either `TRUE` or `FALSE`
+- Double: numeric data with decimals.
+- Integer: are numeric data without decimals.
+  - When R stores a number in a variable, it converts the number into a “double” value or a decimal type with at least two decimal places.
+- Character: The data type character is used when storing text, known as strings in R.
+  - The simplest ways to store data under the character format is by using "" around the piece of text
+  - Note that everything inside "" will be considered as character, no matter if it looks like character or not.
+- Lists
+
+---
+##__Lists__:
+
+Lists are the R objects which contain elements of different types like − numbers, strings, vectors and another list inside it.
+
+
+Because of their more complex structure we often want to name the elements of a list (we can also do this with vectors). This can make reading and accessing the list more straight forward.
+
+
+``` r
+myotherlist = list(A = "hello", 
+                   B = 1:4, 
+                   C = c(TRUE, FALSE))
+```
+
+.pull-left[
+
+``` r
+str(myotherlist)
+```
+
+```
+## List of 3
+##  $ A: chr "hello"
+##  $ B: int [1:4] 1 2 3 4
+##  $ C: logi [1:2] TRUE FALSE
+```
+
+``` r
+myotherlist$A
+```
+
+```
+## [1] "hello"
+```
+].pull-right[
+
+``` r
+myotherlist[2]
+```
+
+```
+## $B
+## [1] 1 2 3 4
+```
+
+``` r
+myotherlist[[2]]
+```
+
+```
+## [1] 1 2 3 4
+```
+]
+
+
+
+---
+## Coercion
+
+When you mix data types within a vector, R will create the result with the data type that can most easily accommodate all the elements it contains. This conversion between modes of storage is called “coercion”. 
+
+- When R converts the mode of storage based on its content, it is referred to as “implicit coercion”. Can you guess the following data types?
+
+
+``` r
+c(1, "Hello")
+c(FALSE, 3L)
+c(1.2, 3L)
+```
+
+--
+
+Use the `typeof()` function to find out.
+.pull-left[
+
+``` r
+typeof(c(1, "Hello"))
+```
+
+```
+## [1] "character"
+```
+
+``` r
+typeof(c(FALSE, 3L))
+```
+
+```
+## [1] "integer"
+```
+].pull-right[
+
+``` r
+typeof(c(1.2, 3L))
+```
+
+```
+## [1] "double"
+```
+]
+
+---
+## Missing values
+
+R uses `NA` to represent missing values in its data structures.
+
+
+``` r
+typeof(NA)
+```
+
+```
+## [1] "logical"
+```
+
+
+---
+## Example: Cat lovers
+
+A survey asked respondents their name and number of cats. The instructions said to enter the number of cats as a numerical value.
+
+
+``` r
+cat_lovers &lt;- read.csv("cat_lovers.csv")
+str(cat_lovers)
+```
+
+
+```
+## 'data.frame':	60 obs. of  3 variables:
+##  $ name          : chr  "Bernice Warren" "Woodrow Stone" "Willie Bass" "Tyrone Estrada" ...
+##  $ number_of_cats: chr  "0" "0" "1" "3" ...
+##  $ handedness    : chr  "left" "left" "left" "left" ...
+```
+
+Any concerns with how the data was read in?
+
+---
+## Example: Cat lovers
+
+Suppose we want to find the average number of cats, so we write the line of code below:
+
+
+``` r
+cat_lovers %&gt;% summarize(mean(number_of_cats))
+```
+
+```
+## Warning: There was 1 warning in `summarize()`.
+## ℹ In argument: `mean(number_of_cats)`.
+## Caused by warning in `mean.default()`:
+## ! argument is not numeric or logical: returning NA
+```
+
+```
+##   mean(number_of_cats)
+## 1                   NA
+```
+
+---
+## Example: Cat lovers
+
+How about removing the NA value?
+
+
+``` r
+cat_lovers %&gt;%
+  summarise(mean_cat = mean(number_of_cats, na.rm = TRUE))
+```
+
+```
+## Warning: There was 1 warning in `summarise()`.
+## ℹ In argument: `mean_cat = mean(number_of_cats, na.rm = TRUE)`.
+## Caused by warning in `mean.default()`:
+## ! argument is not numeric or logical: returning NA
+```
+
+```
+##   mean_cat
+## 1       NA
+```
+
+
+---
+## Example: Cat lovers
+
+Slow down.
+
+What is the type of the `number_of_cats` variable?
+  
+
+``` r
+typeof(cat_lovers$number_of_cats)
+```
+
+```
+## [1] "character"
+```
+
+--
+
+Are there any strange responses in the data?
+
+
+``` r
+cat_lovers[48:54,2]
+```
+
+```
+## [1] "1.5 - honestly I think one of my cats is half human"
+## [2] "0"                                                  
+## [3] "0"                                                  
+## [4] "0"                                                  
+## [5] "0"                                                  
+## [6] "1"                                                  
+## [7] "three"
+```
+
+---
+## Example: Cat lovers
+
+**Problem**: number_of_cats is a characters, when we want it to be a number. However, we have some strange response.
+
+**Attempt 1**: convert to numeric, where the response that couldn't be converted to a number become `NA`
+
+
+``` r
+cat_lovers = cat_lovers %&gt;% 
+  mutate(number_of_cats_new = as.numeric(number_of_cats))
+```
+
+```
+## Warning: There was 1 warning in `mutate()`.
+## ℹ In argument: `number_of_cats_new = as.numeric(number_of_cats)`.
+## Caused by warning:
+## ! NAs introduced by coercion
+```
+
+``` r
+str(cat_lovers)
+```
+
+```
+## 'data.frame':	60 obs. of  4 variables:
+##  $ name              : chr  "Bernice Warren" "Woodrow Stone" "Willie Bass" "Tyrone Estrada" ...
+##  $ number_of_cats    : chr  "0" "0" "1" "3" ...
+##  $ handedness        : chr  "left" "left" "left" "left" ...
+##  $ number_of_cats_new: num  0 0 1 3 3 2 1 1 0 0 ...
+```
+
+---
+## Example: Cat lovers
+
+
+``` r
+cat_lovers[48:54,4]
+```
+
+```
+## [1] NA  0  0  0  0  1 NA
+```
+
+``` r
+cat_lovers %&gt;% 
+  summarize(mean(number_of_cats_new, na.rm = TRUE))
+```
+
+```
+##   mean(number_of_cats_new, na.rm = TRUE)
+## 1                              0.7586207
+```
+
+You can discard these two lines, but they are still useful information, just in different format. This is why surveys restrict entry values...How about we convert them with `case_when()` function. 
+
+---
+## Example: Cat lovers
+
+**Attempt 2**: define a new variable?
+
+
+``` r
+cat_lovers2 &lt;- cat_lovers %&gt;%
+  mutate(number_of_cats = case_when(
+    name == "Ginger Clark" ~ 2,
+    name == "Doug Bass"    ~ 3,
+    .default = as.numeric(number_of_cats)
+    )
+  )
+
+head(cat_lovers2, n = 3)
+```
+
+```
+##             name number_of_cats handedness number_of_cats_new
+## 1 Bernice Warren              0       left                  0
+## 2  Woodrow Stone              0       left                  0
+## 3    Willie Bass              1       left                  1
+```
+
+``` r
+cat_lovers2 %&gt;% summarise(mean_cats = mean(number_of_cats))
+```
+
+```
+##   mean_cats
+## 1 0.8166667
+```
+
+---
+## Example: Cat lovers
+You may want to save a copy of this new cleaned version of data. This way you can just read in your cleaned data, instead of running all the code each time you want to use that data set.
+
+
+``` r
+write.csv(cat_lovers, file = "cat_lovers_clean.csv", 
+          row.names = FALSE)
+```
+
+- Will save file into your working directory!!
+
+---
+## Data "sets" in R
+
+- "set" is in quotation marks because it is not a formal data class
+
+A tidy data "set" can be one of the following types:
+
+- `tibble`
+- `data.frame`
+
+We'll often work with `tibble`s:
+
+- `readr` package (e.g. `read_csv` function) loads data as a `tibble` by default
+- `tibble`s are part of the tidyverse, so they work well with other packages we are using
+- They make minimal assumptions about your data, so are less likely to cause hard to track bugs in your code
+
+---
+## Data frames
+
+A data frame is the most commonly used data structure in R, they are just a list of equal length vectors (usually atomic, but you can use generic as well). 
+
+- Each vector is treated as a column and elements of the vectors as rows.
+
+A `tibble` is a type of data frame that ... makes your life (i.e. data analysis) easier.
+
+- Most often a data frame will be constructed by reading in from a file, but we can also create them from scratch.
+
+---
+##Example: 
+
+How many respondents have below average number of cats?
+
+
+``` r
+mean_cats = cat_lovers2 %&gt;% 
+  summarize(mean_cat = mean(number_of_cats))
+mean_cats
+```
+
+```
+##    mean_cat
+## 1 0.8166667
+```
+
+``` r
+cat_lovers2 %&gt;% filter(number_of_cats &lt; mean_cats) %&gt;%
+  nrow()
+```
+
+```
+## [1] 60
+```
+
+--
+Have you seen any problem here?
+--
+
+
+``` r
+class(mean_cats)
+```
+
+```
+## [1] "data.frame"
+```
+
+
+---
+## A possible solution: 
+
+`pull()` works like [[]] or `$` for data frames, and pulls out the value of a single column in a data frame. How does `pull()` work?
+
+
+``` r
+mean_cats = cat_lovers2 %&gt;% 
+  summarize(mean_cat = mean(number_of_cats)) %&gt;%
+  pull()
+mean_cats
+```
+
+```
+## [1] 0.8166667
+```
+
+``` r
+cat_lovers2 %&gt;% filter(number_of_cats &lt; mean_cats) %&gt;%
+  nrow()
+```
+
+```
+## [1] 33
+```
+
+`pull()` can be your new best friend, when used correctly.
+
+
+``` r
+class(mean_cats)
+```
+
+```
+## [1] "numeric"
+```
+---
+## Factors
+
+Factor objects are how R stores data for categorical variables (fixed numbers of discrete values). Historically, factors were much easier to work with than character vectors, so many base R functions automatically convert character vectors to factors.
+
+
+``` r
+x = as.factor(cat_lovers$handedness)
+glimpse(x)
+```
+
+```
+##  Factor w/ 3 levels "ambidextrous",..: 2 2 2 2 2 2 2 2 2 2 ...
+```
+
+``` r
+class(x)
+```
+
+```
+## [1] "factor"
+```
+
+---
+## Factors
+
+By default, R orders factors in alphabetical order
+
+What if we want to force a particular order?
+
+
+``` r
+cat_lovers = cat_lovers %&gt;% 
+  mutate(handedness = fct_relevel(handedness, 
+                                  "left", "ambidextrous", "right"))
+
+ggplot(cat_lovers, aes(x = handedness)) + 
+  geom_bar()
+```
+
+&lt;img src="tidyr-and-functions_files/figure-html/unnamed-chunk-35-1.png" style="display: block; margin: auto;" /&gt;
+
+
+---
+## Overrriding Data Types
+
+If you are absolutely sure of a data class, overwrite it in your tibble so that you don't need to keep having to keep track of it
+
+
+``` r
+x &lt;- "2"
+typeof(x)
+```
+
+```
+## [1] "character"
+```
+
+``` r
+x &lt;- as.numeric(x)
+typeof(x)
+```
+
+```
+## [1] "double"
+```
+
+---
+### Overriding Data Types: Weird Things About `R`
+
+
+``` r
+#cat_lovers$handedness &lt;- as.factor(cat_lovers$handedness)
+class(cat_lovers$handedness)
+```
+
+```
+## [1] "factor"
+```
+
+``` r
+typeof(cat_lovers$handedness)
+```
+
+```
+## [1] "integer"
+```
+
+The `typeof function` is giving information that's at a "lower" level of abstraction. Factor variables (and also Dates) are stored as integers. 
+
+  - Determines the (R internal) type or storage mode of any object
+  
+- `class`: a simple generic function mechanism which can be used for an object-oriented style of programming. 
+
+So when working with data sets use `str`, `glimpse`, `class`
+
+
+---
+## Recap
+
+Be careful about data types/classes
+
+  - If your data doesn't behave how you expect it to, implicit coercion might be the reason.
+    +  Sometimes `R` makes silly assumptions about your data class 
+  - Go in and investigate your data, apply the fix, _save your data_, live happily ever after.
+  - Think about your data in context, e.g. 0/1 variable is most likely a `factor`
+  - If you are absolutely sure of a data class, overwrite it in your tibble so that you don't need to keep having to keep track of it
+  - `mutate` the variable with the correct class
+  
+  
+---
+class:inverse
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+.center[
+## Function Writing
+]
+
+---
+## Why Write your own Functions?
+
+Writing your own functions allow you to automate common tasks in a more powerful and general way than copy-and-pasting. 
+
+Writing a function has three big advantages over using copy-and-paste:
+
+- You can give a function an evocative name that makes your code easier to understand.
+
+- As requirements change, you only need to update code in one place, instead of many.
+
+- You eliminate the chance of making incidental mistakes when you copy and paste (i.e. updating a variable name in one place, but not in another).
+
+
+---
+### When Should You Write A Function?
+
+You should consider writing a function whenever you’ve copied and pasted a block of code more than twice (i.e. you now have three copies of the same code). 
+
+For example, take a look at this code. What does it do? Notice any mistakes?
+
+
+``` r
+df &lt;- tibble::tibble(
+  a = rnorm(10),
+  b = rnorm(10),
+  c = rnorm(10),
+  d = rnorm(10)
+)
+
+df$a &lt;- (df$a - min(df$a, na.rm = TRUE)) / 
+  (max(df$a, na.rm = TRUE) - min(df$a, na.rm = TRUE))
+df$b &lt;- (df$b - min(df$b, na.rm = TRUE)) / 
+  (max(df$b, na.rm = TRUE) - min(df$a, na.rm = TRUE))
+df$c &lt;- (df$c - min(df$c, na.rm = TRUE)) / 
+  (max(df$c, na.rm = TRUE) - min(df$c, na.rm = TRUE))
+df$d &lt;- (df$d - min(df$d, na.rm = TRUE)) / 
+  (max(df$d, na.rm = TRUE) - min(df$d, na.rm = TRUE))
+```
+
+---
+### How do you Write a Function?
+
+How many inputs do we have?
+
+
+``` r
+(df$a - min(df$a, na.rm = TRUE)) /
+  (max(df$a, na.rm = TRUE) - min(df$a, na.rm = TRUE))
+```
+
+```
+##  [1] 0.4379888 1.0000000 0.8736174 0.2023909 0.9942649 0.5973739 0.9255128 0.2658723 0.0000000
+## [10] 0.8558285
+```
+
+---
+### How do you Write a Function?
+
+Three components of writing a function:
+
+1. You need to pick a **name** for the function
+
+2. You list the **inputs**, or arguments, to the function inside function.
+
+3. You place the code you have developed in **body** of the function, a `{` block that immediately follows `function(...)`.
+
+
+``` r
+function_name &lt;- function(inputs separated by commas){
+  #body: put code here
+  # what to do with those inputs
+}
+```
+
+By default they return the last value computed in the function
+
+---
+### Example:
+
+
+``` r
+add_2 &lt;- function(x){
+  x + 2
+  1000
+}
+
+add_2(2)
+```
+
+```
+## [1] 1000
+```
+
+--
+
+
+``` r
+add_2 &lt;- function(x){
+  x + 2
+}
+
+add_2(2)
+```
+
+```
+## [1] 4
+```
+
+---
+### Back to Rescale Example
+
+
+``` r
+rescale01 &lt;- function(x) {
+  rng &lt;- range(x, na.rm = TRUE) #We’re computing the range of the data three times, so it makes sense to do it in one step
+  (x - rng[1]) / (rng[2] - rng[1])
+}
+
+rescale01(df$a)
+```
+
+```
+##  [1] 0.4379888 1.0000000 0.8736174 0.2023909 0.9942649 0.5973739 0.9255128 0.2658723 0.0000000
+## [10] 0.8558285
+```
+
+``` r
+rescale01(df$b)
+```
+
+```
+##  [1] 0.4233613 0.4817810 0.8648927 0.4031169 0.3465004 1.0000000 0.6166668 0.9831133 0.0000000
+## [10] 0.2859909
+```
+
+---
+### Your Turn
+
+Write your own mean function to find the mean of x :
+
+`$$\bar{x} = \frac{\sum^n_{i=1}x_i}{n}$$`
+
+
+``` r
+set.seed(4)
+x &lt;- round(runif(10, 0, 40),2)
+x
+```
+
+```
+##  [1] 23.43  0.36 11.75 11.09 32.54 10.42 28.98 36.24 37.96  2.93
+```
+
+---
+### Conditional Executuion
+
+An `if` statement allows you to conditionally execute code. It looks like this:
+
+
+``` r
+if (condition) {
+  # code executed when condition is TRUE
+} else {
+  # code executed when condition is FALSE
+}
+```
+
+
+Or can use the `ifelse` function:
+
+
+``` r
+ifelse(condition, 
+       code executed when condition is TRUE, 
+       code executed when condition is FALSE)
+```
+
+---
+### Example
+
+
+``` r
+ifelse_example &lt;- function(x){
+  if(x &gt; 0){
+    "This value is positive"
+  } else if (x == 0){
+    "This value is 0"} else{
+      "This value is negative"
+    }
+  }
+
+ifelse_example(3)
+```
+
+```
+## [1] "This value is positive"
+```
+
+``` r
+ifelse_example(0)
+```
+
+```
+## [1] "This value is 0"
+```
+
+``` r
+ifelse_example(-2)
+```
+
+```
+## [1] "This value is negative"
+```
+
+---
+## Loops
+
+Another tool for reducing duplication is iteration, which helps you when you need to do the same thing to multiple inputs: repeating the same operation on different columns, or on different datasets. 
+
+`for` loops are an example of imperative programming and is a good starting point
+
+- they make iteration very explicit, so it’s obvious what’s happening. 
+
+
+---
+## Loops
+
+From Earlier:
+
+
+``` r
+rescale01(df$a)
+rescale01(df$b)
+rescale01(df$c)
+rescale01(df$d)
+```
+
+Why we shortened our copying with creating a function, we still have something copy/pasted more than twice.
+
+---
+## Loops
+
+Loops have three main elements
+
+
+``` r
+# 1. output
+output &lt;- data.frame(matrix(NA, ncol = ncol(df), nrow = nrow(df)))
+for (i in seq_along(df)) {            # 2. sequence
+  output[,i] &lt;- rescale01(df[[i]])      # 3. body
+}
+
+output
+```
+
+```
+##           X1        X2        X3         X4
+## 1  0.4379888 0.4233613 0.2481862 0.21204822
+## 2  1.0000000 0.4817810 0.5032068 0.22515426
+## 3  0.8736174 0.8648927 0.3772877 0.59491725
+## 4  0.2023909 0.4031169 0.6690809 0.34268812
+## 5  0.9942649 0.3465004 0.0000000 0.78829729
+## 6  0.5973739 1.0000000 0.3008370 0.07232481
+## 7  0.9255128 0.6166668 0.3114563 0.70405192
+## 8  0.2658723 0.9831133 0.4558441 0.00000000
+## 9  0.0000000 0.0000000 0.5925794 1.00000000
+## 10 0.8558285 0.2859909 1.0000000 0.42770339
+```
+
+---
+### Your Turn:
+
+Compute the mean of every column in mtcars.
+
+
+``` r
+data("mtcars")
+head(mtcars)
+```
+
+```
+##                    mpg cyl disp  hp drat    wt  qsec vs am gear carb
+## Mazda RX4         21.0   6  160 110 3.90 2.620 16.46  0  1    4    4
+## Mazda RX4 Wag     21.0   6  160 110 3.90 2.875 17.02  0  1    4    4
+## Datsun 710        22.8   4  108  93 3.85 2.320 18.61  1  1    4    1
+## Hornet 4 Drive    21.4   6  258 110 3.08 3.215 19.44  1  0    3    1
+## Hornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2
+## Valiant           18.1   6  225 105 2.76 3.460 20.22  1  0    3    1
+```
+
+---
+### `purrr` Package:
+
+`for` loops are quite verbose, and require quite a bit of bookkeeping code that is duplicated for every for loop. 
+
+- Functional programming (FP) offers tools to extract out this duplicated code, so each common for loop pattern gets its own function. 
+
+Each function takes a vector as input, applies a function to each piece, and then returns a new vector that’s the same length (and has the same names) as the input. The type of the vector is determined by the suffix to the map function:
+
+- `map()` makes a list.
+- `map_lgl()` makes a logical vector.
+- `map_int()` makes an integer vector.
+- `map_dbl()` makes a double vector.
+- `map_chr()` makes a character vector.
+
+Once you master these functions, you’ll find it takes much less time to solve iteration problems. - The important thing is that you solve the problem that you’re working on, not write the most concise and elegant code.
+
+
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
