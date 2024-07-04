@@ -3,9 +3,9 @@
   <head>
     <title>MTH365: Introduction to Data Science</title>
     <meta charset="utf-8" />
-    <meta name="author" content="Statistical Foundations" />
-    <meta name="date" content="2023-09-26" />
-    <script src="libs/header-attrs-2.23/header-attrs.js"></script>
+    <meta name="author" content="Statistical Inference" />
+    <meta name="date" content="2024-10-04" />
+    <script src="libs/header-attrs-2.27/header-attrs.js"></script>
     <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
   </head>
@@ -17,10 +17,10 @@ class: center, middle, inverse, title-slide
 # MTH365: Introduction to Data Science
 ]
 .author[
-### Statistical Foundations
+### Statistical Inference
 ]
 .date[
-### September 26, 2023
+### October 4, 2024
 ]
 
 ---
@@ -39,12 +39,6 @@ class: center, middle, inverse, title-slide
 ---
 ## Announcements
 
-- Lab 4: **due tonight at 11:59 pm!**
-- A Look Ahead:
-  + Thursday - Linear Models
-  + Tuesday October 3 - Lab 5
-  + Thursday October 5 - Mini Project 2 work day
-- Both Lab 5 and Mini-Project 2 are due after Fall Break on Tuesday October 17.
 
 
 --
@@ -62,21 +56,32 @@ Notes on Lab 3:
 
 - Data science: Data science is a multidisciplinary filed which uses scientific methods, processes and system to extract information from data in a large range of forms. 
 
-Data science techniques can provide us a clean data and its visualization but we still reply on statistics theory to interpret what the data is trying to tell us
+Data science techniques can provide us a clean data and its visualization but statistical theory is still useful to figure out what the data is tell us. 
 
 ---
 ## Introduction
 
-In data science we want to extract meaning from the data
+Statistical Inference: the process of using sample data to make conclusions about the underlying population the sample came from
 
-- Data wrangling
-- Visualization
+Before we talk about methods for statistical inference, let's discuss uncertainty
+- Not only should report the point estimate, but should also quantify our uncertainty
 
-Visualizations are powerful because humans are good at seeing patterns! However, we are also very good at seeing patterns that do not exist!
+--
 
-- Statistical Methods collect data and quantifies patterns in the data
+What do we mean by uncertainty?
 
-Moral of the story: Data science techniques can provide us clean data and visualizations but we still rely on statistical theory to interpret what the data is trying to tell us
+- Roughly equivalent to the notion of repeatability. 
+  + You’re certain if your results are repeatable. 
+  + You’re uncertain if your results are subject to a lot of statistical fluctuations.
+
+---
+## Why are Statisticians Always Uncertain?
+
+
+- Our data consists of a sample
+- We want to use our models to make a prediction, but there are always things that we can't account for in a model
+- Our observations are subject to measurement or reporting error
+- Our data arise from an intrinsically random or variable process
 
 ---
 ## Samples and Population
@@ -103,49 +108,53 @@ What would we do?
 Let’s first filter all the flights going to Chicago and with a non-NA value of arrival delay time.
 
 
-```r
+``` r
 library(nycflights13)
 Chicago &lt;- flights %&gt;%
   filter(dest %in% c('ORD', 'MDW'), !is.na(arr_delay))
-nrow(Chicago)
 ```
 
-```
-## [1] 20591
-```
+--
 
----
-## Let's find a Sample!
+Let's take a sample (n=100)!
 
 
-```r
+``` r
 set.seed(365)
 Sample100 &lt;- Chicago %&gt;% sample_n(size=100)
+```
+
+
+---
+### Let's find a Sample!
+
+
+``` r
 glimpse(Sample100)
 ```
 
 ```
 ## Rows: 100
 ## Columns: 19
-## $ year           [3m[38;5;246m&lt;int&gt;[39m[23m 2013, 2013, 2013, 2013, 2013, 2013, 2013, 2013, 2013, 2013, 2013,…
-## $ month          [3m[38;5;246m&lt;int&gt;[39m[23m 9, 12, 7, 10, 10, 6, 4, 4, 6, 9, 4, 11, 10, 9, 6, 1, 2, 2, 4, 7, …
-## $ day            [3m[38;5;246m&lt;int&gt;[39m[23m 15, 18, 2, 10, 7, 24, 28, 18, 2, 8, 25, 14, 29, 8, 20, 15, 5, 11,…
-## $ dep_time       [3m[38;5;246m&lt;int&gt;[39m[23m 603, 2034, 1800, 629, 2116, 1156, 1759, 906, 1157, 1325, 1222, 11…
-## $ sched_dep_time [3m[38;5;246m&lt;int&gt;[39m[23m 601, 2035, 1805, 630, 1901, 1200, 1800, 630, 1200, 1330, 1225, 11…
-## $ dep_delay      [3m[38;5;246m&lt;dbl&gt;[39m[23m 2, -1, -5, -1, 135, -4, -1, 156, -3, -5, -3, -4, -4, 19, 13, 26, …
-## $ arr_time       [3m[38;5;246m&lt;int&gt;[39m[23m 717, 2153, 1926, 737, 2226, 1300, 1910, 1244, 1303, 1452, 1438, 1…
-## $ sched_arr_time [3m[38;5;246m&lt;int&gt;[39m[23m 730, 2210, 1950, 805, 2040, 1333, 1944, 804, 1310, 1510, 1405, 13…
-## $ arr_delay      [3m[38;5;246m&lt;dbl&gt;[39m[23m -13, -17, -24, -28, 106, -33, -34, 280, -7, -18, 33, -25, -7, -2,…
-## $ carrier        [3m[38;5;246m&lt;chr&gt;[39m[23m "UA", "WN", "AA", "AA", "UA", "UA", "UA", "B6", "WN", "AA", "AA",…
-## $ flight         [3m[38;5;246m&lt;int&gt;[39m[23m 1143, 168, 353, 303, 693, 255, 994, 905, 654, 331, 329, 327, 3330…
-## $ tailnum        [3m[38;5;246m&lt;chr&gt;[39m[23m "N68453", "N930WN", "N3CPAA", "N489AA", "N429UA", "N824UA", "N808…
-## $ origin         [3m[38;5;246m&lt;chr&gt;[39m[23m "EWR", "LGA", "LGA", "LGA", "LGA", "LGA", "EWR", "JFK", "EWR", "L…
-## $ dest           [3m[38;5;246m&lt;chr&gt;[39m[23m "ORD", "MDW", "ORD", "ORD", "ORD", "ORD", "ORD", "ORD", "MDW", "O…
-## $ air_time       [3m[38;5;246m&lt;dbl&gt;[39m[23m 116, 116, 117, 105, 111, 106, 104, 168, 110, 114, 116, 119, 119, …
-## $ distance       [3m[38;5;246m&lt;dbl&gt;[39m[23m 719, 725, 733, 733, 733, 733, 719, 740, 711, 733, 733, 733, 711, …
-## $ hour           [3m[38;5;246m&lt;dbl&gt;[39m[23m 6, 20, 18, 6, 19, 12, 18, 6, 12, 13, 12, 11, 12, 20, 21, 16, 6, 7…
-## $ minute         [3m[38;5;246m&lt;dbl&gt;[39m[23m 1, 35, 5, 30, 1, 0, 0, 30, 0, 30, 25, 25, 0, 30, 0, 50, 30, 0, 0,…
-## $ time_hour      [3m[38;5;246m&lt;dttm&gt;[39m[23m 2013-09-15 06:00:00, 2013-12-18 20:00:00, 2013-07-02 18:00:00, 2…
+## $ year           &lt;int&gt; 2013, 2013, 2013, 2013, 2013, 2013, 2013, 2013, 2013, 2013, 2013, 201…
+## $ month          &lt;int&gt; 9, 12, 7, 10, 10, 6, 4, 4, 6, 9, 4, 11, 10, 9, 6, 1, 2, 2, 4, 7, 11, …
+## $ day            &lt;int&gt; 15, 18, 2, 10, 7, 24, 28, 18, 2, 8, 25, 14, 29, 8, 20, 15, 5, 11, 22,…
+## $ dep_time       &lt;int&gt; 603, 2034, 1800, 629, 2116, 1156, 1759, 906, 1157, 1325, 1222, 1121, …
+## $ sched_dep_time &lt;int&gt; 601, 2035, 1805, 630, 1901, 1200, 1800, 630, 1200, 1330, 1225, 1125, …
+## $ dep_delay      &lt;dbl&gt; 2, -1, -5, -1, 135, -4, -1, 156, -3, -5, -3, -4, -4, 19, 13, 26, -4, …
+## $ arr_time       &lt;int&gt; 717, 2153, 1926, 737, 2226, 1300, 1910, 1244, 1303, 1452, 1438, 1245,…
+## $ sched_arr_time &lt;int&gt; 730, 2210, 1950, 805, 2040, 1333, 1944, 804, 1310, 1510, 1405, 1310, …
+## $ arr_delay      &lt;dbl&gt; -13, -17, -24, -28, 106, -33, -34, 280, -7, -18, 33, -25, -7, -2, -17…
+## $ carrier        &lt;chr&gt; "UA", "WN", "AA", "AA", "UA", "UA", "UA", "B6", "WN", "AA", "AA", "AA…
+## $ flight         &lt;int&gt; 1143, 168, 353, 303, 693, 255, 994, 905, 654, 331, 329, 327, 3330, 56…
+## $ tailnum        &lt;chr&gt; "N68453", "N930WN", "N3CPAA", "N489AA", "N429UA", "N824UA", "N808UA",…
+## $ origin         &lt;chr&gt; "EWR", "LGA", "LGA", "LGA", "LGA", "LGA", "EWR", "JFK", "EWR", "LGA",…
+## $ dest           &lt;chr&gt; "ORD", "MDW", "ORD", "ORD", "ORD", "ORD", "ORD", "ORD", "MDW", "ORD",…
+## $ air_time       &lt;dbl&gt; 116, 116, 117, 105, 111, 106, 104, 168, 110, 114, 116, 119, 119, 99, …
+## $ distance       &lt;dbl&gt; 719, 725, 733, 733, 733, 733, 719, 740, 711, 733, 733, 733, 711, 711,…
+## $ hour           &lt;dbl&gt; 6, 20, 18, 6, 19, 12, 18, 6, 12, 13, 12, 11, 12, 20, 21, 16, 6, 7, 15…
+## $ minute         &lt;dbl&gt; 1, 35, 5, 30, 1, 0, 0, 30, 0, 30, 25, 25, 0, 30, 0, 50, 30, 0, 0, 35,…
+## $ time_hour      &lt;dttm&gt; 2013-09-15 06:00:00, 2013-12-18 20:00:00, 2013-07-02 18:00:00, 2013-…
 ```
 
 ---
@@ -154,7 +163,7 @@ glimpse(Sample100)
 How long of a delay should we expect based on the sample? We can look at the mean, minimum, maximum, and standard deviation to get some idea.
 
 
-```r
+``` r
 Sample100 %&gt;% summarize(mean=mean(arr_delay),
                         min=min(arr_delay),
                         max=max(arr_delay), 
@@ -175,7 +184,7 @@ We might also want to examine the quantiles.
 
 
 
-```r
+``` r
 Sample100 %&gt;% summarize(q05=quantile(arr_delay, 0.05), 
                         q25=quantile(arr_delay, 0.25),
                         median=median(arr_delay),
@@ -200,7 +209,7 @@ Sorting the values from min to max, Quantile X means there are x% of values less
 How about an one and half hour delay?
 
 
-```r
+``` r
 Chicago %&gt;% mutate(less90 = arr_delay&lt;=90) %&gt;% 
   group_by(less90) %&gt;% 
   summarize(n=n())
@@ -220,7 +229,7 @@ Chicago %&gt;% mutate(less90 = arr_delay&lt;=90) %&gt;%
 
 
 
-```r
+``` r
 set.seed(10)
 Sample100_2 &lt;- Chicago %&gt;% sample_n(size=100)
 
@@ -248,7 +257,7 @@ Different samples of data will have different sample statistics!
 ## Compare to Population to Check Sample
 
 
-```r
+``` r
 Sample100_2 %&gt;% summarize(mean=mean(arr_delay), #sample
             min=min(arr_delay),
             max=max(arr_delay), 
@@ -262,7 +271,7 @@ Sample100_2 %&gt;% summarize(mean=mean(arr_delay), #sample
 ## 1  9.64   -42   175  46.4
 ```
 
-```r
+``` r
 Chicago %&gt;% summarize(mean=mean(arr_delay), #population
             min=min(arr_delay),
             max=max(arr_delay), 
@@ -280,7 +289,7 @@ Chicago %&gt;% summarize(mean=mean(arr_delay), #population
 However, in most real-world settings, we do not have access to the population data. We have only our sample.
 
 ---
-## Sample statistics
+## Sample Statistics
 
 Statistic: A quantity computed from values in a sample to represent some characteristics
 
@@ -290,9 +299,8 @@ Examples:
 + Proportion `\((\hat{p})\)`
 + Median `\((m)\)`
 + Standard Deviation `\((s)\)`
-+ Sample Size `\((n)\)`
 
-
+These are also called **point estimates**: single value from a sample to approximate this value in the population.
 
 ---
 ## Sampling Distributions
@@ -310,7 +318,6 @@ If we draw many different samples from the population, each of size `\(n\)`, and
 --
 
 **Sampling distribution**: a set of probabilities represents the chance to see certain values of the statistics
-+ There are three components for a sampling distribution: center (mean), spread (standard error) and shape.
 + [Animation](https://onlinestatbook.com/stat_sim/sampling_dist/index.html)
 
 ---
@@ -323,7 +330,7 @@ We could run the previous code multiple times to obtain our different samples
 Or, we could speed it up:
 
 
-```r
+``` r
 n &lt;- 100
 num_trials &lt;- 500
 chi_25_means &lt;- 1:num_trials %&gt;% 
@@ -350,7 +357,7 @@ head(chi_25_means)
 ---
 ## Creating a Sampling Distribution
 
-```r
+``` r
 # favstats() is in the mosaic library
 favstats(~mean_arr_delay, data=chi_25_means)
 ```
@@ -363,19 +370,28 @@ favstats(~mean_arr_delay, data=chi_25_means)
 --
 
 
-```r
+``` r
 ggplot(chi_25_means, aes(x=mean_arr_delay)) + 
   geom_density(fill='turquoise', alpha=0.5) + 
   labs(x='Sampling Distribution of Sample Mean')
 ```
 
-&lt;img src="statistical-foundations_files/figure-html/unnamed-chunk-11-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="statistical-foundations_files/figure-html/unnamed-chunk-12-1.png" style="display: block; margin: auto;" /&gt;
 
+---
+## What does the Sampling Distribution tells us?
+
+- Where is the sampling distribution centered? 
+  + The expected value of a statistical summary is the average of that summary’s sampling distribution—that is, the average value of that summary under repeated sampling from the same random process that generated our data.
+
+- How spread out is the sampling distribution? 
+  + The answer to this question provides a quantitative measure measure of repeatability, and therefore statistical uncertainty.
+  + The standard deviation of a sampling distribution is called the **standard error**. This reflects the typical statistical fluctuation of our summary statistic
 
 ---
 ## Discuss Reliability: Standard Error
 
-**Standard error**: the standard deviation of the sampling distribution. It describes the width of the sampling distribution.
+**Standard error**: It describes the width of the sampling distribution.
 
 `$$SE = \frac{s}{\sqrt{n}}$$`
 --
@@ -383,7 +399,7 @@ ggplot(chi_25_means, aes(x=mean_arr_delay)) +
 Example: What’s the standard error of the sample mean?
 
 
-```r
+``` r
 favstats(~arr_delay, data=Sample100)
 ```
 
@@ -393,7 +409,7 @@ favstats(~arr_delay, data=Sample100)
 ```
 
 
-```r
+``` r
 favstats(~mean_arr_delay, data=chi_25_means)
 ```
 
@@ -402,30 +418,31 @@ favstats(~mean_arr_delay, data=chi_25_means)
 ##  -4.19 3.2275   6.64 10.3025 21.15 7.0059 4.808579 500       0
 ```
 
---
-
-A larger sample size produces a standard error that is smaller. That is, a larger sample size is more reliable than a smaller sample size.
 
 ---
-## Discuss Readability: Approximate 95% confidence interval
+## Discuss Repeatability: Confidence Intervals
+
+Now suppose we want to report a range of plausible values that have a good shot at capturing the parameter instead of just the point estimate
+- Quantifying this requires a measurement of how much we would expect the sample population to vary from sample to sample
+- It is calculated from the mean and standard error of the sampling distribution.
+
+--
 
 **Approximate 95% Confidence interval**: If generate repeated samples, 95% of those intervals will contain the true population value.
 
 
-- The interval can be used to identify plausible values for the true mean of a variable. It is calculated from the mean and standard error of the sampling distribution.
-
---
-
-&lt;img src="../Week 7/images/confidence-interval.png" width="80%" style="display: block; margin: auto;" /&gt;
+&lt;img src="../Week 7/images/confidence-interval.png" width="70%" style="display: block; margin: auto;" /&gt;
 
 
 ---
-## Discuss Readability: Approximate 95% confidence interval
+## Discuss Repeatability: Confidence Intervals
 
 Example: Calculate and interpret an approximate 95% confidence interval for the mean arrival delay.
 
+`$$\bar{x} \pm 2*SE$$`
 
-```r
+
+``` r
 chi_25_means %&gt;%
   summarize(
     x_bar = mean(mean_arr_delay),
@@ -445,17 +462,17 @@ chi_25_means %&gt;%
 ```
 
 ---
-## Discuss Readability: Approximate 95% confidence interval
+## Discuss Repeatability: Approximate 95% confidence interval
 
 
-```r
+``` r
 ggplot(chi_25_means, aes(x=mean_arr_delay)) + 
   geom_density(fill='turquoise', alpha=0.5) + 
   labs(x='Sampling Distribution of Sample Mean') +
 * geom_vline(xintercept=c(-2.61, 16.6), color="red")
 ```
 
-&lt;img src="statistical-foundations_files/figure-html/unnamed-chunk-16-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="statistical-foundations_files/figure-html/unnamed-chunk-17-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 ## How does sample size affect the sampling distribution?
@@ -471,25 +488,13 @@ Means500 &lt;- do(1000)*(Chicago %&gt;% sample_n(size=500) %&gt;%
 ```
 
 
-```r
-Means &lt;- rbind(Means50 %&gt;% mutate(n=50),
-               Means100 %&gt;% mutate(n=100),
-               Means500 %&gt;% mutate(n=500))
-```
+
+&lt;img src="statistical-foundations_files/figure-html/unnamed-chunk-19-1.png" style="display: block; margin: auto;" /&gt;
+
+
 ---
 ## How does sample size affect the sampling distribution?
 
-
-```r
-ggplot(dat=Means, aes(x=mean)) + 
-  geom_density(aes(fill=as.factor(n))) + 
-  facet_grid(~n)+xlab('Sample means') + guides(fill=FALSE)
-```
-
-&lt;img src="statistical-foundations_files/figure-html/unnamed-chunk-18-1.png" style="display: block; margin: auto;" /&gt;
-
----
-## How does sample size affect the sampling distribution?
 
 A larger sample size produces a smaller standard error. 
   - A larger sample size is more reliable than a smaller sample size
@@ -512,19 +517,19 @@ For large sample sizes, the shape of the sampling distribution tends to bell-sha
 
 In the last example, we had access to the population data and so we could find the sampling distribution by repeatedly sampling from the population. 
   - We typically only have one sample and not the entire population. 
-  
+
+--
+
 **Bootstrap** is a method that allows us to approximate the sampling distribution even though we do not have the population.
 
 In bootstraping we think of our sample as if it were the population. 
-  - So, like before, we draw many new samples from our original sample. 
-  - *Resampling*: drawing a new sample from an existing sample.
+  - Still drawing many new samples from our original sample (**Resampling**). 
 
 When resampling, we sample with replacement.
   - Allows us to estimate the variability of the sample
-  - If we did not sample with replacement, we would always get the same sample median as the observed value.
+  - Otherwise, would always get the same sample statistics as the observed value.
 
-Bootstrapping does not create new cases
-  - It isn’t a way to collect data. 
+Bootstrapping does not create new cases (not for data collection)
 
 ---
 ## Bootstraping
@@ -536,7 +541,7 @@ Bootstrapping does not create new cases
 ## Bootstraping: Let's take a small sample (n=3)
 
 
-```r
+``` r
 f3 &lt;- Chicago %&gt;% sample_n(size=3) %&gt;% dplyr::select(year,month,day)
 ```
 
@@ -555,7 +560,7 @@ f3 &lt;- Chicago %&gt;% sample_n(size=3) %&gt;% dplyr::select(year,month,day)
 .pull-left[
 First Resample: 
 
-```r
+``` r
 f3 %&gt;% slice_sample(n= 3, 
                replace = TRUE)
 ```
@@ -571,7 +576,7 @@ f3 %&gt;% slice_sample(n= 3,
 ].pull-right[
 Second Resample: 
 
-```r
+``` r
 f3 %&gt;% slice_sample(n= 3, 
                replace = TRUE)
 ```
@@ -590,7 +595,7 @@ f3 %&gt;% slice_sample(n= 3,
 ## Bootstrapping: Bigger Sample
 
 
-```r
+``` r
 Bootstrap_Means &lt;- Sample100 %&gt;% 
   specify(response = arr_delay) %&gt;%
   generate(reps = 500, type = "bootstrap") %&gt;%
@@ -600,7 +605,7 @@ ggplot(Bootstrap_Means, aes(x=stat))+
   geom_density(fill='turquoise', alpha=0.5)+labs(x='Bootstrap Means')
 ```
 
-&lt;img src="statistical-foundations_files/figure-html/unnamed-chunk-24-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="statistical-foundations_files/figure-html/unnamed-chunk-25-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 ## Bootstrapping: Bigger Sample
@@ -608,7 +613,7 @@ ggplot(Bootstrap_Means, aes(x=stat))+
 
 Bootstrap Sample:
 
-```r
+``` r
 favstats(~stat, data=Bootstrap_Means)
 ```
 
@@ -619,7 +624,7 @@ favstats(~stat, data=Bootstrap_Means)
 
 Sampling Distribution:
 
-```r
+``` r
 favstats(~mean_arr_delay, data=chi_25_means)
 ```
 
@@ -631,25 +636,6 @@ favstats(~mean_arr_delay, data=chi_25_means)
 --
 
 For moderate to large sample sizes and sufficient number of bootstraps, the bootstrap distribution approximates certain aspects of the sampling distribution, like the standard error and quantiles 
-
----
-## Example: What if we start with a different sample?
-
-
-```r
-NewSample &lt;- Chicago %&gt;% sample_n(size=100)
-
-New_Bootstrap_Means &lt;- NewSample %&gt;% 
-  specify(response = arr_delay) %&gt;%
-  generate(reps = 1000, type = "bootstrap") %&gt;%
-  calculate(stat = "mean")
-
-ggplot(New_Bootstrap_Means, aes(x=stat))+
-  geom_density(fill='turquoise', alpha=0.5)+
-  labs(x='NEW Bootstrap Means')
-```
-
-&lt;img src="statistical-foundations_files/figure-html/unnamed-chunk-27-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 ## Comparison of 3 Bootstrap Distributions
@@ -669,7 +655,6 @@ Quality samples tend to be representative of the population of interest
 Is this class a quality sample of all Creighton students?
 
 ---
-
 ## Outliers
 
 Outliers: a data point that differs significantly from other observations
@@ -681,130 +666,115 @@ When you have an outlier:
 - Only remove it if you are sure it is caused by completely random error, or not related to your research focus.
 
 ---
-## Example: Are there any outliers in the arrival delay?
+## Hypothesis Tests
+
+Used to test an assumption about a population parameter
+
+Made up of 4 steps:
+
+1. Start with a null hypothesis `\((H_0)\)`, that represents the status quo ("there is nothign going on")
+
+2. Set an alternative hypothesis `\((H_A)\)`, that represents the research question, i.e. what we’re testing for
+  - Can be one-sided or two-sided
+
+3. Conduct a hypothesis test under the assumption that the null hypothesis is true
+  - calculate a test-statistic/p-value 
+
+4. If the test results suggest that the data do not provide convincing evidence for the alternative hypothesis, stick with the null hypothesis
+  - If they do, then reject the null hypothesis in favor of the alternative
 
 
-```r
-ggplot(Chicago, aes(x=arr_delay)) + geom_histogram()
-```
+---
+### Example: New England Patriots
+
+The Patriots’ fan base is hugely devoted, probably due to their long run of success over nearly two decades. Many others, however, dislike the Patriots for their highly publicized cheating episodes, whether for deflating footballs or filming the practice sessions of their opponents. But did the Patriots cheat at the pre-game coin toss, which decides who starts the game with the ball?
+
+Believe it or not, many people think so. That’s because, for a stretch of 25 games spanning the 2014-15 NFL seasons, the Patriots won 19 out of 25 coin tosses, for a suspiciously high 76% winning percentage. For the Patriots’ detractors, this fact was clear evidence that something fishy was going on. 
+
+But before turning to fraud or the Force as an explanation, let’s take a closer look at the evidence. Just how likely is it that one team could win the pre-game coin toss at least 19 out of 25 times, assuming that there’s no cheating going on? We are going to examine this using a hypothesis test
+
+
+
+--
+
+`\(H_0:\)`  Pre-game coin toss in the Patriots’ games was truly random during the 2014-2015 NFL seasons.
+
+`\(H_A:\)` Patriots won the pre-game coin toss more often than what would be expected by random chance during the 2014-2015 NFL seasons.
+
+
+---
+### New England Patriots: Null Distribution
+
+Our burning question: just how likely is it that one team could win the pre-game coin toss at least 19 out of 25 times, assuming that there’s no cheating going on? We’d “expect” any given team to win only about half of its pre-game coin tosses, but we also have to account for the possibility that they just got lucky. Hence we want to simulate a random process, assuming the null hypothesis is true, called a **Null Distribution**
+
 
 &lt;img src="statistical-foundations_files/figure-html/unnamed-chunk-29-1.png" style="display: block; margin: auto;" /&gt;
 
----
-## Example: Let's Zoom In
-
-
-```r
-Chicago %&gt;% filter(arr_delay&gt;400) %&gt;% ggplot(aes(x=arr_delay)) + 
-  geom_histogram()
-```
-
-&lt;img src="statistical-foundations_files/figure-html/unnamed-chunk-30-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
-## Example: Any commonalities?
+### New England Patriots: P-value
 
-Do the long arrival delays have anything in common?
+Test Statistic:
 
-
-```r
-Chicago %&gt;% filter(arr_delay&gt;400) %&gt;%
-  dplyr::select(month, day, dep_delay, arr_delay, carrier)
+``` r
+sum(patriots_sim &gt;= 19)
 ```
 
 ```
-## # A tibble: 6 × 5
-##   month   day dep_delay arr_delay carrier
-##   &lt;int&gt; &lt;int&gt;     &lt;dbl&gt;     &lt;dbl&gt; &lt;chr&gt;  
-## 1     1    10      1126      1109 MQ     
-## 2     4    12       414       428 MQ     
-## 3     4    24       423       422 WN     
-## 4     5     3       878       875 MQ     
-## 5     5    23       466       448 AA     
-## 6     6    25       420       424 UA
+## [1] 83
 ```
 
----
-## Your Turn!
+--
+A **p-value** is the probability of observing a test statistic as extreme, or more extreme, than the test statistic observed, given that the null hypothesis is true.
 
-1. Are long delays (over 2 hours) more common in particular months? 
+&lt;img src="statistical-foundations_files/figure-html/unnamed-chunk-31-1.png" style="display: block; margin: auto;" /&gt;
 
-2. Are long delays (over 2 hours) more common with certain carriers?
-
----
-## Your Turn!
-
-Are long delays (over 2 hours) more common in particular months? 
-
-
-```r
-Chicago %&gt;% filter(arr_delay &gt; 120) %&gt;% 
-  dplyr::select(month, day, dep_delay, arr_delay, carrier) %&gt;%
-  group_by(month) %&gt;% 
-  summarize(N = n())
-```
-
-```
-## # A tibble: 12 × 2
-##    month     N
-##    &lt;int&gt; &lt;int&gt;
-##  1     1    30
-##  2     2    30
-##  3     3    48
-##  4     4   115
-##  5     5    90
-##  6     6   110
-##  7     7    93
-##  8     8    64
-##  9     9    53
-## 10    10    30
-## 11    11    29
-## 12    12    50
-```
 
 
 ---
-## Your Turn!
+### Making Conclusions
 
-Are long delays (over 2 hours) more common with certain carriers?
+We often use 5% as the cutoff for whether the p-value is low enough that the data are unlikely to have come from the null model. This cutoff value is called the significance level, `\(\alpha\)`.
 
+- If p-value &lt; `\(\alpha\)` , reject `\(H_0\)` in favor of `\(H_A\)`: The data provide convincing evidence for the alternative hypothesis.
 
-```r
-Chicago %&gt;% filter(arr_delay &gt; 120) %&gt;% 
-  dplyr::select(month, day, dep_delay, arr_delay, carrier) %&gt;%
-  group_by(carrier) %&gt;% 
-  summarize(N = n()) %&gt;%
-  arrange(desc(N))
-```
+- If p-value &gt; `\(\alpha\)`, fail to reject `\(H_0\)` in favor of `\(H_A\)`: The data do not provide convincing evidence for the alternative hypothesis.
 
-```
-## # A tibble: 6 × 2
-##   carrier     N
-##   &lt;chr&gt;   &lt;int&gt;
-## 1 UA        226
-## 2 WN        172
-## 3 AA        151
-## 4 MQ         84
-## 5 9E         58
-## 6 B6         51
-```
+--
+
+In our example, since 0.0083 &lt; 0.05, we have evidence that the New England Patriots won the coin toss more than what would be expected by random chance during the 2014-2015 NFL season.
+
 
 ---
-## Your Turn!
+## P-Values
 
-Are long delays (over 2 hours) more common with certain carriers?
+Using a p-value as a measure of statistical significance has both advantages and disadvantages:
+- The main advantage is that the p-value gives us a continuous measure of evidence against the null hypothesis. 
+  + The smaller the p-value, the more unlikely it is that we would have seen our data under the null hypothesis, and therefore the stronger (“more significant”) the evidence that the null hypothesis is false.
+- The main disadvantage is that the p-value is really, really hard to interpret correctly.
+
+---
+### P-Value Controversy
+
+To avoid thinking too hard about what a p-value actually means, many people just shrug their shoulders and ask a simple question about any particular p-value they happen to encounter: is it less than some magic threshold? 
+- Of course, there is no such thing as a genuinely magic threshold where results become important, any more than there is such a thing as a magic height at which you can suddenly play professional basketball.
+
+Need to distinguish between statistical significance and practical significance.
+
+- Statistical significance just means whether we reject `\(H_0\)`
+- Practical significance, means whether the numerical magnitude of something is large enough to matter to actual human persons
+  + Hypothesis tests with small differences in values can produce very low p-values if you have large sample size or the data have low variability.
 
 
-```r
-Chicago %&gt;% 
-  dplyr::select(month, day, dep_delay, arr_delay, carrier) %&gt;%
-  group_by(carrier) %&gt;% 
-  summarize(N = sum(arr_delay &gt; 120)/n()) %&gt;%
-  ggplot(aes(x = carrier, y = N)) + 
-  geom_col()
-```
+---
+### New England Patriots: Conclusion
 
-&lt;img src="statistical-foundations_files/figure-html/unnamed-chunk-34-1.png" style="display: block; margin: auto;" /&gt;
+But despite the small probability of such an extreme result, it’s hard to believe that the Patriots cheated on the coin toss, for a few reasons. 
+
+--
+  - How? The coin toss would be extremely hard to manipulate, even if you were inclined to do so. 
+  - The Patriots are just one team, and this is just one 25-game stretch. But the NFL has 32 teams, so the probability that at least one of them would go on an unusual coin-toss winning streak over at least one 25-game stretch over a long time period is a lot larger than the number we’ve calculated. 
+  - After this 25-game stretch, the Patriots reverted back to a more typical coin-toss winning percentage, closer to 50%. 
 
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
