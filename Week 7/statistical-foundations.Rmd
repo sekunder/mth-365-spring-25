@@ -46,13 +46,6 @@ knit_hooks$set(output = function(x, options) {
 
 
 
---
-
-Notes on Lab 3:
-
-- Please don't print our full data set
-- Check your data set - see if what you did is what you were expecting.
-- When asks a question, create code and then using the code develop your response
 
 ---
 ## Isn't this data science?
