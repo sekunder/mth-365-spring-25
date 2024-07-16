@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>MTH365: Introduction to Data Science</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Statistical Inference" />
+    <meta name="date" content="2024-10-08" />
+    <script src="libs/header-attrs-2.27/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# MTH365: Introduction to Data Science
+]
+.author[
+### Statistical Inference
+]
+.date[
+### October 8, 2024
+]
+
+---
+
+
+
+
+## Agenda
+
+
+
+---
+## Announcements
+
+
+---
+### Statistical Models
+
+
+There are two things we can do with fitting a model:
+1. Interpretation 
+2. Prediction
+
+Last week we focused on interpretation, today we are going to talk about prediction.
+
+--
+
+Calculating a prediction is easy:
+
+- Plug in values of predictors to the model equation
+- Calculate the predicted value of the response variable, `\((\hat{y})\)`
+
+Getting a good prediction is hard:
+
+- There is no guarantee the model estimates you have are correct
+- Your model might not perform as well with new data as it did with your sample data
+
+---
+### No one best model
+
+.center["All models are wrong, some are just useful"]
+
+--
+
+- Prediction Accuracy and Model Interpretability Trade-Off
+  - A simple model is easier to interpret
+  - A complicated model may have more accurate predictions
+  
+--
+
+- Bias vs Variance Trade-Off
+  - Models should minimize both bias and variance, but to some extent these are mutually exclusive goals.
+  - A complicated models have less bias, but generally have higher variance (overfit).
+  - A simple model can reduce variance but at the cost of increased bias (underfit).
+
+
+---
+### Over vs Under Fitting
+
+&lt;img src="../Week 7/images/model-fit.png" width="2297" style="display: block; margin: auto;" /&gt;
+
+---
+### Splitting Our Data
+
+- Several steps to create a useful statistical model: parameter estimation, model selection, performance assessment, etc.
+
+- Doing all of this on the entire data we have available can lead to overfitting
+  + A model fits too well on the training data, not only fitting the true trend but also the noise in the training data.
+
+- To avoid overfitting, we split the data.
+  + Training: The set of data on which you build your model
+  + Testing: After your model is built, this is the set used to test it by evaluating it against data that it has not previously seen.
+
+
+---
+### Let's return to our flight data
+
+Consider a random sample of 1000 flights from NYC to Chicago in 2013. We want to create a model to predict arrival delay.
+
+
+
+
+First we need to split it into a training and a testing set.
+
+
+``` r
+set.seed(365)
+test_id &lt;- sample(1:nrow(Chicago1000), 
+                  size=round(0.2*nrow(Chicago1000)))
+TEST &lt;- Chicago1000[test_id,]
+TRAIN &lt;- Chicago1000[-test_id,]
+```
+
+---
+### Flight Data: Workflow
+
++ Fit model to Training set (let's start with interaction model):
+
+
+``` r
+simple = lm(arr_delay ~ hour + dep_delay + hour:dep_delay, 
+         data = TRAIN)
+```
+
++ Predict outcome on the Testing Set:
+
+
+``` r
+predictions &lt;- predict(int, TEST)
+```
+
+3. Evaluate Performance
+
+  + Root Mean Square Error (RMSE) - for numerical response
+
+
+---
+### RMSE
+
+
+`$$\text{RMSE} = \sqrt{\frac{\sum^{n}_{i=1}(y_i - \hat{y}_i)^2}{n}}$$`
+
+
+
+- Most popular metric in the Regression setting
+- Quantifies the extent to which the predicted value is close to the true response value for that observation
+
+--
+
+RMSE for Test Set:
+
+
+``` r
+#install.packages("Metrics")
+library(Metrics)
+rmse(TEST$arr_delay, predictions)
+```
+
+```
+## [1] 15.84462
+```
+
+
+
+---
+### Your Turn!
+
+Find another model to predict `arr_delay`. Compare it's predictive accuracy to the previous model.
+
+
+
+---
+### Cross Validation
+
+Potential Problem with a single split into training/testing: you evaluated the model only once and you are not sure your good result is by luck or not
+
+- Want to evaluate model multiple times to be more confident in your model.
+- Generally an issue with smaller data sets (probably not necessary with a large number of observations)
+
+We can easily do this using cross validation 
+
+- A resampling method that uses different portions of the data to test and train a model on different iterations
+- Specifically going to focus on *k-fold cross validation*
+
+
+
+---
+### k-fold Cross Validation
+
+Steps:
+
+- Split the dataset into K subsets randomly
+- Use K-1 subsets for training the model
+- Test the model against that one subset that was left in the previous step
+-  Repeat the above steps for K times i.e., until the model is not trained and tested on all subsets
+- Generate overall prediction error by taking the average of prediction errors in every case
+
+&lt;img src="../Week 7/images/k-fold-cv1.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+### k-fold Cross Validation
+
+What should you choose for *k*?
+
+- Generally choose *k* = 5 or *k* = 10. 
+
+  + Large *k* is very computationally expensive and has lots of variability
+  + Small *k* can lead to a biased model
+
+---
+### k-fold Cross Validation
+
+
+``` r
+library(caret)
+train_control &lt;- trainControl(method = "cv", 
+                              number = 5)
+
+model &lt;- train(arr_delay ~ hour + dep_delay + hour:dep_delay, 
+               data = Chicago1000, trControl = train_control, 
+               method = "lm")
+model
+```
+
+```
+## Linear Regression 
+## 
+## 1000 samples
+##    2 predictor
+## 
+## No pre-processing
+## Resampling: Cross-Validated (5 fold) 
+## Summary of sample sizes: 800, 800, 800, 800, 800 
+## Resampling results:
+## 
+##   RMSE      Rsquared   MAE     
+##   19.03907  0.8312008  13.27001
+## 
+## Tuning parameter 'intercept' was held constant at a value of TRUE
+```
+
+
+
+---
+### k-fold Cross Validation
+
+Linear Regression does not have hyperparameters (parameters of the model that cannot be directly learned from the data)
+
+If you were working with a model with hyperparameters (we'll work with some later), best to do it this way:
+
+
+&lt;img src="../Week 7/images/k-fold-cv2.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+
+---
+### Your Turn!
+
+Try k-fold Cross Validation on your model! How does your results change as you change `\(k\)`?
+
+
+
+
+
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

@@ -1,7 +1,7 @@
 ---
 title: "MTH365: Introduction to Data Science"
 author: "Statistical Inference"
-date: "October 4, 2024"
+date: "October 1, 2024"
 output: 
   xaringan::moon_reader:
     lib_dir: libs
