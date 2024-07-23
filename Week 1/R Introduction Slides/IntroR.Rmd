@@ -1,5 +1,5 @@
 ---
-title: "MTH365: Introduction to Data Science"
+title: "DSC365: Introduction to Data Science"
 author: "Introduction to R"
 date: "August 22, 2024"
 output: 
@@ -38,6 +38,7 @@ knit_hooks$set(output = function(x, options) {
 clean_file_name <- function(x) {
   basename(x) %>% str_remove("\\..*?$") %>% str_remove_all("[^[A-z0-9_]]")
 }
+
 img_modal <- function(src, alt = "", id = clean_file_name(src), other = "") {
   
   other_arg <- paste0("'", as.character(other), "'") %>%
@@ -83,7 +84,7 @@ write("", file = "js-addins.html")
 class:inverse
 
 <br><br><br>
-## MTH365: Intro to Data Science
+## DSC365: Intro to Data Science
 ### Introduction to R
 #### August 22, 2024
 
@@ -111,7 +112,7 @@ class:inverse
 
 ```{r, echo=FALSE, out.width="100%", fig.align='center'}
 
-knitr::include_graphics("../Week 1/images/rstudio.png")
+knitr::include_graphics("../images/rstudio.png")
 
 ```
 
@@ -124,7 +125,7 @@ To Create a Script, Click the Following: File -> New File -> R script
 
 ```{r, echo=FALSE, out.width="100%", fig.align='center'}
 
-knitr::include_graphics("../Week 1/images/editor.jpeg")
+knitr::include_graphics("../images/editor.jpeg")
 
 ```
 <br>
@@ -137,7 +138,7 @@ knitr::include_graphics("../Week 1/images/editor.jpeg")
 
 ```{r, echo=FALSE, out.width="100%", fig.align='center'}
 
-knitr::include_graphics("../Week 1/images/console.jpeg")
+knitr::include_graphics("../images/console.jpeg")
 
 ```
 
@@ -146,7 +147,7 @@ knitr::include_graphics("../Week 1/images/console.jpeg")
 
 ```{r, echo=FALSE, out.width="100%", fig.align='center'}
 
-knitr::include_graphics("../Week 1/images/environment.jpeg")
+knitr::include_graphics("../images/environment.jpeg")
 
 ```
 
@@ -155,9 +156,9 @@ knitr::include_graphics("../Week 1/images/environment.jpeg")
 
 ```{r, results='asis', echo=FALSE, fig.align='center'}
 
-i1 <- img_modal(src = "../Week 1/images/files.png", alt = "Files",other=list(width="30%"))
-i2 <- img_modal(src = "../Week 1/images/packages.png", alt = "Packages",other=list(width="30%"))
-i3 <- img_modal(src = "../Week 1/images/help.png", alt = "Help",other=list(width="30%"))
+i1 <- img_modal(src = "../images/files.png", alt = "Files",other=list(width="30%"))
+i2 <- img_modal(src = "../images/packages.png", alt = "Packages",other=list(width="30%"))
+i3 <- img_modal(src = "../images/help.png", alt = "Help",other=list(width="30%"))
 
 c(str_split(i1, "\\n", simplify = T)[1:2],
   str_split(i2, "\\n", simplify = T)[1:2],
@@ -415,7 +416,7 @@ Method 3: Import Data set in Environment Tab
 
 Second, then load in the data
 ```{r, echo=FALSE}
-data = read.csv("../Week 1/data/movie-2018.csv")
+data = read.csv("~/Documents/Classes/MTH365/mth-365/Week 1/data/movie-2018.csv")
 ```
 
 ```{r, eval=FALSE}
@@ -539,7 +540,7 @@ Introduction points from: https://ourcodingclub.github.io/tutorials/intro-to-r/
 
 ```{r, echo=FALSE}
 
-knitr::include_graphics("../Week 1/images/debug.png")
+knitr::include_graphics("~/Documents/Classes/MTH365/mth-365/Week 1/images/debug.png")
 
 ```
 
@@ -548,6 +549,6 @@ Artwork by @allison_horst
 ---
 ## Coming Up Next Week:
 
-- Introducing R Markdown
+- Introducing Quarto
 - More Basic Functions
 

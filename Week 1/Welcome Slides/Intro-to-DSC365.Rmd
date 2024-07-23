@@ -1,5 +1,5 @@
 ---
-title: "Welcome to MTH365: Introduction to Data Science!"
+title: "Welcome to DSC365: Introduction to Data Science!"
 author: "Alison Kleffner"
 date: "August 20, 2024"
 output: 
@@ -88,7 +88,7 @@ Data science is an exciting discipline that allows you to turn raw data into und
 .center[
 ```{r, echo=FALSE}
 
-knitr::include_graphics("../Week 1/images/data-flowchart.png")
+knitr::include_graphics("~/Documents/Classes/MTH365/mth-365/Week 1/images/data-flowchart.png")
 
 ```
 ]
@@ -155,7 +155,7 @@ If you have never used *R* (or even heard of it) before, it is totally OK! We wi
 ].pull-right[
 ```{r, echo=FALSE}
 
-knitr::include_graphics("../Week 1/images/begin-R.png")
+knitr::include_graphics("~/Documents/Classes/MTH365/mth-365/Week 1/images/begin-R.png")
 
 ```
 .center[<font size = "0.75">Artwork by Allison Horst</font>]
@@ -209,9 +209,9 @@ More reasons to do your programming in a reproducible way:
 2. **Time elapsed**: even the best programmers forget how their code runs eventually
 
 ---
-### Reproducible Research with R Markdown
+### Reproducible Research with Quarto
 
-R Markdown provides “an authoring framework for data science”. In an R Markdown document, you can:
+Quarto provides “an authoring framework for data science”. In an R Markdown document, you can:
 
 - Save and execute code
 - Generate written reports that can be shared with someone else

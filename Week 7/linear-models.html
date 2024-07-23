@@ -539,22 +539,22 @@ Other: Common Fit Statistics
 - AIC: penalize the inclusion of additional variables to a model. It adds a penalty that increases the error when including additional terms. 
 
 ``` r
-AIC(model2)
+AIC(int)
 ```
 
 ```
-## [1] 10506.02
+## [1] 8724.086
 ```
 
 - BIC: Stronger penalty for including additional variables to the model.
 
 
 ``` r
-BIC(model2)
+BIC(int)
 ```
 
 ```
-## [1] 10525.65
+## [1] 8748.624
 ```
 
 
@@ -562,12 +562,13 @@ BIC(model2)
 ### Now we can create a linear model, but is it appropriate?
 
 1. The response has a normal distribution
-2. We need to have a linear relationship (constant variance)
+2. We need to have a linear relationship
   - Need to do nonlinear regression if that’s the case
-3. No perfect collinearity (i.e. one predictor isn’t a linear combination of another predictor in the model)
+3. Constant variance
+4. No perfect collinearity (i.e. one predictor isn’t a linear combination of another predictor in the model)
   - Focus on numerical predictor variables
   - e.g. can’t include revenue, cost, and profit in a model because profit = revenue – cost
-3. Observations are independent
+5. Observations are independent
   
 ---
 ## Assumption: Normality
@@ -591,7 +592,7 @@ plot(model6, which = 2)
 
 Look at the Residuals vs Fitted Plot
 - Look to see if there are any noticeable pattern in any of the plots
-- If pattern, constant variance assumption is violated
+- If pattern, linearity assumption is violated
 
 
 ``` r
@@ -599,6 +600,19 @@ plot(model6, which = 1)
 ```
 
 &lt;img src="linear-models_files/figure-html/unnamed-chunk-21-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+## Assumption: Constant Variance
+
+- Looking for a constant spread of the residuals
+- Don't want to see a narrowing or widening of points (fan shaped)
+
+
+``` r
+plot(model6, which = 3)
+```
+
+&lt;img src="linear-models_files/figure-html/unnamed-chunk-22-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 ## Assumption: No Perfect Collinearity
@@ -635,7 +649,7 @@ M &lt;- cor(Chicago1000[,c(15:16)])
 corrplot(M, method = "number", type = "upper")
 ```
 
-&lt;img src="linear-models_files/figure-html/unnamed-chunk-22-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="linear-models_files/figure-html/unnamed-chunk-23-1.png" style="display: block; margin: auto;" /&gt;
 
 
 ---
