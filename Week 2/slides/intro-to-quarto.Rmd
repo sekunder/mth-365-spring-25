@@ -1,0 +1,254 @@
+---
+title: "DSC365: Introduction to Data Science!"
+author: "Basic R and Quarto"
+date: "August 27, 2024"
+output: 
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r echo=FALSE, message=FALSE, warning = FALSE}
+library(tidyverse)
+library(knitr)
+
+hook_output = knit_hooks$get('output')
+knit_hooks$set(output = function(x, options) {
+  # this hook is used only when the linewidth option is not NULL
+  if (!is.null(n <- options$linewidth)) {
+    x = xfun::split_lines(x)
+    # any lines wider than n should be wrapped
+    if (any(nchar(x) > n)) x = strwrap(x, width = n)
+    x = paste(x, collapse = '\n')
+  }
+  hook_output(x, options)
+})
+
+```
+
+
+## Agenda
+
+- What is Quarto?
+- Quarto set-up
+- Looking at an actual Quarto Document
+
+**Notes Document**: DSC-365-Week2.Rmd
+
+
+---
+## Announcements
+
+- Introduction Questionnaire in BlueLine due **Thursday August 29 at 11:59 pm**
+  + Should take approximately 5 minutes
+- Start Lab 1 in class on Thursday!
+  + Due **Tuesday September 3rd, 2024 at 11:59 pm**
+
+---
+## What do you use to write?
+
+- Microsoft Word
+- Latex/Overleaf
+- Pages
+- Google Docs
+
+How do we get your results from `R` into those documents?
+
+---
+## Literate Programing
+
+A programming method where you intersperse text and code in the same document using structured text to indicate which lines are code and which lines are intended for human consumption.
+  - Use it to explain the purpose of our code and how to use it
+
+<br>
+
+Available Literate Programming options with R
+
+- `knitr` is primarily focused on the creation of Rnw (r no weave) files, which are essentially LaTeX files with R code inside. Rnw files are compiled into pdfs.
+- `rmarkdown` uses Rmd or Rmarkdown files, which can then be compiled into many different formats: pdf, html, markdown, Microsoft Word.
+- `quarto` uses qmd files, which are compiled into many different formats: pdf, html, markdown, Microsoft Word.
+
+
+
+
+---
+## Knit what?
+
+- Quarto adds (renders) `R` code into your document so that all of the files for a particular experiment are in one place.
+- Compiling the document also runs the `R` code, so one button press runs your statistical analysis and places it in your document.
+- Integrates `R` output with the document text so that pictures, tables, and numerical data are all dependent on the `R` code.
+- Produces beautiful, seamless integration of statistical analysis with scientific writing
+
+```{r, echo=FALSE, out.height="65%", out.width="90%", fig.align='center'}
+knitr::include_graphics("../../Week 2/slides/images/render-process.png")
+```
+
+
+---
+## Reproduceable Research
+
+- Journals often require code and data to be included in a paper submission so the analysis can be reproduced
+- Statistical analyses are often re-used for multiple similar experiments
+- We don't always comment code when we write it (though we should) - `quarto` provides context for the code by including the writeup with the code.
+
+---
+## What is Quarto?
+
+- Allows you to "weave together narrative text and code to produce elegantly formatted output as documents, web pages, blog posts, books and more!" ([source](https://quarto.org/docs/faq/rmarkdown.html))
+- R developed *R Markdown* to create documents that include R code, and *Quarto* is their attempt to bring *R Markdown* to everyone.
+  - Developed to be multilingual, beginning with R, Python and Javascript.
+
+
+Most of what we do today can be found in the [Quarto Website](https://quarto.org/docs/get-started/hello/rstudio.html) 
+
+---
+
+## Set-Up
+
++ [Install Quarto](https://quarto.org/docs/get-started/)
+  - This alone will allow you to create `HTML` and Word documents (if you have Word installed)
+  
++ Install the Necessary Packages
+```{r, eval = FALSE}
+install.packages(c("knitr", "rmarkdown", "quarto"))
+```
+
++ If you want to create pdfs (and don't have a Latex installation): install TinyTex
+```{r, eval = FALSE}
+install.packages("tinytex")
+library(tinytex)
+install_tinytex()
+```
+
+---
+## Creating a Quarto Document
+
+File -> New File -> Quarto Document 
+
+```{r, echo=FALSE, out.height="65%", out.width="90%", fig.align='center'}
+knitr::include_graphics("../../Week 2/slides/images/quarto.jpg")
+```
+
+---
+
+## Contents of a .qmd
+
+1. An (optional) YAML header surrounded by `---s`
+2. Code chunks beginning with ````{r}`
+3. Text mixed with simple text formatting (the markdown)
+
+```{r, echo=FALSE, out.height="65%", out.width="90%", fig.align='center'}
+knitr::include_graphics("../../Week 2/slides/images/quarto-document.png")
+```
+
+---
+## Let's Render this document
+
+```{r, echo=FALSE, fig.align='center'}
+knitr::include_graphics("../../Week 2/slides/images/quarto-run.png")
+```
+
+
+
+---
+## YAML
+
+The stuff at the top of the .Rmd file (called YAML front matter) tells **rmarkdown** what output format you want. 
+
+```{r, echo=FALSE, out.height="40%", out.width="60%", fig.align='center'}
+knitr::include_graphics("../../Week 2/slides/images/yaml.png")
+```
+
+<br>
+
+In this case, when you click "Render", RStudio calls `quarto::quarto_render("document-name.qmd", , output_format = "html")`. You can certainly change these default values. 
+
+---
+## What is a code chunk?
+
+In .qmd files, you can start/end a code chunk with three back-ticks. `quarto` knows that text is R code if it is included in a chunk.
+
+
+```{r echo=FALSE, warning=FALSE}
+knitr::include_graphics("../../Week 2/slides/images/code-chunk.png")
+```
+
+
+When you render your .qmd file, Quarto will run each code chunk and embed the results beneath the code chunk in your final report.
+
+
+---
+## Create Code Chunk:
+
+.pull-left[
+Option 1:
+
+```{r, echo=FALSE, out.height="70%", out.width="70%"}
+knitr::include_graphics("../../Week 2/slides/images/create-code-chunk.png")
+```
+].pull-right[
+Option 2:
+
+- Mac: `option+command+i`
+- Windows: `control+alt+i`
+]
+---
+## Code Chunk Options
+
+We may want to remove the messages (the italic text) from our R output in the pdf. Or, we might not want to show the code at all. `\(\\\)`
+
+There are many options to give you greater control over what is shown in the compiled document. 
+
+Let's look at these options in [the documentation](https://yihui.org/knitr/options/) 
+
+---
+## Common Code Chunk Options
+
+Identified by `#|` at the beginning of the line.
+
+- eval=FALSE: don't run the code
+
+- echo=FALSE: don't show the code
+
+- warning=FALSE: don't add R's warnings to the pdf
+
+- message=FALSE: don't show messages from R in the pdf
+
+- include=FALSE: don't include any R output in the document. 
+
+- cache=FALSE: re-run all of the code every time.
+
+---
+## Markdown: Any Writing
+
+```
+This is a really smart sentence you wrote. 
+
+### You can Bold your headers
+
+You also emphasize *important* words. 
+
+You can also **bold** important words.
+```
+This is a really smart sentence you wrote. 
+### You can Bold your headers
+You also emphasize *important* words. $\\$
+You can also **bold** important words
+
+<br>
+
+More Markdown Basics: <https://quarto.org/docs/authoring/markdown-basics.html#source-code> 
+
+---
+## Visual Editor
+
+```{r, echo=FALSE, fig.align='center'}
+knitr::include_graphics("../../Week 2/slides/images/visual-editor.png")
+```
+
+
+---
+## Next: Download Quarto Document from BlueLine

@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>DSC365: Introduction to Data Science!</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Basic R and Quarto" />
+    <meta name="date" content="2024-08-27" />
+    <script src="libs/header-attrs-2.27/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# DSC365: Introduction to Data Science!
+]
+.author[
+### Basic R and Quarto
+]
+.date[
+### August 27, 2024
+]
+
+---
+
+
+
+
+
+## Agenda
+
+- What is Quarto?
+- Quarto set-up
+- Looking at an actual Quarto Document
+
+**Notes Document**: DSC-365-Week2.Rmd
+
+
+---
+## Announcements
+
+- Introduction Questionnaire in BlueLine due **Thursday August 29 at 11:59 pm**
+  + Should take approximately 5 minutes
+- Start Lab 1 in class on Thursday!
+  + Due **Tuesday September 3rd, 2024 at 11:59 pm**
+
+---
+## What do you use to write?
+
+- Microsoft Word
+- Latex/Overleaf
+- Pages
+- Google Docs
+
+How do we get your results from `R` into those documents?
+
+---
+## Literate Programing
+
+A programming method where you intersperse text and code in the same document using structured text to indicate which lines are code and which lines are intended for human consumption.
+  - Use it to explain the purpose of our code and how to use it
+
+&lt;br&gt;
+
+Available Literate Programming options with R
+
+- `knitr` is primarily focused on the creation of Rnw (r no weave) files, which are essentially LaTeX files with R code inside. Rnw files are compiled into pdfs.
+- `rmarkdown` uses Rmd or Rmarkdown files, which can then be compiled into many different formats: pdf, html, markdown, Microsoft Word.
+- `quarto` uses qmd files, which are compiled into many different formats: pdf, html, markdown, Microsoft Word.
+
+
+
+
+---
+## Knit what?
+
+- Quarto adds (renders) `R` code into your document so that all of the files for a particular experiment are in one place.
+- Compiling the document also runs the `R` code, so one button press runs your statistical analysis and places it in your document.
+- Integrates `R` output with the document text so that pictures, tables, and numerical data are all dependent on the `R` code.
+- Produces beautiful, seamless integration of statistical analysis with scientific writing
+
+&lt;img src="../../Week 2/slides/images/render-process.png" width="90%" height="65%" style="display: block; margin: auto;" /&gt;
+
+
+---
+## Reproduceable Research
+
+- Journals often require code and data to be included in a paper submission so the analysis can be reproduced
+- Statistical analyses are often re-used for multiple similar experiments
+- We don't always comment code when we write it (though we should) - `quarto` provides context for the code by including the writeup with the code.
+
+---
+## What is Quarto?
+
+- Allows you to "weave together narrative text and code to produce elegantly formatted output as documents, web pages, blog posts, books and more!" ([source](https://quarto.org/docs/faq/rmarkdown.html))
+- R developed *R Markdown* to create documents that include R code, and *Quarto* is their attempt to bring *R Markdown* to everyone.
+  - Developed to be multilingual, beginning with R, Python and Javascript.
+
+
+Most of what we do today can be found in the [Quarto Website](https://quarto.org/docs/get-started/hello/rstudio.html) 
+
+---
+
+## Set-Up
+
++ [Install Quarto](https://quarto.org/docs/get-started/)
+  - This alone will allow you to create `HTML` and Word documents (if you have Word installed)
+  
++ Install the Necessary Packages
+
+``` r
+install.packages(c("knitr", "rmarkdown", "quarto"))
+```
+
++ If you want to create pdfs (and don't have a Latex installation): install TinyTex
+
+``` r
+install.packages("tinytex")
+library(tinytex)
+install_tinytex()
+```
+
+---
+## Creating a Quarto Document
+
+File -&gt; New File -&gt; Quarto Document 
+
+&lt;img src="../../Week 2/slides/images/quarto.jpg" width="90%" height="65%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Contents of a .qmd
+
+1. An (optional) YAML header surrounded by `---s`
+2. Code chunks beginning with ````{r}`
+3. Text mixed with simple text formatting (the markdown)
+
+&lt;img src="../../Week 2/slides/images/quarto-document.png" width="90%" height="65%" style="display: block; margin: auto;" /&gt;
+
+---
+## Let's Render this document
+
+&lt;img src="../../Week 2/slides/images/quarto-run.png" width="3432" style="display: block; margin: auto;" /&gt;
+
+
+
+---
+## YAML
+
+The stuff at the top of the .Rmd file (called YAML front matter) tells **rmarkdown** what output format you want. 
+
+&lt;img src="../../Week 2/slides/images/yaml.png" width="60%" height="40%" style="display: block; margin: auto;" /&gt;
+
+&lt;br&gt;
+
+In this case, when you click "Render", RStudio calls `quarto::quarto_render("document-name.qmd", , output_format = "html")`. You can certainly change these default values. 
+
+---
+## What is a code chunk?
+
+In .qmd files, you can start/end a code chunk with three back-ticks. `quarto` knows that text is R code if it is included in a chunk.
+
+
+&lt;img src="../../Week 2/slides/images/code-chunk.png" width="2120" /&gt;
+
+
+When you render your .qmd file, Quarto will run each code chunk and embed the results beneath the code chunk in your final report.
+
+
+---
+## Create Code Chunk:
+
+.pull-left[
+Option 1:
+
+&lt;img src="../../Week 2/slides/images/create-code-chunk.png" width="70%" height="70%" /&gt;
+].pull-right[
+Option 2:
+
+- Mac: `option+command+i`
+- Windows: `control+alt+i`
+]
+---
+## Code Chunk Options
+
+We may want to remove the messages (the italic text) from our R output in the pdf. Or, we might not want to show the code at all. `\(\\\)`
+
+There are many options to give you greater control over what is shown in the compiled document. 
+
+Let's look at these options in [the documentation](https://yihui.org/knitr/options/) 
+
+---
+## Common Code Chunk Options
+
+Identified by `#|` at the beginning of the line.
+
+- eval=FALSE: don't run the code
+
+- echo=FALSE: don't show the code
+
+- warning=FALSE: don't add R's warnings to the pdf
+
+- message=FALSE: don't show messages from R in the pdf
+
+- include=FALSE: don't include any R output in the document. 
+
+- cache=FALSE: re-run all of the code every time.
+
+---
+## Markdown: Any Writing
+
+```
+This is a really smart sentence you wrote. 
+
+### You can Bold your headers
+
+You also emphasize *important* words. 
+
+You can also **bold** important words.
+```
+This is a really smart sentence you wrote. 
+### You can Bold your headers
+You also emphasize *important* words. `\(\\\)`
+You can also **bold** important words
+
+&lt;br&gt;
+
+More Markdown Basics: &lt;https://quarto.org/docs/authoring/markdown-basics.html#source-code&gt; 
+
+---
+## Visual Editor
+
+&lt;img src="../../Week 2/slides/images/visual-editor.png" width="2515" style="display: block; margin: auto;" /&gt;
+
+
+---
+## Next: Download Quarto Document from BlueLine
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
