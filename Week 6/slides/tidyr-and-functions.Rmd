@@ -1,7 +1,7 @@
 ---
-title: "MTH365: Introduction to Data Science"
-author: "Data Classes and tidyr"
-date: "September 19, 2023"
+title: "DSC365: Introduction to Data Science"
+author: "tidyr and Function Writing"
+date: "September 24, 2024"
 output: 
   xaringan::moon_reader:
     lib_dir: libs
@@ -37,18 +37,14 @@ knit_hooks$set(output = function(x, options) {
  + `pivot_longer`
  + `pivot_wider`
 - Data Types
-  - Logical
-  - Double
-  - Integer
-  - Character
-  - Lists
-- Cat Lovers Example
+- Function Writing
+- Lists
+
 
 ---
 ## Announcements
 
-- Lab 3 due tonight!
-- Start Lab 4 on Thursday
+
 
 ---
 class:inverse
@@ -69,7 +65,7 @@ class:inverse
 
 ```{r, echo=FALSE}
 
-knitr::include_graphics("../Week 6/images/tidy-data-illustration.png")
+knitr::include_graphics("../../Week 6/slides/images/tidy-data-illustration.png")
 
 ```
 
@@ -80,7 +76,7 @@ knitr::include_graphics("../Week 6/images/tidy-data-illustration.png")
 .pull-left[
 ```{r, echo=FALSE}
 
-knitr::include_graphics("../Week 6/images/tidy-data.png")
+knitr::include_graphics("../../Week 6/slides/images/tidy-data.png")
 
 ```
 ].pull-right[
@@ -105,14 +101,14 @@ One way of telling whether a data set is tidy is to check that all keys for a va
 .pull-left[
 ```{r, echo=FALSE, fig.cap = "Tidy Data", out.height="70%", out.width="70%"}
 
-knitr::include_graphics("../Week 6/images/kp-tidy.png")
+knitr::include_graphics("../../Week 6/slides/images/kp-tidy.png")
 
 ```
 ].pull-right[
 
 ```{r, echo=FALSE, fig.cap="Untidy Data", out.width="90%", fig.align='center'}
 
-knitr::include_graphics("../Week 6/images/kp-untidy.png")
+knitr::include_graphics("../../Week 6/slides/images/kp-untidy.png")
 
 ```
 ]
@@ -144,7 +140,7 @@ xlab("variable") + ylab("rating")
 
 ```{r, echo=FALSE, out.width="80%"}
 
-knitr::include_graphics("../Week 6/images/pivot_longer.png")
+knitr::include_graphics("../../Week 6/slides/images/pivot_longer.png")
 
 ```
 
@@ -183,7 +179,7 @@ Useful if we want to display things as a table:
 
 ```{r, echo=FALSE, out.width="80%"}
 
-knitr::include_graphics("../Week 6/images/pivot_wider.png")
+knitr::include_graphics("../../Week 6/slides/images/pivot_wider.png")
 
 ```
 
@@ -226,96 +222,19 @@ class:inverse
 
 R is (usually) good at figuring out the best data type, but sometimes we'll need to take corrective action! The five data types we'll interact with the most are:
 
-- Logical
-- Double
-- Integer
-- Character
+- Logical: Can take on values of either `TRUE` or `FALSE`
+- Double: numeric data with decimals.
+- Integer: are numeric data without decimals.
+  - When R stores a number in a variable, it converts the number into a “double” value or a decimal type with at least two decimal places.
+- Character: The data type character is used when storing text, known as strings in R.
+  - The simplest ways to store data under the character format is by using "" around the piece of text
+  - Note that everything inside "" will be considered as character, no matter if it looks like character or not.
 - Lists
-
----
-## __Logical__: 
-
-Can take on values of either `TRUE` or `FALSE`
-
-```{r}
-typeof(TRUE)
-
-value1 <- 7; value2 <- 9
-
-# is value1 greater than value2?
-greater <- value1 > value2
-greater
-typeof(greater)
-```
-
-
-Note: You can also define logical variables with a single letter - `T` for `TRUE` or `F` for `FALSE`
-
----
-##__Character__: 
-
-The data type character is used when storing text, known as strings in R. The simplest ways to store data under the character format is by using "" around the piece of text:
-
-```{r}
-typeof("hello")
-```
-
-Note that everything inside "" will be considered as character, no matter if it looks like character or not. For example:
-
-```{r}
-typeof("4")
-```
-
----
-## __Double__: 
-
-A Double is numeric data with decimals.
-
-```{r}
-typeof(1.355)
-```
-
-When R stores a number in a variable, it converts the number into a “double” value or a decimal type with at least two decimal places.
-
-```{r}
-x <- 5
-typeof(x)
-```
-
----
-## __Integer__: 
-
-Integers are numeric data without decimals.
-
-```{r}
-typeof(7L)
-typeof(7)
-```
-
 
 ---
 ##__Lists__:
 
 Lists are the R objects which contain elements of different types like − numbers, strings, vectors and another list inside it.
-
-```{r}
-mylist = list("A", 1:4, c(TRUE, FALSE), 1:4/2)
-```
-
-.pull-left[
-```{r}
-mylist
-```
-
-].pull-right[
-```{r}
-str(mylist)
-```
-
-]
-
----
-## Named Lists:
 
 
 Because of their more complex structure we often want to name the elements of a list (we can also do this with vectors). This can make reading and accessing the list more straight forward.
@@ -338,17 +257,7 @@ myotherlist[[2]]
 ```
 ]
 
----
-## Concatenation
 
-Vectors can be constructed using the `c()` function.
-
-```{r}
-c(1,2,3)
-c(c(1,2,3),4)
-
-c("Hello", "World")
-```
 
 ---
 ## Coercion
@@ -386,29 +295,6 @@ R uses `NA` to represent missing values in its data structures.
 typeof(NA)
 ```
 
----
-## Other special values
-
-- `NaN`: Not a number
-- `Inf`: Positive infinity
-- `-Inf`: Negative infinity
-
-.pull-left[
-```{r}
-pi
-pi/0
-0/0
-
-```
-].pull-right[
-
-```{r}
-1/0 +1/0
-1/0-1/0
-
-NaN + NA
-```
-]
 
 ---
 ## Example: Cat lovers
@@ -423,7 +309,7 @@ str(cat_lovers)
 ```{r, message=FALSE, echo=FALSE}
 library(tidyverse)
 # Make sure to change the file directory
-cat_lovers <- read.csv("../Week 6/data/cat_lovers.csv")
+cat_lovers <- read.csv("../../Week 6/slides/data/cat_lovers.csv")
 
 str(cat_lovers)
 ```
@@ -474,7 +360,7 @@ cat_lovers[48:54,2]
 
 **Problem**: number_of_cats is a characters, when we want it to be a number. However, we have some strange response.
 
-**Attempt 1**: convert to numeric, where the respones that couldn't be converted to a number become `NA`
+**Attempt 1**: convert to numeric, where the response that couldn't be converted to a number become `NA`
 
 ```{r}
 cat_lovers = cat_lovers %>% 
@@ -498,50 +384,6 @@ You can discard these two lines, but they are still useful information, just in 
 
 **Attempt 2**: define a new variable?
 
-```{r, eval=FALSE}
-cat_lovers %>%
-  mutate(
-    number_of_cats = case_when(
-      name == "Ginger Clark" ~ 2,
-      name == "Doug Bass"    ~ 3
-    ),
-  ) %>%
-  summarise(mean_cats = mean(number_of_cats))
-```
---
-```{r, echo=FALSE}
-cat_lovers %>%
-  mutate(
-    number_of_cats = case_when(
-      name == "Ginger Clark" ~ 2,
-      name == "Doug Bass"    ~ 3
-    ),
-  ) %>%
-  summarise(mean_cats = mean(number_of_cats))
-```
-
-Crap. What's the problem?
-
----
-
-## Example: Cat lovers
-
-```{r, echo=FALSE}
-cat_lovers %>%
-  mutate(
-    number_of_cats = case_when(
-      name == "Ginger Clark" ~ 2,
-      name == "Doug Bass"    ~ 3
-    )
-  ) %>% tail(n=10)
-```
-
-Now we have our data in two separate comumns
-
----
-## Example: Cat lovers
-**Attempt 3**: Now that we (maybe) know what we're doing...
-
 ```{r, message=FALSE, warning=FALSE}
 cat_lovers2 <- cat_lovers %>%
   mutate(number_of_cats = case_when(
@@ -550,6 +392,8 @@ cat_lovers2 <- cat_lovers %>%
     .default = as.numeric(number_of_cats)
     )
   )
+
+head(cat_lovers2, n = 3)
 
 cat_lovers2 %>% summarise(mean_cats = mean(number_of_cats))
 ```
@@ -564,11 +408,6 @@ write.csv(cat_lovers, file = "cat_lovers_clean.csv",
 ```
 
 - Will save file into your working directory!!
----
-## Example: Moral of the story
-
-- If your data doesn't behave how you expect it to, implicit coercion might be the reason.
-- Go in and investigate your data, apply the fix, _save your data_, live happily ever after.
 
 ---
 ## Data "sets" in R
@@ -602,7 +441,7 @@ A `tibble` is a type of data frame that ... makes your life (i.e. data analysis)
 
 How many respondents have below average number of cats?
 
-```{r}
+```{r, warning=FALSE}
 mean_cats = cat_lovers2 %>% 
   summarize(mean_cat = mean(number_of_cats))
 mean_cats
@@ -643,22 +482,13 @@ class(mean_cats)
 ---
 ## Factors
 
-Factor objects are how R stores data for categorical variables (fixed numbers of discrete values).
+Factor objects are how R stores data for categorical variables (fixed numbers of discrete values). Historically, factors were much easier to work with than character vectors, so many base R functions automatically convert character vectors to factors.
 
 ```{r}
-x = factor(c("BS","Master", "PhD", "BA"))
+x = as.factor(cat_lovers$handedness)
 glimpse(x)
 class(x)
 ```
-
----
-### Factors
-
-```{r, fig.height=4.5, fig.width=8, fig.align='center'}
-ggplot(cat_lovers, aes(x = handedness)) + 
-  geom_bar()
-```
-
 
 ---
 ## Factors
@@ -676,14 +506,6 @@ ggplot(cat_lovers, aes(x = handedness)) +
   geom_bar()
 ```
 
----
-## Factor notes
-
-- R uses factors to handle categorical variables, variables that have a fixed and known set of possible values. Historically, factors were much easier to work with than character vectors, so many base R functions automatically convert character vectors to factors.
-
-- However, factors are still useful when you have true categorical data, and when you want to override the ordering of character vectors to improve display. The goal of the forcats package is to provide a suite of useful tools that solve common problems with factors.
-
-Source: [forcats.tidyverse.org](http://forcats.tidyverse.org/)
 
 ---
 ## Overrriding Data Types
@@ -721,9 +543,252 @@ So when working with data sets use `str`, `glimpse`, `class`
 
 Be careful about data types/classes
 
-  - Sometimes `R` makes silly assumptions about your data class 
-  - Using `tibble`s help, but it might not solve all issues
+  - If your data doesn't behave how you expect it to, implicit coercion might be the reason.
+    +  Sometimes `R` makes silly assumptions about your data class 
+  - Go in and investigate your data, apply the fix, _save your data_, live happily ever after.
   - Think about your data in context, e.g. 0/1 variable is most likely a `factor`
-  - If a plot/output is not behaving the way you expect, first investigate the data class
   - If you are absolutely sure of a data class, overwrite it in your tibble so that you don't need to keep having to keep track of it
   - `mutate` the variable with the correct class
+  
+  
+---
+class:inverse
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+.center[
+## Function Writing
+]
+
+---
+## Why Write your own Functions?
+
+Writing your own functions allow you to automate common tasks in a more powerful and general way than copy-and-pasting. 
+
+Writing a function has three big advantages over using copy-and-paste:
+
+- You can give a function an evocative name that makes your code easier to understand.
+
+- As requirements change, you only need to update code in one place, instead of many.
+
+- You eliminate the chance of making incidental mistakes when you copy and paste (i.e. updating a variable name in one place, but not in another).
+
+
+---
+### When Should You Write A Function?
+
+You should consider writing a function whenever you’ve copied and pasted a block of code more than twice (i.e. you now have three copies of the same code). 
+
+For example, take a look at this code. What does it do? Notice any mistakes?
+
+```{r}
+df <- tibble::tibble(
+  a = rnorm(10),
+  b = rnorm(10),
+  c = rnorm(10),
+  d = rnorm(10)
+)
+
+df$a <- (df$a - min(df$a, na.rm = TRUE)) / 
+  (max(df$a, na.rm = TRUE) - min(df$a, na.rm = TRUE))
+df$b <- (df$b - min(df$b, na.rm = TRUE)) / 
+  (max(df$b, na.rm = TRUE) - min(df$a, na.rm = TRUE))
+df$c <- (df$c - min(df$c, na.rm = TRUE)) / 
+  (max(df$c, na.rm = TRUE) - min(df$c, na.rm = TRUE))
+df$d <- (df$d - min(df$d, na.rm = TRUE)) / 
+  (max(df$d, na.rm = TRUE) - min(df$d, na.rm = TRUE))
+```
+
+---
+### How do you Write a Function?
+
+How many inputs do we have?
+
+```{r}
+(df$a - min(df$a, na.rm = TRUE)) /
+  (max(df$a, na.rm = TRUE) - min(df$a, na.rm = TRUE))
+```
+
+---
+### How do you Write a Function?
+
+Three components of writing a function:
+
+1. You need to pick a **name** for the function
+
+2. You list the **inputs**, or arguments, to the function inside function.
+
+3. You place the code you have developed in **body** of the function, a `{` block that immediately follows `function(...)`.
+
+```{r, eval = FALSE}
+function_name <- function(inputs separated by commas){
+  #body: put code here
+  # what to do with those inputs
+}
+```
+
+By default they return the last value computed in the function
+
+---
+### Example:
+
+```{r}
+add_2 <- function(x){
+  x + 2
+  1000
+}
+
+add_2(2)
+```
+
+--
+
+```{r}
+add_2 <- function(x){
+  x + 2
+}
+
+add_2(2)
+```
+
+---
+### Back to Rescale Example
+
+```{r}
+rescale01 <- function(x) {
+  rng <- range(x, na.rm = TRUE) #We’re computing the range of the data three times, so it makes sense to do it in one step
+  (x - rng[1]) / (rng[2] - rng[1])
+}
+
+rescale01(df$a)
+rescale01(df$b)
+```
+
+---
+### Your Turn
+
+Write your own mean function to find the mean of x :
+
+$$\bar{x} = \frac{\sum^n_{i=1}x_i}{n}$$
+
+```{r}
+set.seed(4)
+x <- round(runif(10, 0, 40),2)
+x
+```
+
+---
+### Conditional Executuion
+
+An `if` statement allows you to conditionally execute code. It looks like this:
+
+```{r, eval = FALSE}
+if (condition) {
+  # code executed when condition is TRUE
+} else {
+  # code executed when condition is FALSE
+}
+```
+
+
+Or can use the `ifelse` function:
+
+```{r, eval = FALSE}
+ifelse(condition, 
+       code executed when condition is TRUE, 
+       code executed when condition is FALSE)
+```
+
+---
+### Example
+
+```{r}
+ifelse_example <- function(x){
+  if(x > 0){
+    "This value is positive"
+  } else if (x == 0){
+    "This value is 0"} else{
+      "This value is negative"
+    }
+  }
+
+ifelse_example(3)
+ifelse_example(0)
+ifelse_example(-2)
+```
+
+---
+## Loops
+
+Another tool for reducing duplication is iteration, which helps you when you need to do the same thing to multiple inputs: repeating the same operation on different columns, or on different datasets. 
+
+`for` loops are an example of imperative programming and is a good starting point
+
+- they make iteration very explicit, so it’s obvious what’s happening. 
+
+
+---
+## Loops
+
+From Earlier:
+
+```{r, eval = FALSE}
+rescale01(df$a)
+rescale01(df$b)
+rescale01(df$c)
+rescale01(df$d)
+```
+
+Why we shortened our copying with creating a function, we still have something copy/pasted more than twice.
+
+---
+## Loops
+
+Loops have three main elements
+
+```{r}
+# 1. output
+output <- data.frame(matrix(NA, ncol = ncol(df), nrow = nrow(df)))
+for (i in seq_along(df)) {            # 2. sequence
+  output[,i] <- rescale01(df[[i]])      # 3. body
+}
+
+output
+```
+
+---
+### Your Turn:
+
+Compute the mean of every column in mtcars.
+
+```{r}
+data("mtcars")
+head(mtcars)
+```
+
+---
+### `purrr` Package:
+
+`for` loops are quite verbose, and require quite a bit of bookkeeping code that is duplicated for every for loop. 
+
+- Functional programming (FP) offers tools to extract out this duplicated code, so each common for loop pattern gets its own function. 
+
+Each function takes a vector as input, applies a function to each piece, and then returns a new vector that’s the same length (and has the same names) as the input. The type of the vector is determined by the suffix to the map function:
+
+- `map()` makes a list.
+- `map_lgl()` makes a logical vector.
+- `map_int()` makes an integer vector.
+- `map_dbl()` makes a double vector.
+- `map_chr()` makes a character vector.
+
+Once you master these functions, you’ll find it takes much less time to solve iteration problems. - The important thing is that you solve the problem that you’re working on, not write the most concise and elegant code.
+
+
+
+
+
