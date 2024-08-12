@@ -416,7 +416,7 @@ Method 3: Import Data set in Environment Tab
 
 Second, then load in the data
 ```{r, echo=FALSE}
-data = read.csv("~/Documents/Classes/MTH365/mth-365/Week 1/data/movie-2018.csv")
+data = read.csv("~/Documents/Classes/MTH365/mth-365/Welcome to DSC365/data/movie-2018.csv")
 ```
 
 ```{r, eval=FALSE}
@@ -540,11 +540,26 @@ Introduction points from: https://ourcodingclub.github.io/tutorials/intro-to-r/
 
 ```{r, echo=FALSE}
 
-knitr::include_graphics("~/Documents/Classes/MTH365/mth-365/Week 1/images/debug.png")
+knitr::include_graphics("~/Documents/Classes/MTH365/mth-365/Welcome to DSC365/images/debug.png")
 
 ```
 
 Artwork by @allison_horst
+
+---
+## Some Debugging Tips
+
+Here is a few strategies if your code does not work:
+
+- Google!
+    + Whenever you see an error message, start by googling it. If you’re lucky, you’ll discover that it’s a common error with a known solution. When googling, improve your chances of a good match by removing any variable names or values that are specific to your problem.
+
+- Make sure the problem does exist.
+    + Sometimes the error may not cause by the current lines you are working on. It is possible that you have changed something earlier. Try to re-run the files from the beginning.
+
+- Run the functions part by part till you find the problem. 
+
+- Print out the output to see whether it is the one you want. Sometimes look at the data type may also help you understand what's going on. 
 
 ---
 ## Coming Up Next Week:

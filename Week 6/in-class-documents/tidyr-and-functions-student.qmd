@@ -645,27 +645,4 @@ cat_lovers %>% summarise(mean(handness)) #mispelling
 7. package errors caused by being unable to install, compile or load a package.
 
 
-Here is a few strategies if your code does not work:
-
-1. Google!
-
-Whenever you see an error message, start by googling it. If you’re lucky, you’ll discover that it’s a common error with a known solution. When googling, improve your chances of a good match by removing any variable names or values that are specific to your problem.
-
-2. Make sure the problem does exist.
-
-Sometimes the error may not cause by the current lines you are working on. It is possible that you have changed something earlier. Try to re-run the files from the beginning.
-
-3. Run the functions part by part till you find the problem. 
-
-This is especially useful for the tidyverse functions. 
-
-```{r, eval = FALSE}
-cat_lover %>% filter(handedness == "left") %>% 
-  ggplot(aes(x = number_of_cats)) + 
-  geom_histogram()
-
-glimpse(cat_lover)
-```
-
-4. Print out the output to see whether it is the one you want. Sometimes look at the data type may also help you understand what's going on. 
 

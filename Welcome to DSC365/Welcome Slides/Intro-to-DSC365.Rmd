@@ -40,8 +40,6 @@ knit_hooks$set(output = function(x, options) {
 ---
 ## Homework
 
-- Introduction Questionnaire in BlueLine due **Thursday August 29 at 11:59 pm**
-  + Should take approximately 5 minutes
 - Software downloaded by beginning of class on **Thursday August 22**
   + Should hopefully have time at end of class
 
@@ -88,7 +86,7 @@ Data science is an exciting discipline that allows you to turn raw data into und
 .center[
 ```{r, echo=FALSE}
 
-knitr::include_graphics("~/Documents/Classes/MTH365/mth-365/Week 1/images/data-flowchart.png")
+knitr::include_graphics("~/Documents/Classes/MTH365/mth-365/Welcome to DSC365/images/data-flowchart.png")
 
 ```
 ]
@@ -155,7 +153,7 @@ If you have never used *R* (or even heard of it) before, it is totally OK! We wi
 ].pull-right[
 ```{r, echo=FALSE}
 
-knitr::include_graphics("~/Documents/Classes/MTH365/mth-365/Week 1/images/begin-R.png")
+knitr::include_graphics("~/Documents/Classes/MTH365/mth-365/Welcome to DSC365/images/begin-R.png")
 
 ```
 .center[<font size = "0.75">Artwork by Allison Horst</font>]

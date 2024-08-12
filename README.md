@@ -6,4 +6,4 @@ This webpage includes links to the PowerPoints along with additional files neede
 
 Date | Notes | Description | Additional Files | Homework Assigned
 ---- | ---- | --- | --- | ---
-8/20/2024 | [Welcome to Mth 365](Week 1/Welcome Slides/Intro-to-DSC365.html) | Class Introductions | | Introduction Questionnaire (BlueLine) **due Thursday August 29 at 11:59 pm**
+8/20/2024 | [Welcome to Mth 365](Welcome to DSC365/Welcome Slides/Intro-to-DSC365.html) | Class Introductions | | Download R/R Studio **due Thursday August 22 at 11:59 pm**
