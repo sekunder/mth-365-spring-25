@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>MTH365: Introduction to Data Science</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Decision Trees and Random Forests" />
+    <meta name="date" content="2023-10-17" />
+    <script src="libs/header-attrs-2.27/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# MTH365: Introduction to Data Science
+]
+.author[
+### Decision Trees and Random Forests
+]
+.date[
+### October 17, 2023
+]
+
+---
+
+
+
+
+&lt;style type="text/css"&gt;
+.tiny .remark-code { /*Change made here*/
+  font-size: 70% !important;
+}
+&lt;/style&gt;
+
+## Agenda
+
+- Prediction
+  - Evaluating Models
+- Decision Trees
+- Random Forests
+
+---
+## Announcements
+
+- **Lab 5** due tonight at 11:59 pm
+- **Mini-Project 2** due tonight at 11:59 pm
+
+---
+
+## Statistical learning and Machine learning
+
+The difference between two concepts are subjective. Both of the terms emphasize prediction more than interpretation and both of the terms involves using algorithms and statistical models to analyze and draw inferences from patterns in data.
+
+---
+## Supervised vs Unsupervised Learning
+
+Learning techniques fall into two categories:
+
+1. Supervised learning: Use input data (predictors) to predict the value of an output data (response variable). If the output data is continuous, we call it regression. If the output data is categorical, we call it classification.
+  -  You’re familiar with some (simple) supervised learning techniques already: like a linear model: y ~ x1 + x2 + x3
+2. Unsupervised learning: There is no response variable. We try to learn the pattern of the input data, usually by clustering them into several groups.
+
+--
+
+`\(\\\)`
+
+.center[
+What is the difference between classification and clustering?
+]
+
+---
+## Evaluating Models
+
+1. Bias-variance trade-off
+2. Prediction Accuracy
+
+---
+## Bias-variance trade-off
+
+Models should minimize both bias and variance, but to some extent these are mutually exclusive goals. 
+  - A complicated models have less bias, but generally have higher variance. 
+  - A simple model can reduce variance but at the cost of increased bias. 
+
+Also tends to be a trade-off between prediction accuracy and model complexity
+
+---
+## Cross-Validation
+
+In predictive analytics, data sets are often divided into two sets:
+- Training: The set of data on which you build your model
+- Testing: After your model is built, this is the set used to test it by evaluating it against data that it has not previously seen.
+
+One concern in model fitting is overfitting: A model fits too well on the training data, not only fitting the true trend but also the noise in the training data.
+- To avoid overfitting, we cross-validate by splitting the data.
+
+--
+`\(\\\)`
+.center[
+How many observations should go in the test v. training data set?
+]
+
+---
+## Cross-Validation
+
+Cross-validation is a resampling method that uses different portions of the data to test and train a model on different iterations
+
+Two main steps: 
+
+- splitting the data into subsets (called folds)
+- rotating the training and validation among them
+
+--
+
+&lt;img src="../../Week 9/slides/images/cv.png" width="65%" style="display: block; margin: auto;" /&gt;
+
+---
+## Prediction with Linear Regression
+
+Let's return to our flight data real quick. We can create a training and testing data set.
+
+
+``` r
+library(nycflights13)
+data("flights")
+set.seed(14)
+Chicago1000 &lt;- flights %&gt;%
+  filter(dest %in% c('ORD', 'MDW'), !is.na(arr_delay)) %&gt;% 
+  sample_n(size=1000)
+
+#Define our Training and Testing Sets
+set.seed(365)
+test_id &lt;- sample(1:nrow(Chicago1000), 
+                  size=round(0.4*nrow(Chicago1000)))
+TEST &lt;- Chicago1000[test_id,]
+TRAIN &lt;- Chicago1000[-test_id,]
+```
+
+---
+## Prediction with Linear Regression
+
+Root Mean Square Error (RMSE) = $$ \sqrt{\frac{\sum^n_i(y_i - \hat{y})^2}{n}}  $$
+
+
+``` r
+int = lm(arr_delay ~ hour + dep_delay + hour:dep_delay, 
+         data = TRAIN)
+
+#RMSE for Training Data
+sqrt(mean(int$residuals^2))
+```
+
+```
+## [1] 18.46875
+```
+
+``` r
+#install.packages("Metrics")
+library(Metrics)
+#RMSE for Testing Data
+rmse(TEST$arr_delay, predict(int, TEST))
+```
+
+```
+## [1] 19.52926
+```
+
+[Cross Validation with Linear Regression](https://www.geeksforgeeks.org/cross-validation-in-r-programming/)
+---
+## Classification Methods
+
+.center[
+Whereas regression models have a quantitative response variable (and can thus often be visualized as a geometric surface), classification models have a categorical response (and are often visualized as a discrete surface, i.e., a tree).
+]
+
+---
+## Example: Marijuana legalization
+
+The General Social Survey is a wide-ranging survey conducted biannually to measure cultural shifts in American society. We can use the GSS to get an idea of how popular opinion has changed.
+
+.tiny[
+
+``` r
+GSS &lt;- read.csv("../../Week 9/slides/GSS2016.csv")
+glimpse(GSS)
+```
+
+```
+## Rows: 9,423
+## Columns: 18
+## $ YEAR     &lt;int&gt; 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2010, 201…
+## $ NEWSFROM &lt;chr&gt; "Not applicable", "Not applicable", "Not applicable", "Not applicable", "Tv", "No…
+## $ HAPPY    &lt;chr&gt; "Pretty happy", "Not too happy", "Not too happy", "Not too happy", "Very happy", …
+## $ RELIG    &lt;chr&gt; "Catholic", "None", "Catholic", "Catholic", "Protestant", "None", "Catholic", "Pr…
+## $ GRASS    &lt;chr&gt; "Don't know", "Legal", "Not applicable", "Not legal", "Not legal", "Legal", "Don'…
+## $ COURTS   &lt;chr&gt; "About right", "Too harsh", "Not harsh enough", "Not harsh enough", "Not harsh en…
+## $ ENERGY   &lt;chr&gt; "Too little", "Too little", "Don't know", "About right", "Don't know", "Too littl…
+## $ EDUC     &lt;chr&gt; "Not applicable", "Too little", "Too little", "Not applicable", "About right", "T…
+## $ ENVIR    &lt;chr&gt; "Not applicable", "Too little", "Too little", "Not applicable", "About right", "T…
+## $ POLVIEWS &lt;chr&gt; "Slightly liberal", "Liberal", "Don't know", "Liberal", "Slightly liberal", "Slig…
+## $ PARTYID  &lt;chr&gt; "Democrat", "Democrat", "Democrat", "Republican", "Independent", "Democrat", "Ind…
+## $ REGION   &lt;chr&gt; "Middle atlantic", "Middle atlantic", "Middle atlantic", "Middle atlantic", "Midd…
+## $ INCOME   &lt;chr&gt; "$25000 or more", "$15000 - 19999", "$20000 - 24999", "$8000 to 9999", "Don't kno…
+## $ SEX      &lt;chr&gt; "Male", "Female", "Female", "Female", "Female", "Male", "Female", "Female", "Fema…
+## $ DEGREE   &lt;chr&gt; "Bachelor", "Bachelor", "Lt high school", "Lt high school", "Lt high school", "Lt…
+## $ AGE      &lt;chr&gt; "31", "23", "71", "82", "78", "40", "46", "80", "31", "No answer", "31", "21", "5…
+## $ MARITAL  &lt;chr&gt; "Never married", "Never married", "Divorced", "Widowed", "Married", "Never marrie…
+## $ BALLOT   &lt;chr&gt; "Ballot b", "Ballot b", "Ballot a", "Ballot b", "Ballot c", "Ballot b", "Ballot c…
+```
+]
+
+---
+## Let's Clean Our Data! Yay!
+
+- Let's only look at one year, say 2016, and remove "Not applicable from our response"
+
+
+``` r
+GSS &lt;- GSS %&gt;% filter(YEAR==2016) %&gt;% 
+  filter(GRASS != 'Not applicable')
+```
+
+- Want just two groups for responses: Legal and Not legal
+
+
+``` r
+GSS &lt;- GSS %&gt;%
+mutate(LEGAL = ifelse(GRASS=='Legal', 'Legal', 'Not legal'))
+```
+
+- Change variables to proper type
+
+
+``` r
+GSS$AGE &lt;- as.numeric(GSS$AGE)
+```
+
+```
+## Warning: NAs introduced by coercion
+```
+
+---
+## Cleaned Data
+
+.tiny[
+
+``` r
+head(GSS)
+```
+
+```
+##   YEAR       NEWSFROM        HAPPY    RELIG     GRASS           COURTS      ENERGY           EDUC
+## 1 2016             Tv Pretty happy     None     Legal        Too harsh  Too little     Too little
+## 2 2016 Not applicable   Very happy Catholic Not legal       Don't know  Too little     Too little
+## 3 2016 Not applicable   Very happy     None     Legal       Don't know About right Not applicable
+## 4 2016          Radio   Very happy     None     Legal Not harsh enough  Too little     Too little
+## 5 2016 Not applicable   Very happy Catholic Not legal Not harsh enough About right     Too little
+## 6 2016 Not applicable Pretty happy     None Not legal Not harsh enough About right Not applicable
+##            ENVIR             POLVIEWS     PARTYID          REGION         INCOME    SEX
+## 1     Don't know              Liberal Independent     New england $25000 or more   Male
+## 2    About right         Conservative  Republican     New england $25000 or more   Male
+## 3 Not applicable     Slightly liberal    Democrat     New england        Refused Female
+## 4     Too little     Slightly liberal    Democrat     New england $25000 or more Female
+## 5     Too little Slghtly conservative Independent Middle atlantic $25000 or more Female
+## 6 Not applicable         Conservative  Republican Middle atlantic $25000 or more   Male
+##           DEGREE AGE       MARITAL   BALLOT     LEGAL
+## 1    High school  61 Never married Ballot b     Legal
+## 2       Bachelor  72       Married Ballot c Not legal
+## 3       Graduate  55       Married Ballot c     Legal
+## 4 Junior college  53       Married Ballot b     Legal
+## 5    High school  23       Married Ballot c Not legal
+## 6 Junior college  71      Divorced Ballot c Not legal
+```
+]
+
+---
+## Testing data v. training data
+
+**Goal**: Use Age to predict people’s opinion of marijuana legalization.
+
+
+``` r
+set.seed(365)
+test_id &lt;- sample(1:nrow(GSS), size=round(0.4*nrow(GSS)))
+TEST &lt;- GSS[test_id,]
+TRAIN &lt;- GSS[-test_id,]
+```
+
+--
+
+How many people in the training data set support marijuana legalization?
+
+
+``` r
+TRAIN %&gt;% group_by(LEGAL) %&gt;% summarize(n=n())
+```
+
+```
+## # A tibble: 2 × 2
+##   LEGAL         n
+##   &lt;chr&gt;     &lt;int&gt;
+## 1 Legal       694
+## 2 Not legal   480
+```
+
+
+---
+## Decision Trees
+
+Decision trees: A tree-like model of decisions and their possible consequences
+
+- Has flowchart-like structure in which each...
+  + Internal node represents a "test" on an attribute (decision node), 
+  - Branch represents the outcome of the test, 
+  - Leaf node represents a class label (decision taken after computing all attributes). 
+- The paths from root to leaf represent classification rules.
+- Can be applied on both regression and classification problems.
+
+&lt;img src="../../Week 9/slides/images/decision-tree.png" width="75%" style="display: block; margin: auto;" /&gt;
+
+
+---
+## Fitting A Decision Tree
+
+
+``` r
+#install.packages('rpart')
+library(rpart)
+rpart(LEGAL~AGE, data=TRAIN, na.action = na.pass)
+```
+
+```
+## n= 1174 
+## 
+## node), split, n, loss, yval, (yprob)
+##       * denotes terminal node
+## 
+## 1) root 1174 480 Legal (0.5911414 0.4088586)  
+##   2) AGE&lt; 68.5 1026 385 Legal (0.6247563 0.3752437) *
+##   3) AGE&gt;=68.5 148  53 Not legal (0.3581081 0.6418919) *
+```
+
+---
+### Visualizing a Decision Tree
+
+
+``` r
+#install.packages("rattle")
+library(rattle)
+tree &lt;- rpart(LEGAL~AGE, data=TRAIN, na.action = na.pass)
+fancyRpartPlot(tree)
+```
+
+
+
+
+&lt;img src="../../Week 9/slides/images/tree1.png" width="75%" style="display: block; margin: auto;" /&gt;
+
+---
+### Visualizing using ggplot
+
+
+``` r
+TRAIN %&gt;% ggplot(aes(x=LEGAL, y=AGE)) + 
+  geom_hline(yintercept=69, col='black') + 
+  geom_jitter(alpha=0.5, aes(col=LEGAL))
+```
+
+&lt;img src="decision-trees-random-forests_files/figure-html/unnamed-chunk-18-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+### Visualizing using ggplot
+
+
+``` r
+TRAIN %&gt;% ggplot(aes(x=LEGAL, y=AGE)) +
+geom_boxplot(aes(col=LEGAL))
+```
+
+&lt;img src="decision-trees-random-forests_files/figure-html/unnamed-chunk-19-1.png" style="display: block; margin: auto;" /&gt;
+
+
+---
+### Try Yourself
+
+Remember we said earlier decision trees can also use to do the prediction when response variable is a continuous variable. Let’s see how it works. Suppose you want to use people’s political view (POLVIEWS) and marriage status (MARITAL) to estimate
+people’s age. Try to plot and tree and also make a side-by-side scatter plot.
+
+--
+
+
+``` r
+tree2 &lt;- rpart(AGE~POLVIEWS + MARITAL, data=TRAIN)
+fancyRpartPlot(tree2)
+```
+
+
+
+&lt;img src="../../Week 9/slides/images/tree2.png" width="75%" style="display: block; margin: auto;" /&gt;
+---
+### Try Yourself
+
+
+``` r
+TRAIN %&gt;% ggplot(aes(x=MARITAL, y=AGE)) +
+  geom_jitter(alpha=0.5, aes(col=MARITAL)) +
+  geom_hline(yintercept=c(36, 52, 69), col='black')
+```
+
+&lt;img src="decision-trees-random-forests_files/figure-html/unnamed-chunk-23-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+## Evaluating a decision tree: the three C’s
+
+- Complexity parameter
+- Confusion Matrix
+- Classification Accuracy
+
+---
+### Complexity parameter
+
+It is the amount by which splitting that node improved the relative error.
+  - So splitting that node only resulted in an improvement of 0.01, so the tree building stopped there
+
+.tiny[
+
+``` r
+printcp(tree)
+```
+
+```
+## 
+## Classification tree:
+## rpart(formula = LEGAL ~ AGE, data = TRAIN, na.action = na.pass)
+## 
+## Variables actually used in tree construction:
+## [1] AGE
+## 
+## Root node error: 480/1174 = 0.40886
+## 
+## n= 1174 
+## 
+##       CP nsplit rel error xerror     xstd
+## 1 0.0875      0    1.0000 1.0000 0.035093
+## 2 0.0100      1    0.9125 0.9125 0.034522
+```
+]
+
+---
+### Confusion Matrix
+
+
+``` r
+TRAIN &lt;- TRAIN %&gt;%
+  mutate(Legal_Tree = predict(tree, type='class'))
+
+confusion_train &lt;- tally(Legal_Tree~LEGAL, data=TRAIN)
+confusion_train
+```
+
+```
+##            LEGAL
+## Legal_Tree  Legal Not legal
+##   Legal       641       385
+##   Not legal    53        95
+```
+
+
+``` r
+TEST &lt;- TEST %&gt;%
+  mutate(Legal_Tree = predict(tree, type='class', newdata = TEST))
+
+confusion_test &lt;- tally(Legal_Tree~LEGAL, data=TEST)
+confusion_test
+```
+
+```
+##            LEGAL
+## Legal_Tree  Legal Not legal
+##   Legal       391       281
+##   Not legal    41        69
+```
+
+---
+### Classification Accuracy
+
+Training Accuracy:
+
+
+``` r
+sum(diag(confusion_train))/nrow(TRAIN)
+```
+
+```
+## [1] 0.6269165
+```
+
+Testing Accuracy:
+
+
+``` r
+sum(diag(confusion_test))/nrow(TEST)
+```
+
+```
+## [1] 0.5882353
+```
+
+---
+### Prediction for Decision Regression Tree
+
+Going Back to the Try it yourself example, we can still use the predict function to predict our regression decision tree outputs.
+
+
+``` r
+TEST &lt;- TEST %&gt;% filter(MARITAL != "No answer") 
+
+predict(tree2, TEST , method = "anova") %&gt;% head()
+```
+
+```
+##        1        2        3        4        5        6 
+## 51.60315 51.60315 36.39895 51.60315 51.60315 36.39895
+```
+
+&lt;br&gt;
+
+**Be Careful**: Can only predict using categorical variables located in the Training Set
+
+---
+### Try by Yourself
+
+What if we try to use both age and political affiliation to predict the view on marijuana legalization? Visualize the tree and calculate the classification accuracy.
+
+--
+
+
+``` r
+tree3 &lt;- rpart(LEGAL~AGE+PARTYID, data=TRAIN)
+fancyRpartPlot(tree3)
+```
+
+
+
+&lt;img src="../../Week 9/slides/images/tree3.png" width="2080" style="display: block; margin: auto;" /&gt;
+
+---
+### Try by Yourself
+
+
+``` r
+TRAIN &lt;- TRAIN %&gt;%
+  mutate(Legal_Tree = predict(tree3, type='class'))
+
+confusion_train &lt;- tally(Legal_Tree~LEGAL, data=TRAIN)
+```
+
+
+``` r
+TEST &lt;- TEST %&gt;%
+  mutate(Legal_Tree = predict(tree3, type='class', newdata = TEST))
+
+confusion_test &lt;- tally(Legal_Tree~LEGAL, data=TEST)
+```
+
+Training Accuracy:
+
+
+``` r
+sum(diag(confusion_train))/nrow(TRAIN)
+```
+
+```
+## [1] 0.6379898
+```
+
+Testing Accuracy:
+
+
+``` r
+sum(diag(confusion_test))/nrow(TEST)
+```
+
+```
+## [1] 0.6197183
+```
+
+---
+### Advantages and Disadvantages of Decision Trees
+
+- Easy to explain to people
+  + Can visualize
+  + Some people believe that it mirrors human decision-making
+- Can handle qualitative predictors with dummy variables
+- However, they generally do not have the same level of predictive accuracy as other approaches
+  + Can approve prediction accuracy by aggregating many trees!
+  
+  
+  
+---
+### Random Forests
+
+A random forest is collection of decision trees that are aggregated by majority rule
+
+Random forest will expect you to have a relatively large number of input variables.
+
+**Example**: Which variables are most important for predicting views on marijuana legalization?
+
+---
+### When to use random forest
+
+1. When there are a lot of variables and you have no idea why one may be useful to explain the response variable.
+
+2. Potential collinearity in the predictors.
+
+Once the random forest tells you several potential important variables, you can try to fit linear model or decision tree for interpretation
+
+---
+## Random Forests
+
+.tiny[
+
+``` r
+#install.packages('randomForest')
+library(randomForest)
+
+forest_grass &lt;- randomForest(as.factor(LEGAL)~NEWSFROM+HAPPY+
+                               RELIG+COURTS+ENERGY+EDUC+ENVIR+
+                               POLVIEWS+PARTYID+REGION+INCOME+
+                               SEX+DEGREE+AGE+MARITAL+BALLOT, 
+                             data=TRAIN, na.action = na.omit,
+                             ntree=201, mtry=4)
+
+forest_grass
+```
+
+```
+## 
+## Call:
+##  randomForest(formula = as.factor(LEGAL) ~ NEWSFROM + HAPPY +      RELIG + COURTS + ENERGY + EDUC + ENVIR + POLVIEWS + PARTYID +      REGION + INCOME + SEX + DEGREE + AGE + MARITAL + BALLOT,      data = TRAIN, ntree = 201, mtry = 4, na.action = na.omit) 
+##                Type of random forest: classification
+##                      Number of trees: 201
+## No. of variables tried at each split: 4
+## 
+##         OOB estimate of  error rate: 35.89%
+## Confusion matrix:
+##           Legal Not legal class.error
+## Legal       538       153   0.2214182
+## Not legal   264       207   0.5605096
+```
+]
+---
+## Random Forests: Prediction
+
+
+``` r
+TEST &lt;- TEST %&gt;%
+  mutate(Legal_RF = predict(forest_grass, type='class', 
+                            newdata = TEST)) 
+
+TEST$Legal_RF[1:5]
+```
+
+```
+##     1     2     3     4     5 
+## Legal Legal Legal Legal Legal 
+## Levels: Legal Not legal
+```
+
+---
+### Variable Importance
+
+Since each tree in a random forest uses a different set of variables, we want to keep track of which variables seem to be the most consistently influential. This is captured by the notion of importance.
+
+Gini is a measure of how each variable contributes to the homogeneity of the nodes and leaves in the resulting random forest (lower is more pure).
+
+.tiny[
+
+``` r
+importance(forest_grass) %&gt;% as.data.frame() %&gt;% 
+  rownames_to_column() %&gt;% arrange(desc(MeanDecreaseGini))
+```
+
+```
+##     rowname MeanDecreaseGini
+## 1       AGE         96.49321
+## 2  POLVIEWS         51.02785
+## 3    REGION         49.44354
+## 4    DEGREE         39.78192
+## 5    INCOME         35.98503
+## 6     RELIG         34.74858
+## 7   MARITAL         34.02996
+## 8    COURTS         32.48719
+## 9   PARTYID         29.11214
+## 10   ENERGY         27.48588
+## 11    ENVIR         25.42176
+## 12    HAPPY         24.58732
+## 13     EDUC         22.13127
+## 14 NEWSFROM         18.91842
+## 15      SEX         16.77552
+## 16   BALLOT         14.35204
+```
+]
+
+
+---
+### Decision Tree with Selected Importance
+
+
+``` r
+tree4 &lt;- rpart(LEGAL~AGE+REGION+POLVIEWS, data=TRAIN)
+fancyRpartPlot(tree4)
+```
+
+
+
+&lt;img src="../../Week 9/slides/images/tree4.png" width="2437" style="display: block; margin: auto;" /&gt;
+
+---
+### Your Turn: Age
+
+Which variables are most important for predicting ages? Use these to create a Decision Tree.
+
+--
+
+``` r
+forest_age &lt;- randomForest(AGE~NEWSFROM+ HAPPY+RELIG+COURTS+ENERGY
+                           +EDUC+ENVIR+ POLVIEWS+PARTYID+REGION+
+                             INCOME+SEX+ DEGREE+LEGAL+MARITAL+BALLOT, 
+                           data=TRAIN,
+                           ntree=201, mtry=3, na.action = na.omit)
+
+forest_age
+```
+
+```
+## 
+## Call:
+##  randomForest(formula = AGE ~ NEWSFROM + HAPPY + RELIG + COURTS +      ENERGY + EDUC + ENVIR + POLVIEWS + PARTYID + REGION + INCOME +      SEX + DEGREE + LEGAL + MARITAL + BALLOT, data = TRAIN, ntree = 201,      mtry = 3, na.action = na.omit) 
+##                Type of random forest: regression
+##                      Number of trees: 201
+## No. of variables tried at each split: 3
+## 
+##           Mean of squared residuals: 215.5168
+##                     % Var explained: 26.01
+```
+
+---
+### Your Turn: Age
+
+
+
+``` r
+importance(forest_age) %&gt;% as.data.frame() %&gt;%
+  rownames_to_column() %&gt;% arrange(desc(IncNodePurity))
+```
+
+```
+##     rowname IncNodePurity
+## 1   MARITAL     72777.041
+## 2    REGION     23131.370
+## 3  POLVIEWS     20546.556
+## 4    INCOME     18260.559
+## 5    DEGREE     17043.578
+## 6     RELIG     15920.127
+## 7  NEWSFROM     15490.672
+## 8   PARTYID     14342.756
+## 9    COURTS     14265.098
+## 10    ENVIR     12171.064
+## 11   ENERGY     11811.164
+## 12    HAPPY     11535.810
+## 13     EDUC     10229.520
+## 14    LEGAL      8710.686
+## 15      SEX      7483.333
+## 16   BALLOT      6311.855
+```
+
+``` r
+tree5 &lt;- rpart(AGE~MARITAL+REGION+POLVIEWS, data=TRAIN)
+```
+
+
+---
+### If Time: Iris Data
+
+Here is the data from credit card customers. One variable that credit card companies are often interested in is utilization: how much of the available credit limit is currently being “used”?
+
+
+``` r
+data("iris")
+```
+
+1. Separate into training and testing set
+2. Fit a random Forest Model (Species)- Decide variable importance
+3. Using your most important variables, create a decision tree
+4. Evaluate your decision Tree
+
+
+---
+### If Time: Iris Data
+
+
+``` r
+set.seed(10)
+test_id &lt;- sample(1:nrow(iris), size=round(0.4*nrow(iris)))
+TEST &lt;- iris[test_id,]
+TRAIN &lt;- iris[-test_id,]
+```
+
+.tiny[
+
+``` r
+forest_species &lt;- randomForest(Species~Sepal.Length + Sepal.Width+ 
+                                 Petal.Length+Petal.Width, data=TRAIN,
+                               ntree=50, mtry=2, na.action =na.omit)
+
+forest_species
+```
+
+```
+## 
+## Call:
+##  randomForest(formula = Species ~ Sepal.Length + Sepal.Width +      Petal.Length + Petal.Width, data = TRAIN, ntree = 50, mtry = 2,      na.action = na.omit) 
+##                Type of random forest: classification
+##                      Number of trees: 50
+## No. of variables tried at each split: 2
+## 
+##         OOB estimate of  error rate: 5.56%
+## Confusion matrix:
+##            setosa versicolor virginica class.error
+## setosa         35          0         0  0.00000000
+## versicolor      0         29         2  0.06451613
+## virginica       0          3        21  0.12500000
+```
+]
+
+---
+### If Time: Iris Data
+
+
+``` r
+importance(forest_species) %&gt;% as.data.frame() %&gt;%
+  rownames_to_column() %&gt;% arrange(desc(MeanDecreaseGini))
+```
+
+```
+##        rowname MeanDecreaseGini
+## 1 Petal.Length        29.035207
+## 2  Petal.Width        21.343675
+## 3 Sepal.Length         6.047485
+## 4  Sepal.Width         1.862966
+```
+
+``` r
+tree6 &lt;- rpart(Species ~ Petal.Width + Petal.Length, data=TRAIN)
+```
+
+---
+### If Time: Iris Data
+
+
+``` r
+fancyRpartPlot(tree6)
+```
+
+&lt;img src="../../Week 9/slides/images/tree6.png" width="1405" style="display: block; margin: auto;" /&gt;
+
+---
+### If Time: Iris Data
+
+
+``` r
+TRAIN &lt;- TRAIN %&gt;%
+  mutate(Species_Tree = predict(tree6, type='class'))
+
+confusion_train &lt;- tally(Species_Tree~Species, data=TRAIN)
+```
+
+
+``` r
+TEST &lt;- TEST %&gt;%
+  mutate(Species_Tree = predict(tree6, type='class', newdata = TEST))
+
+confusion_test &lt;- tally(Species_Tree~Species, data=TEST)
+```
+
+Training Accuracy:
+
+
+``` r
+sum(diag(confusion_train))/nrow(TRAIN)
+```
+
+```
+## [1] 0.9666667
+```
+
+Testing Accuracy:
+
+
+``` r
+sum(diag(confusion_test))/nrow(TEST)
+```
+
+```
+## [1] 0.95
+```
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

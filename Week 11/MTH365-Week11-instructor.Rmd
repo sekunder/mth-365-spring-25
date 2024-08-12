@@ -186,7 +186,7 @@ We create tokens using the `unnest_tokens` function.
 
 ```{r}
 tweet_words <- got %>% 
-  select(text) %>% 
+  dplyr::select(text) %>% 
   unnest_tokens(word,text)
 
 glimpse(tweet_words)
@@ -209,7 +209,7 @@ Stop words are words that does not have meaning in the text, like "the" and "a".
 ```{r, warning=FALSE, message=FALSE}
 glimpse(stop_words)
 
-my_stop_words <- stop_words %>% select(word) %>% 
+my_stop_words <- stop_words %>% dplyr::select(word) %>% 
   bind_rows(data.frame(word = c("https", "t.co", "rt")))
 
 tweet_words_interesting <- tweet_words %>% anti_join(my_stop_words)
