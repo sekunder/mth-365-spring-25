@@ -101,11 +101,6 @@ class:inverse
 <br>
 
 **Note**: Please follow along and run the code in the file *IntroR.R* found in BlueLine
----
-## Announcements
-
-- Introduction Questionnaire in BlueLine due **Thursday August 29 at 11:59 pm**
-  + Should take approximately 5 minutes
 
 ---
 ### R Studio Set-Up
@@ -350,7 +345,6 @@ Stackoverflow is VERY helpful!
   + Should now show up in *Packages* Tab
 - After packages are installed, their function can be loaded into the current *R* session using the function `library()`
 
-
 ---
 
 ## Installing Packages
@@ -387,8 +381,22 @@ library(tidyverse)
 
 Will have to run this every time we are in a new session and want to use this package
 
----
 
+---
+## Functions
+
+Think of a function like a verb:
+
+```{r, eval = FALSE}
+do_this(to_this)
+```
+
+**Functions** are sets of instructions that take **arguments** and **return** values
+
+
+*R* has pre-made functions found in packages, but later in the semester we will talk about how to create your own functions
+
+---
 ## Load Data
 
 We usually work with .csv file in R. When you have a file that need to be read into the Rstudio, first save the data set to the same file folder as your R file, or set the working directory to the file. 
@@ -561,6 +569,20 @@ Here is a few strategies if your code does not work:
 
 - Print out the output to see whether it is the one you want. Sometimes look at the data type may also help you understand what's going on. 
 
+---
+## Some Debugging Tips
+
+- Take a break! You won't effectively debug something if you're stressed.
+
+- Check your spelling
+
+```{r, echo=FALSE, out.width="70%", fig.align='center'}
+
+knitr::include_graphics("~/Documents/Classes/MTH365/mth-365/Welcome to DSC365/R Introduction Slides/images/spelling-error.png")
+
+```
+
+- Rubber ducking [(Source)](https://duckly.com/blog/improve-how-to-code-with-rubber-duck-debugging/)
 ---
 ## Coming Up Next Week:
 
