@@ -4,7 +4,7 @@
     <title>MTH365: Introduction to Data Science</title>
     <meta charset="utf-8" />
     <meta name="author" content="Decision Trees and Random Forests" />
-    <meta name="date" content="2023-10-17" />
+    <meta name="date" content="2024-10-22" />
     <script src="libs/header-attrs-2.27/header-attrs.js"></script>
     <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
@@ -20,7 +20,7 @@ class: center, middle, inverse, title-slide
 ### Decision Trees and Random Forests
 ]
 .date[
-### October 17, 2023
+### October 22, 2024
 ]
 
 ---
@@ -36,22 +36,11 @@ class: center, middle, inverse, title-slide
 
 ## Agenda
 
-- Prediction
-  - Evaluating Models
 - Decision Trees
 - Random Forests
 
 ---
 ## Announcements
-
-- **Lab 5** due tonight at 11:59 pm
-- **Mini-Project 2** due tonight at 11:59 pm
-
----
-
-## Statistical learning and Machine learning
-
-The difference between two concepts are subjective. Both of the terms emphasize prediction more than interpretation and both of the terms involves using algorithms and statistical models to analyze and draw inferences from patterns in data.
 
 ---
 ## Supervised vs Unsupervised Learning
@@ -62,117 +51,16 @@ Learning techniques fall into two categories:
   -  You’re familiar with some (simple) supervised learning techniques already: like a linear model: y ~ x1 + x2 + x3
 2. Unsupervised learning: There is no response variable. We try to learn the pattern of the input data, usually by clustering them into several groups.
 
---
-
-`\(\\\)`
-
-.center[
-What is the difference between classification and clustering?
-]
 
 ---
-## Evaluating Models
+## Tree-Based Methods
 
-1. Bias-variance trade-off
-2. Prediction Accuracy
+- Can be used for both regression and classification
+  + Regression models have a quantitative response variable (and can thus often be visualized as a geometric surface), classification models have a categorical response (and are often visualized as a discrete surface, i.e., a tree).
+- These involve stratifying or segmenting the predictor space into a
+number of simple regions
+  + Have a set of decision rules that can be summarized in a tree
 
----
-## Bias-variance trade-off
-
-Models should minimize both bias and variance, but to some extent these are mutually exclusive goals. 
-  - A complicated models have less bias, but generally have higher variance. 
-  - A simple model can reduce variance but at the cost of increased bias. 
-
-Also tends to be a trade-off between prediction accuracy and model complexity
-
----
-## Cross-Validation
-
-In predictive analytics, data sets are often divided into two sets:
-- Training: The set of data on which you build your model
-- Testing: After your model is built, this is the set used to test it by evaluating it against data that it has not previously seen.
-
-One concern in model fitting is overfitting: A model fits too well on the training data, not only fitting the true trend but also the noise in the training data.
-- To avoid overfitting, we cross-validate by splitting the data.
-
---
-`\(\\\)`
-.center[
-How many observations should go in the test v. training data set?
-]
-
----
-## Cross-Validation
-
-Cross-validation is a resampling method that uses different portions of the data to test and train a model on different iterations
-
-Two main steps: 
-
-- splitting the data into subsets (called folds)
-- rotating the training and validation among them
-
---
-
-&lt;img src="../../Week 9/slides/images/cv.png" width="65%" style="display: block; margin: auto;" /&gt;
-
----
-## Prediction with Linear Regression
-
-Let's return to our flight data real quick. We can create a training and testing data set.
-
-
-``` r
-library(nycflights13)
-data("flights")
-set.seed(14)
-Chicago1000 &lt;- flights %&gt;%
-  filter(dest %in% c('ORD', 'MDW'), !is.na(arr_delay)) %&gt;% 
-  sample_n(size=1000)
-
-#Define our Training and Testing Sets
-set.seed(365)
-test_id &lt;- sample(1:nrow(Chicago1000), 
-                  size=round(0.4*nrow(Chicago1000)))
-TEST &lt;- Chicago1000[test_id,]
-TRAIN &lt;- Chicago1000[-test_id,]
-```
-
----
-## Prediction with Linear Regression
-
-Root Mean Square Error (RMSE) = $$ \sqrt{\frac{\sum^n_i(y_i - \hat{y})^2}{n}}  $$
-
-
-``` r
-int = lm(arr_delay ~ hour + dep_delay + hour:dep_delay, 
-         data = TRAIN)
-
-#RMSE for Training Data
-sqrt(mean(int$residuals^2))
-```
-
-```
-## [1] 18.46875
-```
-
-``` r
-#install.packages("Metrics")
-library(Metrics)
-#RMSE for Testing Data
-rmse(TEST$arr_delay, predict(int, TEST))
-```
-
-```
-## [1] 19.52926
-```
-
-[Cross Validation with Linear Regression](https://www.geeksforgeeks.org/cross-validation-in-r-programming/)
----
-## Classification Methods
-
-.center[
-Whereas regression models have a quantitative response variable (and can thus often be visualized as a geometric surface), classification models have a categorical response (and are often visualized as a discrete surface, i.e., a tree).
-]
 
 ---
 ## Example: Marijuana legalization
@@ -189,24 +77,24 @@ glimpse(GSS)
 ```
 ## Rows: 9,423
 ## Columns: 18
-## $ YEAR     &lt;int&gt; 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2010, 201…
-## $ NEWSFROM &lt;chr&gt; "Not applicable", "Not applicable", "Not applicable", "Not applicable", "Tv", "No…
-## $ HAPPY    &lt;chr&gt; "Pretty happy", "Not too happy", "Not too happy", "Not too happy", "Very happy", …
-## $ RELIG    &lt;chr&gt; "Catholic", "None", "Catholic", "Catholic", "Protestant", "None", "Catholic", "Pr…
-## $ GRASS    &lt;chr&gt; "Don't know", "Legal", "Not applicable", "Not legal", "Not legal", "Legal", "Don'…
-## $ COURTS   &lt;chr&gt; "About right", "Too harsh", "Not harsh enough", "Not harsh enough", "Not harsh en…
-## $ ENERGY   &lt;chr&gt; "Too little", "Too little", "Don't know", "About right", "Don't know", "Too littl…
-## $ EDUC     &lt;chr&gt; "Not applicable", "Too little", "Too little", "Not applicable", "About right", "T…
-## $ ENVIR    &lt;chr&gt; "Not applicable", "Too little", "Too little", "Not applicable", "About right", "T…
-## $ POLVIEWS &lt;chr&gt; "Slightly liberal", "Liberal", "Don't know", "Liberal", "Slightly liberal", "Slig…
-## $ PARTYID  &lt;chr&gt; "Democrat", "Democrat", "Democrat", "Republican", "Independent", "Democrat", "Ind…
-## $ REGION   &lt;chr&gt; "Middle atlantic", "Middle atlantic", "Middle atlantic", "Middle atlantic", "Midd…
-## $ INCOME   &lt;chr&gt; "$25000 or more", "$15000 - 19999", "$20000 - 24999", "$8000 to 9999", "Don't kno…
-## $ SEX      &lt;chr&gt; "Male", "Female", "Female", "Female", "Female", "Male", "Female", "Female", "Fema…
-## $ DEGREE   &lt;chr&gt; "Bachelor", "Bachelor", "Lt high school", "Lt high school", "Lt high school", "Lt…
-## $ AGE      &lt;chr&gt; "31", "23", "71", "82", "78", "40", "46", "80", "31", "No answer", "31", "21", "5…
-## $ MARITAL  &lt;chr&gt; "Never married", "Never married", "Divorced", "Widowed", "Married", "Never marrie…
-## $ BALLOT   &lt;chr&gt; "Ballot b", "Ballot b", "Ballot a", "Ballot b", "Ballot c", "Ballot b", "Ballot c…
+## $ YEAR     &lt;int&gt; 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2010…
+## $ NEWSFROM &lt;chr&gt; "Not applicable", "Not applicable", "Not applicable", "Not applicable", "Tv"…
+## $ HAPPY    &lt;chr&gt; "Pretty happy", "Not too happy", "Not too happy", "Not too happy", "Very hap…
+## $ RELIG    &lt;chr&gt; "Catholic", "None", "Catholic", "Catholic", "Protestant", "None", "Catholic"…
+## $ GRASS    &lt;chr&gt; "Don't know", "Legal", "Not applicable", "Not legal", "Not legal", "Legal", …
+## $ COURTS   &lt;chr&gt; "About right", "Too harsh", "Not harsh enough", "Not harsh enough", "Not har…
+## $ ENERGY   &lt;chr&gt; "Too little", "Too little", "Don't know", "About right", "Don't know", "Too …
+## $ EDUC     &lt;chr&gt; "Not applicable", "Too little", "Too little", "Not applicable", "About right…
+## $ ENVIR    &lt;chr&gt; "Not applicable", "Too little", "Too little", "Not applicable", "About right…
+## $ POLVIEWS &lt;chr&gt; "Slightly liberal", "Liberal", "Don't know", "Liberal", "Slightly liberal", …
+## $ PARTYID  &lt;chr&gt; "Democrat", "Democrat", "Democrat", "Republican", "Independent", "Democrat",…
+## $ REGION   &lt;chr&gt; "Middle atlantic", "Middle atlantic", "Middle atlantic", "Middle atlantic", …
+## $ INCOME   &lt;chr&gt; "$25000 or more", "$15000 - 19999", "$20000 - 24999", "$8000 to 9999", "Don'…
+## $ SEX      &lt;chr&gt; "Male", "Female", "Female", "Female", "Female", "Male", "Female", "Female", …
+## $ DEGREE   &lt;chr&gt; "Bachelor", "Bachelor", "Lt high school", "Lt high school", "Lt high school"…
+## $ AGE      &lt;chr&gt; "31", "23", "71", "82", "78", "40", "46", "80", "31", "No answer", "31", "21…
+## $ MARITAL  &lt;chr&gt; "Never married", "Never married", "Divorced", "Widowed", "Married", "Never m…
+## $ BALLOT   &lt;chr&gt; "Ballot b", "Ballot b", "Ballot a", "Ballot b", "Ballot c", "Ballot b", "Bal…
 ```
 ]
 
@@ -250,27 +138,27 @@ head(GSS)
 ```
 
 ```
-##   YEAR       NEWSFROM        HAPPY    RELIG     GRASS           COURTS      ENERGY           EDUC
-## 1 2016             Tv Pretty happy     None     Legal        Too harsh  Too little     Too little
-## 2 2016 Not applicable   Very happy Catholic Not legal       Don't know  Too little     Too little
-## 3 2016 Not applicable   Very happy     None     Legal       Don't know About right Not applicable
-## 4 2016          Radio   Very happy     None     Legal Not harsh enough  Too little     Too little
-## 5 2016 Not applicable   Very happy Catholic Not legal Not harsh enough About right     Too little
-## 6 2016 Not applicable Pretty happy     None Not legal Not harsh enough About right Not applicable
-##            ENVIR             POLVIEWS     PARTYID          REGION         INCOME    SEX
-## 1     Don't know              Liberal Independent     New england $25000 or more   Male
-## 2    About right         Conservative  Republican     New england $25000 or more   Male
-## 3 Not applicable     Slightly liberal    Democrat     New england        Refused Female
-## 4     Too little     Slightly liberal    Democrat     New england $25000 or more Female
-## 5     Too little Slghtly conservative Independent Middle atlantic $25000 or more Female
-## 6 Not applicable         Conservative  Republican Middle atlantic $25000 or more   Male
-##           DEGREE AGE       MARITAL   BALLOT     LEGAL
-## 1    High school  61 Never married Ballot b     Legal
-## 2       Bachelor  72       Married Ballot c Not legal
-## 3       Graduate  55       Married Ballot c     Legal
-## 4 Junior college  53       Married Ballot b     Legal
-## 5    High school  23       Married Ballot c Not legal
-## 6 Junior college  71      Divorced Ballot c Not legal
+##   YEAR       NEWSFROM        HAPPY    RELIG     GRASS           COURTS      ENERGY
+## 1 2016             Tv Pretty happy     None     Legal        Too harsh  Too little
+## 2 2016 Not applicable   Very happy Catholic Not legal       Don't know  Too little
+## 3 2016 Not applicable   Very happy     None     Legal       Don't know About right
+## 4 2016          Radio   Very happy     None     Legal Not harsh enough  Too little
+## 5 2016 Not applicable   Very happy Catholic Not legal Not harsh enough About right
+## 6 2016 Not applicable Pretty happy     None Not legal Not harsh enough About right
+##             EDUC          ENVIR             POLVIEWS     PARTYID          REGION
+## 1     Too little     Don't know              Liberal Independent     New england
+## 2     Too little    About right         Conservative  Republican     New england
+## 3 Not applicable Not applicable     Slightly liberal    Democrat     New england
+## 4     Too little     Too little     Slightly liberal    Democrat     New england
+## 5     Too little     Too little Slghtly conservative Independent Middle atlantic
+## 6 Not applicable Not applicable         Conservative  Republican Middle atlantic
+##           INCOME    SEX         DEGREE AGE       MARITAL   BALLOT     LEGAL
+## 1 $25000 or more   Male    High school  61 Never married Ballot b     Legal
+## 2 $25000 or more   Male       Bachelor  72       Married Ballot c Not legal
+## 3        Refused Female       Graduate  55       Married Ballot c     Legal
+## 4 $25000 or more Female Junior college  53       Married Ballot b     Legal
+## 5 $25000 or more Female    High school  23       Married Ballot c Not legal
+## 6 $25000 or more   Male Junior college  71      Divorced Ballot c Not legal
 ```
 ]
 
@@ -319,9 +207,22 @@ Decision trees: A tree-like model of decisions and their possible consequences
 
 &lt;img src="../../Week 9/slides/images/decision-tree.png" width="75%" style="display: block; margin: auto;" /&gt;
 
+---
+## Decision Trees (Classification)
+
+We predict that each observation belongs to the most commonly occurring class of training observations in the region to which it belongs.
+
+--
+
+How to decide to split?
+  + Gini Index: `$$G = \sum^{K}_{k=1}\hat{p}_{mk}(1-\hat{p}_{mk})$$`
+where `\(\hat{p}_{mk}\)` is the proportion of training observations in the *m*th region that are from the *k*th class
+    + Gini Index is a measure of node purity (a pure node contains observations from a single class)
+    
+    + used to evaluate quality of a split (create a split if makes the node more pure)
 
 ---
-## Fitting A Decision Tree
+## Fitting A Decision Tree (Classification)
 
 
 ``` r
@@ -342,7 +243,7 @@ rpart(LEGAL~AGE, data=TRAIN, na.action = na.pass)
 ```
 
 ---
-### Visualizing a Decision Tree
+### Visualizing a Decision Tree (Classification)
 
 
 ``` r
@@ -367,7 +268,7 @@ TRAIN %&gt;% ggplot(aes(x=LEGAL, y=AGE)) +
   geom_jitter(alpha=0.5, aes(col=LEGAL))
 ```
 
-&lt;img src="decision-trees-random-forests_files/figure-html/unnamed-chunk-18-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="decision-trees-random-forests_files/figure-html/unnamed-chunk-15-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 ### Visualizing using ggplot
@@ -378,37 +279,7 @@ TRAIN %&gt;% ggplot(aes(x=LEGAL, y=AGE)) +
 geom_boxplot(aes(col=LEGAL))
 ```
 
-&lt;img src="decision-trees-random-forests_files/figure-html/unnamed-chunk-19-1.png" style="display: block; margin: auto;" /&gt;
-
-
----
-### Try Yourself
-
-Remember we said earlier decision trees can also use to do the prediction when response variable is a continuous variable. Let’s see how it works. Suppose you want to use people’s political view (POLVIEWS) and marriage status (MARITAL) to estimate
-people’s age. Try to plot and tree and also make a side-by-side scatter plot.
-
---
-
-
-``` r
-tree2 &lt;- rpart(AGE~POLVIEWS + MARITAL, data=TRAIN)
-fancyRpartPlot(tree2)
-```
-
-
-
-&lt;img src="../../Week 9/slides/images/tree2.png" width="75%" style="display: block; margin: auto;" /&gt;
----
-### Try Yourself
-
-
-``` r
-TRAIN %&gt;% ggplot(aes(x=MARITAL, y=AGE)) +
-  geom_jitter(alpha=0.5, aes(col=MARITAL)) +
-  geom_hline(yintercept=c(36, 52, 69), col='black')
-```
-
-&lt;img src="decision-trees-random-forests_files/figure-html/unnamed-chunk-23-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="decision-trees-random-forests_files/figure-html/unnamed-chunk-16-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 ## Evaluating a decision tree: the three C’s
@@ -508,9 +379,43 @@ sum(diag(confusion_test))/nrow(TEST)
 ```
 
 ---
+## Decision Trees (Regression)
+
+1. We divide the predictor space — that is, the set of possible values for `\(X_1,X_2, \dots ,X_p\)` — into *J* distinct and non-overlapping regions, `\(R_1,R_2,\dots,R_J\)`.
+
+2. For every observation that falls into the region `\(R_j\)`, we make the same prediction, which is simply the mean of the response values for the training observations in `\(R_j\)`.
+
+
+--
+
+&lt;br&gt;
+
+How to decide to split?
+
+Find regions `\((R_j)\)` that minimizes the residual sum of squares `\((RSS = \sum^{J}_{j=1}\sum_{i \in R_j}(y_i - \hat{y}_{R_j})^2)\)`. Stops when you reach some criterion.
+
+
+---
+### Fitting A Decision Tree (Regression)
+
+Let's suppose we want to use people’s political view (POLVIEWS) and marital status (MARITAL) to estimate people’s age.
+
+--
+
+
+``` r
+tree2 &lt;- rpart(AGE~POLVIEWS+MARITAL, data=TRAIN)
+fancyRpartPlot(tree2)
+```
+
+
+
+&lt;img src="../../Week 9/slides/images/tree2.png" width="75%" style="display: block; margin: auto;" /&gt;
+
+---
 ### Prediction for Decision Regression Tree
 
-Going Back to the Try it yourself example, we can still use the predict function to predict our regression decision tree outputs.
+We can still use the predict function to predict our regression decision tree outputs. Can then find the RMSE using these predictions. Can also print out the complexity parameter information to assess fit.
 
 
 ``` r
@@ -587,6 +492,17 @@ sum(diag(confusion_test))/nrow(TEST)
 ```
 
 ---
+### Trees Versus Linear Models
+
+- If the relationship between the features and the response is well approximated by
+a linear model, then an approach such as linear regression will likely work well, and will outperform a method such as a regression tree that does not exploit this linear structure. 
+- If instead there is a highly nonlinear and complex relationship between the features and the response as indicated by model, then decision trees may outperform classical approaches
+
+&lt;br&gt;
+
+**But should also consider other things like testing error and interpretability**
+
+---
 ### Advantages and Disadvantages of Decision Trees
 
 - Easy to explain to people
@@ -617,7 +533,21 @@ Random forest will expect you to have a relatively large number of input variabl
 Once the random forest tells you several potential important variables, you can try to fit linear model or decision tree for interpretation
 
 ---
-## Random Forests
+## Building a Random Forest
+
+In building a random forest, each time a split in a tree is considered, a random sample of *m* predictors is chosen as split candidates from the full set of *p* predictors. 
+
+- A fresh sample of *m* predictors is taken at each split
+- Typically we choose *m* `\(\approx \sqrt{p}\)` 
+
+Hence, at each split in the tree, the algorithm is not even allowed to consider a majority of the available predictors. Why is this a good thing?
+
+- Suppose that there is one very strong predictor in the data set, along with a number of other moderately strong predictors
+- By forcing each split to consider only a subset of the predictors, some splits will not even consider the strong predictor, so other predictors will have more of a chance.        
+  + Decorrelating the trees - making the average of the resulting trees less variable and hence more reliable.
+
+---
+## Random Forests 
 
 .tiny[
 
@@ -643,13 +573,14 @@ forest_grass
 ##                      Number of trees: 201
 ## No. of variables tried at each split: 4
 ## 
-##         OOB estimate of  error rate: 35.89%
+##         OOB estimate of  error rate: 36.75%
 ## Confusion matrix:
 ##           Legal Not legal class.error
-## Legal       538       153   0.2214182
+## Legal       528       163   0.2358900
 ## Not legal   264       207   0.5605096
 ```
 ]
+
 ---
 ## Random Forests: Prediction
 
@@ -663,8 +594,8 @@ TEST$Legal_RF[1:5]
 ```
 
 ```
-##     1     2     3     4     5 
-## Legal Legal Legal Legal Legal 
+##         1         2         3         4         5 
+## Not legal     Legal     Legal     Legal     Legal 
 ## Levels: Legal Not legal
 ```
 
@@ -684,22 +615,22 @@ importance(forest_grass) %&gt;% as.data.frame() %&gt;%
 
 ```
 ##     rowname MeanDecreaseGini
-## 1       AGE         96.49321
-## 2  POLVIEWS         51.02785
-## 3    REGION         49.44354
-## 4    DEGREE         39.78192
-## 5    INCOME         35.98503
-## 6     RELIG         34.74858
-## 7   MARITAL         34.02996
-## 8    COURTS         32.48719
-## 9   PARTYID         29.11214
-## 10   ENERGY         27.48588
-## 11    ENVIR         25.42176
-## 12    HAPPY         24.58732
-## 13     EDUC         22.13127
-## 14 NEWSFROM         18.91842
-## 15      SEX         16.77552
-## 16   BALLOT         14.35204
+## 1       AGE         98.99517
+## 2  POLVIEWS         51.16884
+## 3    REGION         49.68865
+## 4    DEGREE         37.41108
+## 5    INCOME         35.65191
+## 6     RELIG         35.55887
+## 7   MARITAL         33.76458
+## 8    COURTS         32.47684
+## 9   PARTYID         28.61363
+## 10   ENERGY         27.42172
+## 11    HAPPY         25.79851
+## 12    ENVIR         25.38195
+## 13     EDUC         22.04172
+## 14 NEWSFROM         17.76259
+## 15      SEX         16.73957
+## 16   BALLOT         14.78124
 ```
 ]
 
@@ -720,14 +651,14 @@ fancyRpartPlot(tree4)
 ---
 ### Your Turn: Age
 
-Which variables are most important for predicting ages? Use these to create a Decision Tree.
+Which variables are most important for predicting ages? Use these to create a Decision Tree. Note: Check column name when you arrange the importance variables.
 
 --
 
 ``` r
 forest_age &lt;- randomForest(AGE~NEWSFROM+ HAPPY+RELIG+COURTS+ENERGY
                            +EDUC+ENVIR+ POLVIEWS+PARTYID+REGION+
-                             INCOME+SEX+ DEGREE+LEGAL+MARITAL+BALLOT, 
+                            INCOME+SEX+ DEGREE+LEGAL+MARITAL+BALLOT, 
                            data=TRAIN,
                            ntree=201, mtry=3, na.action = na.omit)
 
@@ -742,8 +673,8 @@ forest_age
 ##                      Number of trees: 201
 ## No. of variables tried at each split: 3
 ## 
-##           Mean of squared residuals: 215.5168
-##                     % Var explained: 26.01
+##           Mean of squared residuals: 214.6301
+##                     % Var explained: 26.32
 ```
 
 ---
@@ -758,22 +689,22 @@ importance(forest_age) %&gt;% as.data.frame() %&gt;%
 
 ```
 ##     rowname IncNodePurity
-## 1   MARITAL     72777.041
-## 2    REGION     23131.370
-## 3  POLVIEWS     20546.556
-## 4    INCOME     18260.559
-## 5    DEGREE     17043.578
-## 6     RELIG     15920.127
-## 7  NEWSFROM     15490.672
-## 8   PARTYID     14342.756
-## 9    COURTS     14265.098
-## 10    ENVIR     12171.064
-## 11   ENERGY     11811.164
-## 12    HAPPY     11535.810
-## 13     EDUC     10229.520
-## 14    LEGAL      8710.686
-## 15      SEX      7483.333
-## 16   BALLOT      6311.855
+## 1   MARITAL     71987.888
+## 2    REGION     22675.746
+## 3  POLVIEWS     21153.517
+## 4    INCOME     17773.530
+## 5    DEGREE     17247.317
+## 6     RELIG     16593.254
+## 7  NEWSFROM     15691.347
+## 8   PARTYID     14172.918
+## 9    COURTS     13872.600
+## 10    ENVIR     12287.841
+## 11    HAPPY     11598.273
+## 12   ENERGY     11547.199
+## 13     EDUC     10329.886
+## 14    LEGAL      8537.511
+## 15      SEX      7443.911
+## 16   BALLOT      6319.413
 ```
 
 ``` r
@@ -906,6 +837,8 @@ sum(diag(confusion_test))/nrow(TEST)
 ```
 ## [1] 0.95
 ```
+
+
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
