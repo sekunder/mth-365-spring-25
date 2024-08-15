@@ -81,12 +81,19 @@ Getting a good prediction is hard:
   - A complicated models have less bias, but generally have higher variance (overfit).
   - A simple model can reduce variance but at the cost of increased bias (underfit).
 
+---
+##Bias vs Variance
+
+```{r echo=FALSE, fig.align='center', out.width="70%"}
+knitr::include_graphics("../Week 8/images/bias-variance.png")
+```
+
 
 ---
 ### Over vs Under Fitting
 
 ```{r echo=FALSE, fig.align='center'}
-knitr::include_graphics("../Week 7/images/model-fit.png")
+knitr::include_graphics("../Week 8/images/model-fit.png")
 ```
 
 ---
@@ -133,7 +140,7 @@ TRAIN <- Chicago1000[-test_id,]
 + Fit model to Training set (let's start with interaction model):
 
 ```{r}
-simple = lm(arr_delay ~ hour + dep_delay + hour:dep_delay, 
+int = lm(arr_delay ~ hour + dep_delay + hour:dep_delay, 
          data = TRAIN)
 ```
 
@@ -205,7 +212,7 @@ Steps:
 - Generate overall prediction error by taking the average of prediction errors in every case
 
 ```{r echo=FALSE, fig.align='center', out.width="80%"}
-knitr::include_graphics("../Week 7/images/k-fold-cv1.png")
+knitr::include_graphics("../Week 8/images/k-fold-cv1.png")
 ```
 
 ---
@@ -243,7 +250,7 @@ If you were working with a model with hyperparameters (we'll work with some late
 
 
 ```{r echo=FALSE, fig.align='center', out.width="80%"}
-knitr::include_graphics("../Week 7/images/k-fold-cv2.png")
+knitr::include_graphics("../Week 8/images/k-fold-cv2.png")
 ```
 
 
@@ -262,7 +269,7 @@ We extrapolate when we use the regression equation to produce a response value f
 Let's look at the visualization of the relationship between year and diameter of a dinner plate.
 
 ```{r echo=FALSE, fig.align='center', out.width="40%"}
-knitr::include_graphics("../Week 7/images/extrapolation.png")
+knitr::include_graphics("../Week 8/images/extrapolation.png")
 ```
 
 The trend in the data as summarized by the estimated regression equation does not necessarily hold outside the scope of the model. If so, dinner plates would constantly be getting bigger. 

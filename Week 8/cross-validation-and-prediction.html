@@ -76,11 +76,16 @@ Getting a good prediction is hard:
   - A complicated models have less bias, but generally have higher variance (overfit).
   - A simple model can reduce variance but at the cost of increased bias (underfit).
 
+---
+##Bias vs Variance
+
+&lt;img src="../Week 8/images/bias-variance.png" width="70%" style="display: block; margin: auto;" /&gt;
+
 
 ---
 ### Over vs Under Fitting
 
-&lt;img src="../Week 7/images/model-fit.png" width="2297" style="display: block; margin: auto;" /&gt;
+&lt;img src="../Week 8/images/model-fit.png" width="2297" style="display: block; margin: auto;" /&gt;
 
 ---
 ### Splitting Our Data
@@ -121,7 +126,7 @@ TRAIN &lt;- Chicago1000[-test_id,]
 
 
 ``` r
-simple = lm(arr_delay ~ hour + dep_delay + hour:dep_delay, 
+int = lm(arr_delay ~ hour + dep_delay + hour:dep_delay, 
          data = TRAIN)
 ```
 
@@ -160,7 +165,7 @@ rmse(TEST$arr_delay, predictions)
 ```
 
 ```
-## [1] 15.84462
+## [1] 15.9417
 ```
 
 
@@ -198,7 +203,7 @@ Steps:
 -  Repeat the above steps for K times i.e., until the model is not trained and tested on all subsets
 - Generate overall prediction error by taking the average of prediction errors in every case
 
-&lt;img src="../Week 7/images/k-fold-cv1.png" width="80%" style="display: block; margin: auto;" /&gt;
+&lt;img src="../Week 8/images/k-fold-cv1.png" width="80%" style="display: block; margin: auto;" /&gt;
 
 ---
 ### k-fold Cross Validation
@@ -252,7 +257,7 @@ Linear Regression does not have hyperparameters (parameters of the model that ca
 If you were working with a model with hyperparameters (we'll work with some later), best to do it this way:
 
 
-&lt;img src="../Week 7/images/k-fold-cv2.png" width="80%" style="display: block; margin: auto;" /&gt;
+&lt;img src="../Week 8/images/k-fold-cv2.png" width="80%" style="display: block; margin: auto;" /&gt;
 
 
 ---
@@ -269,7 +274,7 @@ We extrapolate when we use the regression equation to produce a response value f
 
 Let's look at the visualization of the relationship between year and diameter of a dinner plate.
 
-&lt;img src="../Week 7/images/extrapolation.png" width="40%" style="display: block; margin: auto;" /&gt;
+&lt;img src="../Week 8/images/extrapolation.png" width="40%" style="display: block; margin: auto;" /&gt;
 
 The trend in the data as summarized by the estimated regression equation does not necessarily hold outside the scope of the model. If so, dinner plates would constantly be getting bigger. 
 

@@ -663,3 +663,20 @@ Testing Accuracy:
 ```{r}
 sum(diag(confusion_test))/nrow(TEST)
 ```
+
+
+---
+# Review on Random Forests
+
+__Random forest__ : Every time, only select a part of data and a part of variables to fit the tree model. Repeat for multiple times, the classification result will be majority of all tree models and the regression result will be the average prediction of all tree models. 
+
+Note: Random forest will expect you to have a relatively large number of input variables.  
+
+--
+
+**When to use random forests?**
+
+1. When there are a lot of variables and you have no idea why one may be useful to explain the response variable.
+2. Potential collinearity in the predictors.
+
+Once the random forest tells you several potential important variables, you can try to fit linear model or decision tree for interpretation

@@ -1,37 +1,14 @@
 ---
-title: "MTH365: Introduction to Data Science"
-author: "KNN And Classification"
-date: "October 24, 2023"
-output: 
-  xaringan::moon_reader:
-    lib_dir: libs
-    nature:
-      highlightStyle: github
-      highlightLines: true
-      countIncrementalSlides: false
+title: "Week 10: K Nearest Neighbors (KNN)"
+author: 'DSC 365: Introduction to Data Science'
+date: "October 29, 2024"
+format: pdf
 ---
 
-```{r echo=FALSE, message=FALSE, warning = FALSE}
+```{r, message=FALSE}
 library(tidyverse)
-library(knitr)
-library(mosaic)
-
+library(Metrics)
 ```
-
-
-# Review on Random Forests
-
-__Random forest__ : Every time, only select a part of data and a part of variables to fit the tree model. Repeat for multiple times, the classification result will be majority of all tree models and the regression result will be the average prediction of all tree models. 
-
-Note: Random forest will expect you to have a relatively large number of input variables.  
-
-
-**When to use random forests?**
-
-1. When there are a lot of variables and you have no idea why one may be useful to explain the response variable.
-2. Potential collinearity in the predictors.
-
-Once the random forest tells you several potential important variables, you can try to fit linear model or decision tree for interpretation
 
 
 ## "Lazy" learning
@@ -44,7 +21,7 @@ __Lazy learning__: no assumptions necessary to classify data
 
 __Example__: Consider the plot below - describe the relationship between x and y.
 
-```{r, fig.align='center', fig.height=4.5, fig.width=7}
+```{r, echo=FALSE, fig.align='center', fig.height=4.5, fig.width=7}
 set.seed(365)
 x1 <- runif(min=0.1, max=0.5, n=20)
 x2 <- runif(min=0.3, max=0.7, n=20)
@@ -63,47 +40,48 @@ ggplot(data, aes(x=x, y=y))+geom_point()
 ```
 
 
-
 What if the data points belonged to three different groups, like this?
 
-```{r, fig.align='center', fig.height=6.5, fig.width=8}
-ggplot(data, aes(x=x, y=y, group=group))+
-  geom_point(aes(col=group,pch=group))+
+```{r, echo=FALSE, fig.align='center', fig.height=6.5, fig.width=8}
+ggplot(data, aes(x=x, y=y,group=group)) +
+  geom_point(aes(col=group,pch=group)) +
   scale_color_brewer(palette='Set1')
 ```
 
 
-
 How should a new data point, $(0.2, 0.5)$ be classified? What about $(0.4, 0.2)$?
 
-```{r, fig.align='center', fig.height=6.5, fig.width=8}
-new.points <- data.frame(x = c(0.2, 0.4), y = c(0.5, 0.2), group=c('Point 1', 'Point 2'))
+```{r, echo=FALSE, fig.align='center', fig.height=6.5, fig.width=8}
+new.points <- data.frame(x = c(0.2, 0.4), y = c(0.5, 0.2), 
+                         group=c('Point 1', 'Point 2'))
+
 data.new <- rbind(data, new.points)
 
-ggplot(data.new, aes(x=x, y=y, group=group))+
-  geom_point(aes(col=group,pch=group))+
+ggplot(data.new, aes(x=x, y=y, group=group)) + 
+  geom_point(aes(col=group, pch=group)) + 
   scale_color_brewer(palette='Set1')
 ```
 
 
 ## $k$-nearest neighbor (k-NN or KNN): 
 
+A non-parametric supervised learning method that can be used for both classification and regression
+
 1. In k-NN classification, the output is a class membership. An object is classified by a plurality vote of its neighbors, with the object being assigned to the class most common among its k nearest neighbors (k is a positive integer, typically small). 
 2. In k-NN regression, the output is the property value for the object. This value is the average of the values of k nearest neighbors.
 
+## KNN for Classification Steps
 
-## k-NN Steps
-
-In the k-NN algorithm, $k$ specifies the number of neighbors and its algorithm is as follows:
+In the KNN algorithm, $k$ specifies the number of neighbors and its algorithm is as follows:
 
 - Choose the number $k$ of neighbors
 - Find the $k$ Nearest Neighbor of an unknown data point using distance.
-  + Euclidean Distance
-- Among the $k$-neighbors, count the number of data points in each category.
-- Assign the new data point to a category, where you counted the most neighbors.
+  + Euclidean Distance: $d(p,q) = \sqrt{\sum^n_{i=1}(p_i - q_i)^2}$
+- Among the $k$-neighbors, count the number of data points in each category (or find the conditional probability the new point $(x_0)$ is in category *j*).
+  + $P(Y=j|X=x_0) = \frac{1}{k}\sum_{i \in N_0}I(y_i = j)$
+- Assign the new data point to a category, where you counted the most neighbors/highest probability from formula above.
 
-
-## `knn()`
+### `knn()`
 
 __Example__: Let's classify our new points using $k=2$.
 
@@ -117,27 +95,36 @@ knnModel = knn(train = data[,1:2],
 knnModel
 ```
 
-
 What if we use more points, $k=10$?
 
 ```{r}
-
+knnModel = knn(train = data[,1:2], 
+               test = new.points[,1:2], 
+               cl = data$group, 
+               k = 10, prob = TRUE)
+knnModel
 ```
 
 
-## Advantages and disadvantages of $k$-nearest neighbors
+### Advantages and disadvantages of $k$-nearest neighbors
 
 The algorithm is easy to implement and straight forward. New data can be added seamlessly which will not impact the accuracy of the algorithm. No training period, relatively fast. 
 
 However, sometimes it is hard to decide the k value. With more variables included, the accuracy will be affected. Sensitive to the outliers, you need to scale the data sometimes. 
 
+Further, to provide accurate classification, KNN requires a lot of observations relative to the number of predictors—that is, n much larger than p.
 
-## Example: Credit utilization
+### Choice of k
+
++ *k* = 1: low bias, but high variance
++ *k* = 100: low variance, but high bias
+
+
+### Example: Credit Utilization
 
 __Example__: Can we use kNN to predict which utilization quantile a new customer falls into based on their application data?
 
 ```{r}
-#install.packges("ISLR")
 library(ISLR)
 data(Credit)
 Credit <- Credit %>% mutate(Utilization = Balance/Limit) %>% 
@@ -148,16 +135,13 @@ Credit <- Credit %>% mutate(Utilization = Balance/Limit) %>%
 
 ```
 
-
-
 We want to predict the utilization quantile based on two application characteristics: credit rating and age.
 
-```{r, fig.align='center', fig.height=6, fig.width=7}
+```{r, echo=FALSE, fig.align='center', fig.height=6, fig.width=7}
 ggplot(Credit, aes(x=Age, y=Rating, group=Quartile)) + 
   geom_point(aes(col=Quartile, pch=Quartile)) + 
   scale_color_brewer(palette='Set1')
 ```
-
 
 New applicants:
 
@@ -186,22 +170,17 @@ str(full$Quartile)
 
 ```
 
-
-
 ```{r, fig.align='center', fig.height=6, fig.width=7}
 ggplot(full, aes(x=Age, y=Rating, group=Quartile)) + 
   geom_point(aes(col=Quartile, pch=Quartile)) + 
   scale_color_brewer(palette='Set1')
 ```
 
+
 Fit a first model with $k=10$.
 
 ```{r}
-knn10 = knn(train = old[,1:2],
-            test = applicants[,1:2],
-            cl = old[,3], 
-            k = 10, prob = TRUE)
-knn10
+
 ```
 
 
@@ -219,43 +198,92 @@ Going bigger: $k=100$
 ```
 
 
-## Evaluate models with Cross-validation
+### Evaluate models with Cross-validation
 
 __Example__: Let's add some more dimensions to the model. We want to know if k-nearest neighbor is effective at predicting quartile membership using an applicant's age, credit rating, income, number of existing credit cards, and education level. I'll randomly select 100 observations for testing, and assign the other 300 to my training data set.
 
 ```{r}
-
+set.seed(365)
+test_ID = sample(1:nrow(Credit), size = 100)
+TEST = Credit[test_ID,]
+TRAIN = Credit[-test_ID, ]
 ```
-
 
 Now, we'll set the testing data as "new data", and make predictions using the k-nearest neighbors from the training data.
 
 ```{r}
-
-
+knn_train = TRAIN %>% dplyr::select(Age, Rating, Income, Cards, Education)
+knn_test = TEST %>% dplyr::select(Age, Rating, Income, Cards, Education) 
 ```
-
 
 Now, we'll set the testing data as "new data", and make predictions using the k-nearest neighbors from the training data.
 
 ```{r}
 #Create Confusion Matrix
 
-
-#Classification Accuracy
-
 ```
 
 
-## Try by yourself
+### Try by yourself
 
 Let's see whether we can predict people's ethnicity based on their credit card information (Age, Rating, Income, Cards, Education, Balance). Try to fit a KNN model with K = 5, 10, 25, 50, 100. See how the prediction values change and think about why.
 
 
-
 ```{r}
+
 ```
 
+
+## KNN for Regression Steps
+
+In the KNN algorithm, $k$ specifies the number of neighbors and its algorithm is as follows:
+
+- Choose the number $k$ of neighbors
+- Find the $k$ Nearest Neighbor of an unknown data point using distance.
+  + Euclidean Distance: $d(p,q) = \sqrt{\sum^n_{i=1}(p_i - q_i)^2}$
+- Estimates $f(x_0)$ (response value of the new observation) using the average of all the training responses of the $k$ Nearest Neighbors
+  + $\hat{f}(x_0) = \frac{1}{K}\sum_{x_i \in N_0}y_i$
+
+
+### Example: Credit Utilization
+
+
+```{r}
+knn_train = TRAIN %>% dplyr::select(Age, Rating, Income, Cards, 
+                                    Education)
+knn_test = TEST %>% dplyr::select(Age, Rating, Income, Cards, 
+                                  Education) 
+
+knn50 = FNN::knn.reg(train = knn_train, 
+            test = knn_test,
+            y = TRAIN$Utilization, 
+            k = 50)
+
+head(knn50$pred, n = 5)
+
+rmse(TEST$Utilization, knn50$pred)
+
+```
+
+
+### Linear Regression vs KNN Regression
+
+**In General**: 
+
+Parametric approaches will outperform nonparametric approaches if the parametric form that has been selected is close to the true form of the data
+
+So in situations where the relationship is nonlinear, KNN regression may perform better than Linear Regression
+
+- But, Linear Regression may actually perform better than KNN as the number of variables (dimensions) increase
+  + curse of dimensionality
+  
+### Try by yourself
+
+Run a multiple linear regression model on the same data, and compare the RMSE with the KNN regression model. Which method is performing better? Will increasing/decreasing *k* lower the RMSE?
+  
+```{r}
+
+```
 
 ## Summary 
 
