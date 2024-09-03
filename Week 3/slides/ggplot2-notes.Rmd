@@ -32,14 +32,13 @@ knit_hooks$set(output = function(x, options) {
 ```
 
 
-## Agenda
-
-- Grammar of Graphics
-- ggplot2 basics
-- Example Plots
-
----
 ## Announcements
+
+- Start Lab 2 in class on Thursday!
+  + Due **Tuesday September 10th, 2024 at 11:59 pm** 
+  
+- Will Discuss Mini-Project 1 on Thursday
+  + Due **Thursday September 19th, 2024 at 12:29 pm** (ie. before class starts)
 
 
 ---
