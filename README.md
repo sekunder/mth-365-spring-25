@@ -10,5 +10,7 @@ Date | Notes | Description | Additional Files | Homework Assigned
 8/22/2024 | [Intro to R](Welcome to DSC365/R Introduction Slides/IntroR.html) | R Basics |[R File](Welcome to DSC365/R Introduction Slides/IntroR.R) | 
 8/27/2024 | [Quarto](Week 2/slides/intro-to-quarto.html) | Introduction to interactive documents with Quarto  |[in class document](Week 2/in-class-documents/DSC365-quarto-intro-student.qmd) | 
 8/29/2024 | **Lab 1** | Lab 1 Work Day | | **Due** Thursday September 5 at 11:59 pm in Blueline
-8/27/2024 | [ggplot](Week 3/slides/ggplot2-notes.html) | Creating visualizations using ggplot2  |[in class document](Week 3/in-class-documents/DSC365-Week3-student.qmd) | 
-8/29/2024 | **Lab 2** | Lab 2 Work Day | | **Due** Tuesday September 10 at 11:59 pm in Blueline
+9/3/2024 | [ggplot](Week 3/slides/ggplot2-notes.html) | Creating visualizations using ggplot2  |[in class document](Week 3/in-class-documents/DSC365-Week3-student.qmd) | 
+9/5/2024 | **Lab 2** | Lab 2 Work Day | | **Due** Tuesday September 10 at 11:59 pm in Blueline
+9/10/2024 | [Data Wrangling](Week 4/slides/data-wrangling-notes.html) | Introduction to Data Wrangling with dyplr  |[in class document](Week 4/in-class-documents/DSC365-Data-Wrangling-student.qmd) | 
+9/12/2024 | **Lab 3** | Lab 3 Work Day | | **Due** Tuesday September 26 at 11:59 pm in Blueline
