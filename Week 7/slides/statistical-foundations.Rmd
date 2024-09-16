@@ -33,15 +33,6 @@ knit_hooks$set(output = function(x, options) {
 
 ```
 
-## Agenda
-
-- Population vs. Sampling
-- Sampling Distributions
-  + Standard Error
-- Confidence Intervals
-- Bootstrapping 
-
----
 ## Announcements
 
 

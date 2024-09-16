@@ -31,20 +31,15 @@ knit_hooks$set(output = function(x, options) {
 
 ```
 
-## Agenda
-
-- `tidyr`
- + `pivot_longer`
- + `pivot_wider`
-- Data Types
-- Function Writing
-- Lists
-
-
----
 ## Announcements
 
+**Lab 4**: Work day Thursday September 26
 
+- Due Tuesday October 1st, 2024 at 11:59 pm in Blueline
+
+**Mini Project 2**
+
+- Due Thursday October 24 at 11:59 in Blueline
 
 ---
 class:inverse
@@ -220,7 +215,7 @@ class:inverse
 ---
 ## Data types in R
 
-R is (usually) good at figuring out the best data type, but sometimes we'll need to take corrective action! The five data types we'll interact with the most are:
+R is (usually) good at figuring out the best data type, but sometimes we'll need to take corrective action! The four data types we'll interact with the most are:
 
 - Logical: Can take on values of either `TRUE` or `FALSE`
 - Double: numeric data with decimals.
@@ -229,7 +224,7 @@ R is (usually) good at figuring out the best data type, but sometimes we'll need
 - Character: The data type character is used when storing text, known as strings in R.
   - The simplest ways to store data under the character format is by using "" around the piece of text
   - Note that everything inside "" will be considered as character, no matter if it looks like character or not.
-- Lists
+- lists
 
 ---
 ##__Lists__:
@@ -257,22 +252,12 @@ myotherlist[[2]]
 ```
 ]
 
-
-
 ---
 ## Coercion
 
 When you mix data types within a vector, R will create the result with the data type that can most easily accommodate all the elements it contains. This conversion between modes of storage is called “coercion”. 
 
-- When R converts the mode of storage based on its content, it is referred to as “implicit coercion”. Can you guess the following data types?
-
-```{r, eval = FALSE}
-c(1, "Hello")
-c(FALSE, 3L)
-c(1.2, 3L)
-```
-
---
+- When R converts the mode of storage based on its content, it is referred to as “implicit coercion”.
 
 Use the `typeof()` function to find out.
 .pull-left[
@@ -450,7 +435,6 @@ cat_lovers2 %>% filter(number_of_cats < mean_cats) %>%
   nrow()
 ```
 
---
 Have you seen any problem here?
 --
 
@@ -484,10 +468,12 @@ class(mean_cats)
 
 Factor objects are how R stores data for categorical variables (fixed numbers of discrete values). Historically, factors were much easier to work with than character vectors, so many base R functions automatically convert character vectors to factors.
 
-```{r}
+```{r, fig.height=3, fig.width=8, fig.align='center'}
 x = as.factor(cat_lovers$handedness)
 glimpse(x)
-class(x)
+
+ggplot(cat_lovers, aes(x = handedness, fill = handedness)) + 
+  geom_bar()
 ```
 
 ---
@@ -502,7 +488,7 @@ cat_lovers = cat_lovers %>%
   mutate(handedness = fct_relevel(handedness, 
                                   "left", "ambidextrous", "right"))
 
-ggplot(cat_lovers, aes(x = handedness)) + 
+ggplot(cat_lovers, aes(x = handedness, fill = handedness)) + 
   geom_bar()
 ```
 
@@ -514,9 +500,9 @@ If you are absolutely sure of a data class, overwrite it in your tibble so that 
 
 ```{r}
 x <- "2"
-typeof(x)
+class(x)
 x <- as.numeric(x)
-typeof(x)
+class(x)
 
 ```
 
@@ -562,7 +548,7 @@ class:inverse
 <br>
 <br>
 .center[
-## Function Writing
+## Function Writing and Loops
 ]
 
 ---

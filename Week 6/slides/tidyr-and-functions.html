@@ -28,20 +28,15 @@ class: center, middle, inverse, title-slide
 
 
 
-## Agenda
-
-- `tidyr`
- + `pivot_longer`
- + `pivot_wider`
-- Data Types
-- Function Writing
-- Lists
-
-
----
 ## Announcements
 
+**Lab 4**: Work day Thursday September 26
 
+- Due Tuesday October 1st, 2024 at 11:59 pm in Blueline
+
+**Mini Project 2**
+
+- Due Thursday October 24 at 11:59 in Blueline
 
 ---
 class:inverse
@@ -106,20 +101,6 @@ One way of telling whether a data set is tidy is to check that all keys for a va
 
 ``` r
 library(reshape2)
-```
-
-```
-## 
-## Attaching package: 'reshape2'
-```
-
-```
-## The following object is masked from 'package:tidyr':
-## 
-##     smiths
-```
-
-``` r
 data("french_fries")
 head(french_fries)
 ```
@@ -148,7 +129,7 @@ geom_boxplot(aes(x = "5_rancid", y = rancid), fill = "deeppink") +
 xlab("variable") + ylab("rating")
 ```
 
-&lt;img src="tidyr-and-functions_files/figure-html/unnamed-chunk-25-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="tidyr-and-functions_files/figure-html/unnamed-chunk-7-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 ### Tidy your data using pivot_longer
@@ -197,7 +178,7 @@ ggplot(french_fries_long) +
   geom_boxplot(aes(x = variable, y = rating, fill = variable))
 ```
 
-&lt;img src="tidyr-and-functions_files/figure-html/unnamed-chunk-28-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="tidyr-and-functions_files/figure-html/unnamed-chunk-10-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 ### And reverse: `pivot_wider`
@@ -256,7 +237,7 @@ class:inverse
 ---
 ## Data types in R
 
-R is (usually) good at figuring out the best data type, but sometimes we'll need to take corrective action! The five data types we'll interact with the most are:
+R is (usually) good at figuring out the best data type, but sometimes we'll need to take corrective action! The four data types we'll interact with the most are:
 
 - Logical: Can take on values of either `TRUE` or `FALSE`
 - Double: numeric data with decimals.
@@ -265,7 +246,7 @@ R is (usually) good at figuring out the best data type, but sometimes we'll need
 - Character: The data type character is used when storing text, known as strings in R.
   - The simplest ways to store data under the character format is by using "" around the piece of text
   - Note that everything inside "" will be considered as character, no matter if it looks like character or not.
-- Lists
+- lists
 
 ---
 ##__Lists__:
@@ -322,23 +303,12 @@ myotherlist[[2]]
 ```
 ]
 
-
-
 ---
 ## Coercion
 
 When you mix data types within a vector, R will create the result with the data type that can most easily accommodate all the elements it contains. This conversion between modes of storage is called “coercion”. 
 
-- When R converts the mode of storage based on its content, it is referred to as “implicit coercion”. Can you guess the following data types?
-
-
-``` r
-c(1, "Hello")
-c(FALSE, 3L)
-c(1.2, 3L)
-```
-
---
+- When R converts the mode of storage based on its content, it is referred to as “implicit coercion”.
 
 Use the `typeof()` function to find out.
 .pull-left[
@@ -641,7 +611,6 @@ cat_lovers2 %&gt;% filter(number_of_cats &lt; mean_cats) %&gt;%
 ## [1] 60
 ```
 
---
 Have you seen any problem here?
 --
 
@@ -707,12 +676,11 @@ glimpse(x)
 ```
 
 ``` r
-class(x)
+ggplot(cat_lovers, aes(x = handedness, fill = handedness)) + 
+  geom_bar()
 ```
 
-```
-## [1] "factor"
-```
+&lt;img src="tidyr-and-functions_files/figure-html/unnamed-chunk-33-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 ## Factors
@@ -727,11 +695,11 @@ cat_lovers = cat_lovers %&gt;%
   mutate(handedness = fct_relevel(handedness, 
                                   "left", "ambidextrous", "right"))
 
-ggplot(cat_lovers, aes(x = handedness)) + 
+ggplot(cat_lovers, aes(x = handedness, fill = handedness)) + 
   geom_bar()
 ```
 
-&lt;img src="tidyr-and-functions_files/figure-html/unnamed-chunk-53-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="tidyr-and-functions_files/figure-html/unnamed-chunk-34-1.png" style="display: block; margin: auto;" /&gt;
 
 
 ---
@@ -742,7 +710,7 @@ If you are absolutely sure of a data class, overwrite it in your tibble so that 
 
 ``` r
 x &lt;- "2"
-typeof(x)
+class(x)
 ```
 
 ```
@@ -751,11 +719,11 @@ typeof(x)
 
 ``` r
 x &lt;- as.numeric(x)
-typeof(x)
+class(x)
 ```
 
 ```
-## [1] "double"
+## [1] "numeric"
 ```
 
 ---
@@ -812,7 +780,7 @@ class:inverse
 &lt;br&gt;
 &lt;br&gt;
 .center[
-## Function Writing
+## Function Writing and Loops
 ]
 
 ---
@@ -867,8 +835,8 @@ How many inputs do we have?
 ```
 
 ```
-##  [1] 0.2402940 0.4958383 1.0000000 0.5880072 0.1110398 0.3841620 0.6259632
-##  [8] 0.9518982 0.0000000 0.3168258
+##  [1] 0.6200927 0.0000000 0.3361151 1.0000000 0.9623396 0.5814900 0.4081351 0.5237306 0.3889844
+## [10] 0.4139984
 ```
 
 ---
@@ -938,8 +906,8 @@ rescale01(df$a)
 ```
 
 ```
-##  [1] 0.2402940 0.4958383 1.0000000 0.5880072 0.1110398 0.3841620 0.6259632
-##  [8] 0.9518982 0.0000000 0.3168258
+##  [1] 0.6200927 0.0000000 0.3361151 1.0000000 0.9623396 0.5814900 0.4081351 0.5237306 0.3889844
+## [10] 0.4139984
 ```
 
 ``` r
@@ -947,8 +915,8 @@ rescale01(df$b)
 ```
 
 ```
-##  [1] 1.00000000 0.43662932 0.41133171 0.80818378 0.16292216 0.00000000
-##  [7] 0.85390890 0.31462067 0.02550191 0.12814789
+##  [1] 0.2480301 0.7940051 0.1311439 0.1003564 0.0000000 1.0000000 0.2459154 0.8721714 0.8615558
+## [10] 0.4803820
 ```
 
 ---
@@ -1072,17 +1040,17 @@ output
 ```
 
 ```
-##           X1         X2         X3        X4
-## 1  0.2402940 1.00000000 0.00000000 0.0000000
-## 2  0.4958383 0.43662932 1.00000000 0.9080343
-## 3  1.0000000 0.41133171 0.25085590 0.5517819
-## 4  0.5880072 0.80818378 0.01313643 0.1481479
-## 5  0.1110398 0.16292216 0.42738123 0.2460168
-## 6  0.3841620 0.00000000 0.35166831 0.6095245
-## 7  0.6259632 0.85390890 0.37946420 0.9199489
-## 8  0.9518982 0.31462067 0.40579757 1.0000000
-## 9  0.0000000 0.02550191 0.70045300 0.5310633
-## 10 0.3168258 0.12814789 0.65572565 0.5057356
+##           X1        X2        X3        X4
+## 1  0.6200927 0.2480301 0.4379888 0.4233613
+## 2  0.0000000 0.7940051 1.0000000 0.4817810
+## 3  0.3361151 0.1311439 0.8736174 0.8648927
+## 4  1.0000000 0.1003564 0.2023909 0.4031169
+## 5  0.9623396 0.0000000 0.9942649 0.3465004
+## 6  0.5814900 1.0000000 0.5973739 1.0000000
+## 7  0.4081351 0.2459154 0.9255128 0.6166668
+## 8  0.5237306 0.8721714 0.2658723 0.9831133
+## 9  0.3889844 0.8615558 0.0000000 0.0000000
+## 10 0.4139984 0.4803820 0.8558285 0.2859909
 ```
 
 ---
