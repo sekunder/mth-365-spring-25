@@ -32,7 +32,7 @@ class: center, middle, inverse, title-slide
 
 **Lab 4**: Work day Thursday September 26
 
-- Due Tuesday October 1st, 2024 at 11:59 pm in Blueline
+- Due Thursday October 3rd, 2024 at 11:59 pm in Blueline
 
 **Mini Project 2**
 
@@ -231,6 +231,332 @@ class:inverse
 &lt;br&gt;
 &lt;br&gt;
 .center[
+## Function Writing and Loops
+]
+
+---
+## Why Write your own Functions?
+
+Writing your own functions allow you to automate common tasks in a more powerful and general way than copy-and-pasting. 
+
+Writing a function has three big advantages over using copy-and-paste:
+
+- You can give a function an evocative name that makes your code easier to understand.
+
+- As requirements change, you only need to update code in one place, instead of many.
+
+- You eliminate the chance of making incidental mistakes when you copy and paste (i.e. updating a variable name in one place, but not in another).
+
+
+---
+### When Should You Write A Function?
+
+You should consider writing a function whenever you’ve copied and pasted a block of code more than twice (i.e. you now have three copies of the same code). 
+
+For example, take a look at this code. What does it do? Notice any mistakes?
+
+
+``` r
+df &lt;- tibble::tibble(
+  a = rnorm(10),
+  b = rnorm(10),
+  c = rnorm(10),
+  d = rnorm(10)
+)
+
+df$a &lt;- (df$a - min(df$a, na.rm = TRUE)) / 
+  (max(df$a, na.rm = TRUE) - min(df$a, na.rm = TRUE))
+df$b &lt;- (df$b - min(df$b, na.rm = TRUE)) / 
+  (max(df$b, na.rm = TRUE) - min(df$a, na.rm = TRUE))
+df$c &lt;- (df$c - min(df$c, na.rm = TRUE)) / 
+  (max(df$c, na.rm = TRUE) - min(df$c, na.rm = TRUE))
+df$d &lt;- (df$d - min(df$d, na.rm = TRUE)) / 
+  (max(df$d, na.rm = TRUE) - min(df$d, na.rm = TRUE))
+```
+
+---
+### How do you Write a Function?
+
+How many inputs do we have?
+
+
+``` r
+(df$a - min(df$a, na.rm = TRUE)) /
+  (max(df$a, na.rm = TRUE) - min(df$a, na.rm = TRUE))
+```
+
+```
+##  [1] 0.4379888 1.0000000 0.8736174 0.2023909 0.9942649 0.5973739 0.9255128 0.2658723 0.0000000
+## [10] 0.8558285
+```
+
+---
+### How do you Write a Function?
+
+Three components of writing a function:
+
+1. You need to pick a **name** for the function
+
+2. You list the **inputs**, or arguments, to the function inside function.
+
+3. You place the code you have developed in **body** of the function, a `{` block that immediately follows `function(...)`.
+
+
+``` r
+function_name &lt;- function(inputs separated by commas){
+  #body: put code here
+  # what to do with those inputs
+}
+```
+
+By default they return the last value computed in the function
+
+---
+### Example:
+
+
+``` r
+add_2 &lt;- function(x){
+  x + 2
+  1000
+}
+
+add_2(2)
+```
+
+```
+## [1] 1000
+```
+
+--
+
+
+``` r
+add_2 &lt;- function(x){
+  x + 2
+}
+
+add_2(2)
+```
+
+```
+## [1] 4
+```
+
+---
+### Back to Rescale Example
+
+
+``` r
+rescale01 &lt;- function(x) {
+  rng &lt;- range(x, na.rm = TRUE)
+  (x - rng[1]) / (rng[2] - rng[1])
+}
+
+rescale01(df$a)
+```
+
+```
+##  [1] 0.4379888 1.0000000 0.8736174 0.2023909 0.9942649 0.5973739 0.9255128 0.2658723 0.0000000
+## [10] 0.8558285
+```
+
+``` r
+rescale01(df$b)
+```
+
+```
+##  [1] 0.4233613 0.4817810 0.8648927 0.4031169 0.3465004 1.0000000 0.6166668 0.9831133 0.0000000
+## [10] 0.2859909
+```
+
+---
+### Your Turn
+
+Write your own mean function to find the mean of x :
+
+`$$\bar{x} = \frac{\sum^n_{i=1}x_i}{n}$$`
+
+
+``` r
+set.seed(4)
+x &lt;- round(runif(10, 0, 40),2)
+x #use this data to test
+```
+
+```
+##  [1] 23.43  0.36 11.75 11.09 32.54 10.42 28.98 36.24 37.96  2.93
+```
+
+
+
+---
+### Conditional Executuion
+
+An `if` statement allows you to conditionally execute code. It looks like this:
+
+
+``` r
+if (condition) {
+  # code executed when condition is TRUE
+} else {
+  # code executed when condition is FALSE
+}
+```
+
+
+Or can use the `ifelse` function:
+
+
+``` r
+ifelse(condition, 
+       code executed when condition is TRUE, 
+       code executed when condition is FALSE)
+```
+
+---
+### Example
+
+
+``` r
+ifelse_example &lt;- function(x){
+  if(x &gt; 0){
+    "This value is positive"
+  } else if (x == 0){
+    "This value is 0"} else{
+      "This value is negative"
+    }
+  }
+
+ifelse_example(3)
+```
+
+```
+## [1] "This value is positive"
+```
+
+``` r
+ifelse_example(0)
+```
+
+```
+## [1] "This value is 0"
+```
+
+``` r
+ifelse_example(-2)
+```
+
+```
+## [1] "This value is negative"
+```
+
+---
+## Loops
+
+Another tool for reducing duplication is iteration, which helps you when you need to do the same thing to multiple inputs: repeating the same operation on different columns, or on different datasets. 
+
+`for` loops are an example of imperative programming and is a good starting point
+
+- they make iteration very explicit, so it’s obvious what’s happening. 
+
+
+---
+## Loops
+
+From Earlier:
+
+
+``` r
+rescale01(df$a)
+rescale01(df$b)
+rescale01(df$c)
+rescale01(df$d)
+```
+
+While we shortened our copying with creating a function, we still have something copy/pasted more than twice.
+
+---
+## Loops
+
+Loops have three main elements
+
+
+``` r
+# 1. output
+output &lt;- data.frame(matrix(NA, ncol = ncol(df), nrow = nrow(df)))
+for (i in seq_along(df)) {            # 2. sequence
+  output[,i] &lt;- rescale01(df[[i]])      # 3. body
+}
+
+output
+```
+
+```
+##           X1        X2        X3         X4
+## 1  0.4379888 0.4233613 0.2481862 0.21204822
+## 2  1.0000000 0.4817810 0.5032068 0.22515426
+## 3  0.8736174 0.8648927 0.3772877 0.59491725
+## 4  0.2023909 0.4031169 0.6690809 0.34268812
+## 5  0.9942649 0.3465004 0.0000000 0.78829729
+## 6  0.5973739 1.0000000 0.3008370 0.07232481
+## 7  0.9255128 0.6166668 0.3114563 0.70405192
+## 8  0.2658723 0.9831133 0.4558441 0.00000000
+## 9  0.0000000 0.0000000 0.5925794 1.00000000
+## 10 0.8558285 0.2859909 1.0000000 0.42770339
+```
+
+---
+### Your Turn:
+
+Compute the mean of every column in mtcars.
+
+
+``` r
+data("mtcars")
+head(mtcars)
+```
+
+```
+##                    mpg cyl disp  hp drat    wt  qsec vs am gear carb
+## Mazda RX4         21.0   6  160 110 3.90 2.620 16.46  0  1    4    4
+## Mazda RX4 Wag     21.0   6  160 110 3.90 2.875 17.02  0  1    4    4
+## Datsun 710        22.8   4  108  93 3.85 2.320 18.61  1  1    4    1
+## Hornet 4 Drive    21.4   6  258 110 3.08 3.215 19.44  1  0    3    1
+## Hornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2
+## Valiant           18.1   6  225 105 2.76 3.460 20.22  1  0    3    1
+```
+
+---
+### `purrr` Package:
+
+`for` loops are quite verbose, and require quite a bit of bookkeeping code that is duplicated for every for loop. 
+
+- Functional programming (FP) offers tools to extract out this duplicated code, so each common for loop pattern gets its own function. 
+
+Each function takes a vector as input, applies a function to each piece, and then returns a new vector that’s the same length (and has the same names) as the input. The type of the vector is determined by the suffix to the map function:
+
+- `map()` makes a list.
+- `map_lgl()` makes a logical vector.
+- `map_int()` makes an integer vector.
+- `map_dbl()` makes a double vector.
+- `map_chr()` makes a character vector.
+
+Once you master these functions, you’ll find it takes much less time to solve iteration problems. - The important thing is that you solve the problem that you’re working on, not write the most concise and elegant code.
+
+
+
+---
+class:inverse
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+.center[
 ## Data Types
 ]
 
@@ -246,62 +572,8 @@ R is (usually) good at figuring out the best data type, but sometimes we'll need
 - Character: The data type character is used when storing text, known as strings in R.
   - The simplest ways to store data under the character format is by using "" around the piece of text
   - Note that everything inside "" will be considered as character, no matter if it looks like character or not.
-- lists
+- lists: R objects which contain elements of different types like − numbers, strings, vectors
 
----
-##__Lists__:
-
-Lists are the R objects which contain elements of different types like − numbers, strings, vectors and another list inside it.
-
-
-Because of their more complex structure we often want to name the elements of a list (we can also do this with vectors). This can make reading and accessing the list more straight forward.
-
-
-``` r
-myotherlist = list(A = "hello", 
-                   B = 1:4, 
-                   C = c(TRUE, FALSE))
-```
-
-.pull-left[
-
-``` r
-str(myotherlist)
-```
-
-```
-## List of 3
-##  $ A: chr "hello"
-##  $ B: int [1:4] 1 2 3 4
-##  $ C: logi [1:2] TRUE FALSE
-```
-
-``` r
-myotherlist$A
-```
-
-```
-## [1] "hello"
-```
-].pull-right[
-
-``` r
-myotherlist[2]
-```
-
-```
-## $B
-## [1] 1 2 3 4
-```
-
-``` r
-myotherlist[[2]]
-```
-
-```
-## [1] 1 2 3 4
-```
-]
 
 ---
 ## Coercion
@@ -330,6 +602,7 @@ typeof(c(FALSE, 3L))
 ```
 ].pull-right[
 
+
 ``` r
 typeof(c(1.2, 3L))
 ```
@@ -337,13 +610,6 @@ typeof(c(1.2, 3L))
 ```
 ## [1] "double"
 ```
-]
-
----
-## Missing values
-
-R uses `NA` to represent missing values in its data structures.
-
 
 ``` r
 typeof(NA)
@@ -353,6 +619,7 @@ typeof(NA)
 ## [1] "logical"
 ```
 
+]
 
 ---
 ## Example: Cat lovers
@@ -370,7 +637,7 @@ str(cat_lovers)
 ## 'data.frame':	60 obs. of  3 variables:
 ##  $ name          : chr  "Bernice Warren" "Woodrow Stone" "Willie Bass" "Tyrone Estrada" ...
 ##  $ number_of_cats: chr  "0" "0" "1" "3" ...
-##  $ handedness    : chr  "left" "left" "left" "left" ...
+##  $ hand          : chr  "left" "left" "left" "left" ...
 ```
 
 Any concerns with how the data was read in?
@@ -484,7 +751,7 @@ str(cat_lovers)
 ## 'data.frame':	60 obs. of  4 variables:
 ##  $ name              : chr  "Bernice Warren" "Woodrow Stone" "Willie Bass" "Tyrone Estrada" ...
 ##  $ number_of_cats    : chr  "0" "0" "1" "3" ...
-##  $ handedness        : chr  "left" "left" "left" "left" ...
+##  $ hand              : chr  "left" "left" "left" "left" ...
 ##  $ number_of_cats_new: num  0 0 1 3 3 2 1 1 0 0 ...
 ```
 
@@ -531,10 +798,10 @@ head(cat_lovers2, n = 3)
 ```
 
 ```
-##             name number_of_cats handedness number_of_cats_new
-## 1 Bernice Warren              0       left                  0
-## 2  Woodrow Stone              0       left                  0
-## 3    Willie Bass              1       left                  1
+##             name number_of_cats hand number_of_cats_new
+## 1 Bernice Warren              0 left                  0
+## 2  Woodrow Stone              0 left                  0
+## 3    Willie Bass              1 left                  1
 ```
 
 ``` r
@@ -559,7 +826,7 @@ write.csv(cat_lovers, file = "cat_lovers_clean.csv",
 - Will save file into your working directory!!
 
 ---
-## Data "sets" in R
+## Data "set" in R
 
 - "set" is in quotation marks because it is not a formal data class
 
@@ -611,7 +878,7 @@ cat_lovers2 %&gt;% filter(number_of_cats &lt; mean_cats) %&gt;%
 ## [1] 60
 ```
 
-Have you seen any problem here?
+Do you see any problem here?
 --
 
 
@@ -633,7 +900,7 @@ class(mean_cats)
 ``` r
 mean_cats = cat_lovers2 %&gt;% 
   summarize(mean_cat = mean(number_of_cats)) %&gt;%
-  pull()
+* pull()
 mean_cats
 ```
 
@@ -661,13 +928,13 @@ class(mean_cats)
 ## [1] "numeric"
 ```
 ---
-## Factors
+### Factors
 
-Factor objects are how R stores data for categorical variables (fixed numbers of discrete values). Historically, factors were much easier to work with than character vectors, so many base R functions automatically convert character vectors to factors.
+Factor: how R stores categorical variables. By default, R orders factors in alphabetical order. Use `fct_relevel` to force a particular order
 
 
 ``` r
-x = as.factor(cat_lovers$handedness)
+x = as.factor(cat_lovers$hand)
 glimpse(x)
 ```
 
@@ -675,31 +942,14 @@ glimpse(x)
 ##  Factor w/ 3 levels "ambidextrous",..: 2 2 2 2 2 2 2 2 2 2 ...
 ```
 
-``` r
-ggplot(cat_lovers, aes(x = handedness, fill = handedness)) + 
-  geom_bar()
-```
-
-&lt;img src="tidyr-and-functions_files/figure-html/unnamed-chunk-33-1.png" style="display: block; margin: auto;" /&gt;
-
----
-## Factors
-
-By default, R orders factors in alphabetical order
-
-What if we want to force a particular order?
-
 
 ``` r
-cat_lovers = cat_lovers %&gt;% 
-  mutate(handedness = fct_relevel(handedness, 
-                                  "left", "ambidextrous", "right"))
-
-ggplot(cat_lovers, aes(x = handedness, fill = handedness)) + 
-  geom_bar()
+cat_lovers = cat_lovers %&gt;%  
+  mutate(hand=fct_relevel(hand,"left","ambidextrous","right"))
+ggplot(cat_lovers, aes(x=hand, fill=hand)) + geom_bar()
 ```
 
-&lt;img src="tidyr-and-functions_files/figure-html/unnamed-chunk-34-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="tidyr-and-functions_files/figure-html/unnamed-chunk-43-1.png" style="display: block; margin: auto;" /&gt;
 
 
 ---
@@ -731,8 +981,8 @@ class(x)
 
 
 ``` r
-#cat_lovers$handedness &lt;- as.factor(cat_lovers$handedness)
-class(cat_lovers$handedness)
+#cat_lovers$hand &lt;- as.factor(cat_lovers$hand)
+class(cat_lovers$hand)
 ```
 
 ```
@@ -740,7 +990,7 @@ class(cat_lovers$handedness)
 ```
 
 ``` r
-typeof(cat_lovers$handedness)
+typeof(cat_lovers$hand)
 ```
 
 ```
@@ -768,333 +1018,7 @@ Be careful about data types/classes
   - If you are absolutely sure of a data class, overwrite it in your tibble so that you don't need to keep having to keep track of it
   - `mutate` the variable with the correct class
   
-  
----
-class:inverse
-&lt;br&gt;
-&lt;br&gt;
-&lt;br&gt;
-&lt;br&gt;
-&lt;br&gt;
-&lt;br&gt;
-&lt;br&gt;
-&lt;br&gt;
-.center[
-## Function Writing and Loops
-]
-
----
-## Why Write your own Functions?
-
-Writing your own functions allow you to automate common tasks in a more powerful and general way than copy-and-pasting. 
-
-Writing a function has three big advantages over using copy-and-paste:
-
-- You can give a function an evocative name that makes your code easier to understand.
-
-- As requirements change, you only need to update code in one place, instead of many.
-
-- You eliminate the chance of making incidental mistakes when you copy and paste (i.e. updating a variable name in one place, but not in another).
-
-
----
-### When Should You Write A Function?
-
-You should consider writing a function whenever you’ve copied and pasted a block of code more than twice (i.e. you now have three copies of the same code). 
-
-For example, take a look at this code. What does it do? Notice any mistakes?
-
-
-``` r
-df &lt;- tibble::tibble(
-  a = rnorm(10),
-  b = rnorm(10),
-  c = rnorm(10),
-  d = rnorm(10)
-)
-
-df$a &lt;- (df$a - min(df$a, na.rm = TRUE)) / 
-  (max(df$a, na.rm = TRUE) - min(df$a, na.rm = TRUE))
-df$b &lt;- (df$b - min(df$b, na.rm = TRUE)) / 
-  (max(df$b, na.rm = TRUE) - min(df$a, na.rm = TRUE))
-df$c &lt;- (df$c - min(df$c, na.rm = TRUE)) / 
-  (max(df$c, na.rm = TRUE) - min(df$c, na.rm = TRUE))
-df$d &lt;- (df$d - min(df$d, na.rm = TRUE)) / 
-  (max(df$d, na.rm = TRUE) - min(df$d, na.rm = TRUE))
-```
-
----
-### How do you Write a Function?
-
-How many inputs do we have?
-
-
-``` r
-(df$a - min(df$a, na.rm = TRUE)) /
-  (max(df$a, na.rm = TRUE) - min(df$a, na.rm = TRUE))
-```
-
-```
-##  [1] 0.6200927 0.0000000 0.3361151 1.0000000 0.9623396 0.5814900 0.4081351 0.5237306 0.3889844
-## [10] 0.4139984
-```
-
----
-### How do you Write a Function?
-
-Three components of writing a function:
-
-1. You need to pick a **name** for the function
-
-2. You list the **inputs**, or arguments, to the function inside function.
-
-3. You place the code you have developed in **body** of the function, a `{` block that immediately follows `function(...)`.
-
-
-``` r
-function_name &lt;- function(inputs separated by commas){
-  #body: put code here
-  # what to do with those inputs
-}
-```
-
-By default they return the last value computed in the function
-
----
-### Example:
-
-
-``` r
-add_2 &lt;- function(x){
-  x + 2
-  1000
-}
-
-add_2(2)
-```
-
-```
-## [1] 1000
-```
-
---
-
-
-``` r
-add_2 &lt;- function(x){
-  x + 2
-}
-
-add_2(2)
-```
-
-```
-## [1] 4
-```
-
----
-### Back to Rescale Example
-
-
-``` r
-rescale01 &lt;- function(x) {
-  rng &lt;- range(x, na.rm = TRUE) #We’re computing the range of the data three times, so it makes sense to do it in one step
-  (x - rng[1]) / (rng[2] - rng[1])
-}
-
-rescale01(df$a)
-```
-
-```
-##  [1] 0.6200927 0.0000000 0.3361151 1.0000000 0.9623396 0.5814900 0.4081351 0.5237306 0.3889844
-## [10] 0.4139984
-```
-
-``` r
-rescale01(df$b)
-```
-
-```
-##  [1] 0.2480301 0.7940051 0.1311439 0.1003564 0.0000000 1.0000000 0.2459154 0.8721714 0.8615558
-## [10] 0.4803820
-```
-
----
-### Your Turn
-
-Write your own mean function to find the mean of x :
-
-`$$\bar{x} = \frac{\sum^n_{i=1}x_i}{n}$$`
-
-
-``` r
-set.seed(4)
-x &lt;- round(runif(10, 0, 40),2)
-x
-```
-
-```
-##  [1] 23.43  0.36 11.75 11.09 32.54 10.42 28.98 36.24 37.96  2.93
-```
-
----
-### Conditional Executuion
-
-An `if` statement allows you to conditionally execute code. It looks like this:
-
-
-``` r
-if (condition) {
-  # code executed when condition is TRUE
-} else {
-  # code executed when condition is FALSE
-}
-```
-
-
-Or can use the `ifelse` function:
-
-
-``` r
-ifelse(condition, 
-       code executed when condition is TRUE, 
-       code executed when condition is FALSE)
-```
-
----
-### Example
-
-
-``` r
-ifelse_example &lt;- function(x){
-  if(x &gt; 0){
-    "This value is positive"
-  } else if (x == 0){
-    "This value is 0"} else{
-      "This value is negative"
-    }
-  }
-
-ifelse_example(3)
-```
-
-```
-## [1] "This value is positive"
-```
-
-``` r
-ifelse_example(0)
-```
-
-```
-## [1] "This value is 0"
-```
-
-``` r
-ifelse_example(-2)
-```
-
-```
-## [1] "This value is negative"
-```
-
----
-## Loops
-
-Another tool for reducing duplication is iteration, which helps you when you need to do the same thing to multiple inputs: repeating the same operation on different columns, or on different datasets. 
-
-`for` loops are an example of imperative programming and is a good starting point
-
-- they make iteration very explicit, so it’s obvious what’s happening. 
-
-
----
-## Loops
-
-From Earlier:
-
-
-``` r
-rescale01(df$a)
-rescale01(df$b)
-rescale01(df$c)
-rescale01(df$d)
-```
-
-Why we shortened our copying with creating a function, we still have something copy/pasted more than twice.
-
----
-## Loops
-
-Loops have three main elements
-
-
-``` r
-# 1. output
-output &lt;- data.frame(matrix(NA, ncol = ncol(df), nrow = nrow(df)))
-for (i in seq_along(df)) {            # 2. sequence
-  output[,i] &lt;- rescale01(df[[i]])      # 3. body
-}
-
-output
-```
-
-```
-##           X1        X2        X3        X4
-## 1  0.6200927 0.2480301 0.4379888 0.4233613
-## 2  0.0000000 0.7940051 1.0000000 0.4817810
-## 3  0.3361151 0.1311439 0.8736174 0.8648927
-## 4  1.0000000 0.1003564 0.2023909 0.4031169
-## 5  0.9623396 0.0000000 0.9942649 0.3465004
-## 6  0.5814900 1.0000000 0.5973739 1.0000000
-## 7  0.4081351 0.2459154 0.9255128 0.6166668
-## 8  0.5237306 0.8721714 0.2658723 0.9831133
-## 9  0.3889844 0.8615558 0.0000000 0.0000000
-## 10 0.4139984 0.4803820 0.8558285 0.2859909
-```
-
----
-### Your Turn:
-
-Compute the mean of every column in mtcars.
-
-
-``` r
-data("mtcars")
-head(mtcars)
-```
-
-```
-##                    mpg cyl disp  hp drat    wt  qsec vs am gear carb
-## Mazda RX4         21.0   6  160 110 3.90 2.620 16.46  0  1    4    4
-## Mazda RX4 Wag     21.0   6  160 110 3.90 2.875 17.02  0  1    4    4
-## Datsun 710        22.8   4  108  93 3.85 2.320 18.61  1  1    4    1
-## Hornet 4 Drive    21.4   6  258 110 3.08 3.215 19.44  1  0    3    1
-## Hornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2
-## Valiant           18.1   6  225 105 2.76 3.460 20.22  1  0    3    1
-```
-
----
-### `purrr` Package:
-
-`for` loops are quite verbose, and require quite a bit of bookkeeping code that is duplicated for every for loop. 
-
-- Functional programming (FP) offers tools to extract out this duplicated code, so each common for loop pattern gets its own function. 
-
-Each function takes a vector as input, applies a function to each piece, and then returns a new vector that’s the same length (and has the same names) as the input. The type of the vector is determined by the suffix to the map function:
-
-- `map()` makes a list.
-- `map_lgl()` makes a logical vector.
-- `map_int()` makes an integer vector.
-- `map_dbl()` makes a double vector.
-- `map_chr()` makes a character vector.
-
-Once you master these functions, you’ll find it takes much less time to solve iteration problems. - The important thing is that you solve the problem that you’re working on, not write the most concise and elegant code.
-
-
-
-
-
+ 
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

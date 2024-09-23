@@ -2,7 +2,7 @@
 title: "Week 5: Data Communication and Ethics"
 author: 'DSC 365: Introduction to Data Science'
 date: "September 17, 2024"
-format: html
+format: pdf
 ---
 
 ```{r echo=FALSE, message=FALSE, warning = FALSE}
@@ -47,6 +47,7 @@ Reduces the amount of work users of your graph have to do when they view it
 
 ```{r, fig.align="center", out.height="60%", out.width="60%", echo = FALSE}
 data <- data.frame(expand.grid(x = 1:6, y = 1:6), color = factor(sample(c(1, 2), 36, replace = TRUE)))
+
 data$x <- data$x + rnorm(36, 0, .25)
 data$y <- data$y + rnorm(36, 0, .25)
 data$shape <- factor(c(rep(2, 15), 1, rep(2,20)))
@@ -57,7 +58,7 @@ ggplot(data, aes(x, y)) + geom_point(aes(shape = shape), size = 5, colour = "#1B
 
 
 
-```{r, fig.align="center", out.height="60%", out.width="60%", echo = FALSE}
+```{r, fig.align="center", out.height="60%", out.width="60%", echo = TRUE}
 data$shape <- factor(c(rep(2, 25), 1, rep(2, 10)))
 
 ggplot(data, aes(x, y)) + geom_point(aes(colour = shape), size = 5, shape = I(19)) + theme_void() + theme(legend.position = "none") + scale_colour_brewer(palette="Dark2")
@@ -219,7 +220,6 @@ hairData %>%
 ```
 
 
-
 ```{r}
 hairData %>% 
   ggplot(aes(x=Hair, y=Freq)) +  
@@ -253,7 +253,7 @@ Now try by yourself (or with a group) with another type of figure.
 
 (a). Use the iris data below. Plot the figure to show the relation between Sepal.Length and Petal.Length.
 ```{r}
-data(iris)
+
 ```
 
 (b). Use colors to distinguish the species. Which function you have used? fill or color?
@@ -266,6 +266,7 @@ data(iris)
 (c). Use red to represents `virginica`, blue to represents `versicolor`, and yellow to represents `setosa`.
 
 ```{r}
+
 
 ```
 
