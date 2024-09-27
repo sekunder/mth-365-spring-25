@@ -30,6 +30,18 @@ class: center, middle, inverse, title-slide
 
 ## Announcements
 
+**Lab 4**
+
+- Due Thursday October 3rd, 2024 at 11:59 pm in Blueline
+
+**Lab 5**: work day in class on Thursday October 10
+
+- Due Tuesday October 22nd, 2024 at 11:59 pm in Blueline
+
+**Mini Project 2**
+
+- Due Thursday October 24 at 11:59 in Blueline
+
 
 
 
@@ -43,7 +55,16 @@ class: center, middle, inverse, title-slide
 Data science techniques can provide us a clean data and its visualization but statistical theory is still useful to figure out what the data is tell us. 
 
 ---
-## Introduction
+## Samples and Population
+
+In statistics we are interested in a **population** of cases/people/objects. However, often this population is too large to collect data on, so we take **samples** from the larger population.
+
+Statistical methodology assumes that the cases are drawn from a much larger set of potential cases, so the given data are a sample of a larger population of potential cases. 
+  - Other samples that might have been drawn from the population.
+
+
+---
+## Statistical Inference
 
 Statistical Inference: the process of using sample data to make conclusions about the underlying population the sample came from
 
@@ -66,14 +87,6 @@ What do we mean by uncertainty?
 - We want to use our models to make a prediction, but there are always things that we can't account for in a model
 - Our observations are subject to measurement or reporting error
 - Our data arise from an intrinsically random or variable process
-
----
-## Samples and Population
-
-In statistics we are interested in a **population** of cases/people/objects. However, often this population is too large to collect data on, so we take **samples** from the larger population.
-
-Statistical methodology assumes that the cases are drawn from a much larger set of potential cases, so the given data are a sample of a larger population of potential cases. 
-  - Other samples that might have been drawn from the population.
 
 --
 
@@ -98,7 +111,8 @@ Chicago &lt;- flights %&gt;%
   filter(dest %in% c('ORD', 'MDW'), !is.na(arr_delay))
 ```
 
---
+---
+### Let's find a Sample!
 
 Let's take a sample (n=100)!
 
@@ -108,87 +122,42 @@ set.seed(365)
 Sample100 &lt;- Chicago %&gt;% sample_n(size=100)
 ```
 
-
----
-### Let's find a Sample!
-
-
-``` r
-glimpse(Sample100)
-```
-
-```
-## Rows: 100
-## Columns: 19
-## $ year           &lt;int&gt; 2013, 2013, 2013, 2013, 2013, 2013, 2013, 2013, 2013, 2013, 2013, 201…
-## $ month          &lt;int&gt; 9, 12, 7, 10, 10, 6, 4, 4, 6, 9, 4, 11, 10, 9, 6, 1, 2, 2, 4, 7, 11, …
-## $ day            &lt;int&gt; 15, 18, 2, 10, 7, 24, 28, 18, 2, 8, 25, 14, 29, 8, 20, 15, 5, 11, 22,…
-## $ dep_time       &lt;int&gt; 603, 2034, 1800, 629, 2116, 1156, 1759, 906, 1157, 1325, 1222, 1121, …
-## $ sched_dep_time &lt;int&gt; 601, 2035, 1805, 630, 1901, 1200, 1800, 630, 1200, 1330, 1225, 1125, …
-## $ dep_delay      &lt;dbl&gt; 2, -1, -5, -1, 135, -4, -1, 156, -3, -5, -3, -4, -4, 19, 13, 26, -4, …
-## $ arr_time       &lt;int&gt; 717, 2153, 1926, 737, 2226, 1300, 1910, 1244, 1303, 1452, 1438, 1245,…
-## $ sched_arr_time &lt;int&gt; 730, 2210, 1950, 805, 2040, 1333, 1944, 804, 1310, 1510, 1405, 1310, …
-## $ arr_delay      &lt;dbl&gt; -13, -17, -24, -28, 106, -33, -34, 280, -7, -18, 33, -25, -7, -2, -17…
-## $ carrier        &lt;chr&gt; "UA", "WN", "AA", "AA", "UA", "UA", "UA", "B6", "WN", "AA", "AA", "AA…
-## $ flight         &lt;int&gt; 1143, 168, 353, 303, 693, 255, 994, 905, 654, 331, 329, 327, 3330, 56…
-## $ tailnum        &lt;chr&gt; "N68453", "N930WN", "N3CPAA", "N489AA", "N429UA", "N824UA", "N808UA",…
-## $ origin         &lt;chr&gt; "EWR", "LGA", "LGA", "LGA", "LGA", "LGA", "EWR", "JFK", "EWR", "LGA",…
-## $ dest           &lt;chr&gt; "ORD", "MDW", "ORD", "ORD", "ORD", "ORD", "ORD", "ORD", "MDW", "ORD",…
-## $ air_time       &lt;dbl&gt; 116, 116, 117, 105, 111, 106, 104, 168, 110, 114, 116, 119, 119, 99, …
-## $ distance       &lt;dbl&gt; 719, 725, 733, 733, 733, 733, 719, 740, 711, 733, 733, 733, 711, 711,…
-## $ hour           &lt;dbl&gt; 6, 20, 18, 6, 19, 12, 18, 6, 12, 13, 12, 11, 12, 20, 21, 16, 6, 7, 15…
-## $ minute         &lt;dbl&gt; 1, 35, 5, 30, 1, 0, 0, 30, 0, 30, 25, 25, 0, 30, 0, 50, 30, 0, 0, 35,…
-## $ time_hour      &lt;dttm&gt; 2013-09-15 06:00:00, 2013-12-18 20:00:00, 2013-07-02 18:00:00, 2013-…
-```
-
 ---
 ## Finding Summary Statistics
 
-How long of a delay should we expect based on the sample? We can look at the mean, minimum, maximum, and standard deviation to get some idea.
+How long of a delay should we expect based on the sample? We can look at the mean, minimum, maximum, quantiles, and standard deviation to get some idea.
 
 
 ``` r
-Sample100 %&gt;% summarize(mean=mean(arr_delay),
-                        min=min(arr_delay),
+Sample100 %&gt;% summarize(min=min(arr_delay),
+                        q05=quantile(arr_delay, 0.05),
+                        mean=mean(arr_delay),
+                        median=median(arr_delay),
                         max=max(arr_delay), 
+                        q95=quantile(arr_delay, 0.95),
                         sd=sd(arr_delay))
 ```
 
 ```
-## # A tibble: 1 × 4
-##    mean   min   max    sd
-##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1  8.96   -39   280  46.5
+## # A tibble: 1 × 7
+##     min   q05  mean median   max   q95    sd
+##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1   -39   -33  8.96   -6.5   280  102.  46.5
 ```
-
----
-### Finding Summary Statistics
-
-We might also want to examine the quantiles.
 
 
 
 ``` r
-Sample100 %&gt;% summarize(q05=quantile(arr_delay, 0.05), 
-                        q25=quantile(arr_delay, 0.25),
-                        median=median(arr_delay),
-                        q75=quantile(arr_delay, 0.75), 
-                        q95=quantile(arr_delay, 0.95))
+mean(Chicago$arr_delay) # population value
 ```
 
 ```
-## # A tibble: 1 × 5
-##     q05   q25 median   q75   q95
-##   &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1   -33   -18   -6.5  17.2  102.
+## [1] 7.144772
 ```
 
-Sorting the values from min to max, Quantile X means there are x% of values less than it:
 
-  - ie. 75% of the values are less than 17.2
-  
 ---
-# What constitutes an “unacceptable” delay?
+## What constitutes an “unacceptable” delay?
 
 How about an one and half hour delay?
 
@@ -196,15 +165,17 @@ How about an one and half hour delay?
 ``` r
 Chicago %&gt;% mutate(less90 = arr_delay&lt;=90) %&gt;% 
   group_by(less90) %&gt;% 
-  summarize(n=n())
+  count() %&gt;%
+  mutate(pct = n / nrow(Chicago))
 ```
 
 ```
-## # A tibble: 2 × 2
-##   less90     n
-##   &lt;lgl&gt;  &lt;int&gt;
-## 1 FALSE   1197
-## 2 TRUE   19394
+## # A tibble: 2 × 3
+## # Groups:   less90 [2]
+##   less90     n    pct
+##   &lt;lgl&gt;  &lt;int&gt;  &lt;dbl&gt;
+## 1 FALSE   1197 0.0581
+## 2 TRUE   19394 0.942
 ```
 
 
@@ -231,46 +202,13 @@ Sample100_2 %&gt;% summarize(mean=mean(arr_delay),
 ```
 
 
-The sample mean is now 9.64. Is this the same or different than the previous sample?
+The sample mean is now 9.64. Is this the same or different than the previous sample? How close is it to the population value?
 
 --
 
 Different samples of data will have different sample statistics!
 
----
-## Compare to Population to Check Sample
-
-
-``` r
-Sample100_2 %&gt;% summarize(mean=mean(arr_delay), #sample
-            min=min(arr_delay),
-            max=max(arr_delay), 
-            sd=sd(arr_delay)) 
-```
-
-```
-## # A tibble: 1 × 4
-##    mean   min   max    sd
-##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1  9.64   -42   175  46.4
-```
-
-``` r
-Chicago %&gt;% summarize(mean=mean(arr_delay), #population
-            min=min(arr_delay),
-            max=max(arr_delay), 
-            sd=sd(arr_delay))
-```
-
-```
-## # A tibble: 1 × 4
-##    mean   min   max    sd
-##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1  7.14   -62  1109  47.9
-```
-
---
-However, in most real-world settings, we do not have access to the population data. We have only our sample.
+-   In most real-world settings, we do not have access to the population data. We have only our sample.
 
 ---
 ## Sample Statistics
@@ -297,7 +235,7 @@ We need to figure out the reliability of a sample statistic from the sample itse
 --
 
 If we draw many different samples from the population, each of size `\(n\)`, and calculated the sample statistic on each of those samples, how similar would the sample statistic be across all the samples?
-  + Do so by creating a sampling distribution
+  + Create a sampling distribution
 
 --
 
@@ -318,9 +256,8 @@ Or, we could speed it up:
 n &lt;- 100
 num_trials &lt;- 500
 chi_25_means &lt;- 1:num_trials %&gt;% 
-  map(~Chicago %&gt;% slice_sample(n = n) %&gt;% 
+    map_dfr(~Chicago %&gt;% slice_sample(n = n) %&gt;% 
         summarize(mean_arr_delay = mean(arr_delay))) %&gt;% 
-  list_rbind() %&gt;% 
   mutate(n = n)
 
 head(chi_25_means)
@@ -360,7 +297,7 @@ ggplot(chi_25_means, aes(x=mean_arr_delay)) +
   labs(x='Sampling Distribution of Sample Mean')
 ```
 
-&lt;img src="statistical-foundations_files/figure-html/unnamed-chunk-12-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="statistical-foundations_files/figure-html/unnamed-chunk-10-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 ## What does the Sampling Distribution tells us?
@@ -369,7 +306,7 @@ ggplot(chi_25_means, aes(x=mean_arr_delay)) +
   + The expected value of a statistical summary is the average of that summary’s sampling distribution—that is, the average value of that summary under repeated sampling from the same random process that generated our data.
 
 - How spread out is the sampling distribution? 
-  + The answer to this question provides a quantitative measure measure of repeatability, and therefore statistical uncertainty.
+  + The answer to this question provides a quantitative measure of repeatability, and therefore statistical uncertainty.
   + The standard deviation of a sampling distribution is called the **standard error**. This reflects the typical statistical fluctuation of our summary statistic
 
 ---
@@ -408,7 +345,6 @@ favstats(~mean_arr_delay, data=chi_25_means)
 
 Now suppose we want to report a range of plausible values that have a good shot at capturing the parameter instead of just the point estimate
 - Quantifying this requires a measurement of how much we would expect the sample population to vary from sample to sample
-- It is calculated from the mean and standard error of the sampling distribution.
 
 --
 
@@ -456,7 +392,7 @@ ggplot(chi_25_means, aes(x=mean_arr_delay)) +
 * geom_vline(xintercept=c(-2.61, 16.6), color="red")
 ```
 
-&lt;img src="statistical-foundations_files/figure-html/unnamed-chunk-17-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="statistical-foundations_files/figure-html/unnamed-chunk-15-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 ## How does sample size affect the sampling distribution?
@@ -473,7 +409,7 @@ Means500 &lt;- do(1000)*(Chicago %&gt;% sample_n(size=500) %&gt;%
 
 
 
-&lt;img src="statistical-foundations_files/figure-html/unnamed-chunk-19-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="statistical-foundations_files/figure-html/unnamed-chunk-17-1.png" style="display: block; margin: auto;" /&gt;
 
 
 ---
@@ -500,7 +436,6 @@ For large sample sizes, the shape of the sampling distribution tends to bell-sha
 ## Bootstraping
 
 In the last example, we had access to the population data and so we could find the sampling distribution by repeatedly sampling from the population. 
-  - We typically only have one sample and not the entire population. 
 
 --
 
@@ -589,7 +524,7 @@ ggplot(Bootstrap_Means, aes(x=stat))+
   geom_density(fill='turquoise', alpha=0.5)+labs(x='Bootstrap Means')
 ```
 
-&lt;img src="statistical-foundations_files/figure-html/unnamed-chunk-25-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="statistical-foundations_files/figure-html/unnamed-chunk-23-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 ## Bootstrapping: Bigger Sample
@@ -621,10 +556,8 @@ favstats(~mean_arr_delay, data=chi_25_means)
 
 For moderate to large sample sizes and sufficient number of bootstraps, the bootstrap distribution approximates certain aspects of the sampling distribution, like the standard error and quantiles 
 
----
-## Comparison of 3 Bootstrap Distributions
 
-&lt;img src="statistical-foundations_files/figure-html/unnamed-chunk-28-1.png" style="display: block; margin: auto;" /&gt;
+
 
 ---
 ## Side Note: We want Quality Samples!
@@ -650,7 +583,32 @@ When you have an outlier:
 - Only remove it if you are sure it is caused by completely random error, or not related to your research focus.
 
 ---
-## Hypothesis Tests
+### Confounding Variables and Simpson's Paradox
+
+.center[
+Correlation does not imply causation
+]
+
+&lt;br&gt;
+
+- A common concern with observational data is that correlations are distorted by other variables -&gt; *confounding variables*
+  + Randomized trials control for this; but not always practical
+  
+- In observational studies, addressing confounding is straightforward if these variables are measured (ex. can add them to model)
+
+
+---
+### Confounding Variables and Simpson's Paradox
+
+
+Simpson's paradox is a phenomenon where a trend appears in several groups of data but disappears or reverses when the groups are combined. 
+- The paradox can be resolved when confounding variables are appropriately addressed, but can lead to problematic interpretations if they are not. 
+
+&lt;img src="images/simpson-paradox.png" width="85%" height="90%" style="display: block; margin: auto;" /&gt;
+
+
+---
+### Hypothesis Tests and its Perils
 
 Used to test an assumption about a population parameter
 
@@ -659,7 +617,7 @@ Made up of 4 steps:
 1. Start with a null hypothesis `\((H_0)\)`, that represents the status quo ("there is nothign going on")
 
 2. Set an alternative hypothesis `\((H_A)\)`, that represents the research question, i.e. what we’re testing for
-  - Can be one-sided or two-sided
+  - Can be one-sided `\((&lt;,&gt;)\)` or two-sided `\((\neq)\)`
 
 3. Conduct a hypothesis test under the assumption that the null hypothesis is true
   - calculate a test-statistic/p-value 
@@ -692,7 +650,7 @@ But before turning to fraud or the Force as an explanation, let’s take a close
 Our burning question: just how likely is it that one team could win the pre-game coin toss at least 19 out of 25 times, assuming that there’s no cheating going on? We’d “expect” any given team to win only about half of its pre-game coin tosses, but we also have to account for the possibility that they just got lucky. Hence we want to simulate a random process, assuming the null hypothesis is true, called a **Null Distribution**
 
 
-&lt;img src="statistical-foundations_files/figure-html/unnamed-chunk-29-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="statistical-foundations_files/figure-html/unnamed-chunk-28-1.png" style="display: block; margin: auto;" /&gt;
 
 
 ---
@@ -709,9 +667,9 @@ sum(patriots_sim &gt;= 19)
 ```
 
 --
-A **p-value** is the probability of observing a test statistic as extreme, or more extreme, than the test statistic observed, given that the null hypothesis is true.
+A **p-value** is the probability of observing a test statistic as extreme, or more extreme, than what observed, given that the null hypothesis is true.
 
-&lt;img src="statistical-foundations_files/figure-html/unnamed-chunk-31-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="statistical-foundations_files/figure-html/unnamed-chunk-30-1.png" style="display: block; margin: auto;" /&gt;
 
 
 
@@ -736,12 +694,15 @@ Using a p-value as a measure of statistical significance has both advantages and
 - The main advantage is that the p-value gives us a continuous measure of evidence against the null hypothesis. 
   + The smaller the p-value, the more unlikely it is that we would have seen our data under the null hypothesis, and therefore the stronger (“more significant”) the evidence that the null hypothesis is false.
 - The main disadvantage is that the p-value is really, really hard to interpret correctly.
+  + Also has an "all or nothing" connotation
 
 ---
 ### P-Value Controversy
 
 To avoid thinking too hard about what a p-value actually means, many people just shrug their shoulders and ask a simple question about any particular p-value they happen to encounter: is it less than some magic threshold? 
-- Of course, there is no such thing as a genuinely magic threshold where results become important, any more than there is such a thing as a magic height at which you can suddenly play professional basketball.
+- Unfortunately magic thresholds don't exist
+
+--
 
 Need to distinguish between statistical significance and practical significance.
 

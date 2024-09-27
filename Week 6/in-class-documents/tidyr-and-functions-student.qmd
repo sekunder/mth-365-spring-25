@@ -220,6 +220,15 @@ $$\bar{x} = \frac{\sum^n_{i=1}x_i}{n}$$
 set.seed(4)
 x <- round(runif(10, 0, 40),2)
 x #use this data to test
+
+mean(x)
+
+mean_finder <- function(y){
+  sum(y)/length(y)
+}
+
+mean_finder(x)
+
 ```
 
 
