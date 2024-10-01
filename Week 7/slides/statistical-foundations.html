@@ -60,7 +60,6 @@ Data science techniques can provide us a clean data and its visualization but st
 In statistics we are interested in a **population** of cases/people/objects. However, often this population is too large to collect data on, so we take **samples** from the larger population.
 
 Statistical methodology assumes that the cases are drawn from a much larger set of potential cases, so the given data are a sample of a larger population of potential cases. 
-  - Other samples that might have been drawn from the population.
 
 
 ---
@@ -98,7 +97,7 @@ What do we mean by uncertainty?
 ---
 ## Example: Setting travel policy by sampling from the population
 
-Example: You’ve been asked to develop a travel policy for business travelers going from New York City to Chicago. Assume that the `nycflights13` data sets represents the complete population of flights.
+Example: You’ve been asked to develop a travel policy for business travelers going from New York City to Chicago. Assume that the `nycflights13` data set represents the complete population of flights.
 
 What would we do?
 
@@ -159,23 +158,23 @@ mean(Chicago$arr_delay) # population value
 ---
 ## What constitutes an “unacceptable” delay?
 
-How about an one and half hour delay?
+How about an one and forty-five minuted delay (105 minutes)?
 
 
 ``` r
-Chicago %&gt;% mutate(less90 = arr_delay&lt;=90) %&gt;% 
-  group_by(less90) %&gt;% 
+Chicago %&gt;% mutate(less105 = arr_delay&lt;=105) %&gt;% 
+  group_by(less105) %&gt;% 
   count() %&gt;%
   mutate(pct = n / nrow(Chicago))
 ```
 
 ```
 ## # A tibble: 2 × 3
-## # Groups:   less90 [2]
-##   less90     n    pct
-##   &lt;lgl&gt;  &lt;int&gt;  &lt;dbl&gt;
-## 1 FALSE   1197 0.0581
-## 2 TRUE   19394 0.942
+## # Groups:   less105 [2]
+##   less105     n    pct
+##   &lt;lgl&gt;   &lt;int&gt;  &lt;dbl&gt;
+## 1 FALSE     945 0.0459
+## 2 TRUE    19646 0.954
 ```
 
 

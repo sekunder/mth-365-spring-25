@@ -32,20 +32,20 @@ knit_hooks$set(output = function(x, options) {
 
 ```
 
-## Agenda
+## Announcements
 
-Focus: Linear Regression
+**Lab 4**
 
-  + Quadratic Terms
-  + Interaction Terms
-  + Categorical Predictors
-    - ANOVA
-  + Assessing Variable Importance
-    - Model Comparison
-    
-    
-    
-    
+- Due Tonight at 11:59 pm in Blueline
+
+**Lab 5**: work day in class on Thursday October 10
+
+- Due Tuesday October 22nd, 2024 at 11:59 pm in Blueline
+
+**Mini Project 2**
+
+- Due Thursday October 24 at 11:59 in Blueline
+
 ---
 ## Language of Models
 
@@ -93,6 +93,9 @@ There are two things we can do with fitting a model:
 
 Sometimes we are only interested in one of them, sometimes both. They have slightly different approaches and may lead to different choice and explanation of the model.
 
+---
+## Fit a model
+
 Today's lecture we focus on interpretation and your mini-project 3 focuses on prediction. General steps for fitting a model for interpretation: 
 
 1. Look at your research question. Identify the response variable.
@@ -103,8 +106,8 @@ Today's lecture we focus on interpretation and your mini-project 3 focuses on pr
 ---
 ## Benefits and Drawbacks of Models
 
-- Models can sometimes reveal patterns that are not evident in a graph of the data. This is a great advantage of modeling over simple visual inspection of data.
-- There is a real risk, however, that a model is imposing structure that is not really there on the scatter of data, just as people imagine animal shapes in the stars. A skeptical approach is always warranted.
+- **Benefits**: Models can sometimes reveal patterns that are not evident in a graph of the data.
+- **Drawbacks**: There is a real risk, however, that a model is imposing structure that is not really there on the scatter of data, just as people imagine animal shapes in the stars. A skeptical approach is always warranted.
 
 ---
 
@@ -122,7 +125,7 @@ Chicago1000 <- flights %>%
   sample_n(size=1000)
 ```
 
-Look at the column names of the data. Which variables may be related to the arrival delay?
+Below are the column names of the data. Suppose we want to focus on if the time of the flights (`hour`) is related to the arrival delay (`arr_delay`)?
 
 ```{r eval = FALSE}
 colnames(Chicago1000)
@@ -132,10 +135,7 @@ colnames(Chicago1000)
 ```{r, echo=FALSE}
 matrix(c(colnames(Chicago1000), ""), nrow = 5, ncol = 4) 
 ```
---
-
-Maybe the time of the flights will affect the arrival delay. If yes, how? Let's check whether the variable `hour` is related to `arrival delay`. 
-
+ 
 ---
 ### Visualizing a Model
 
@@ -172,9 +172,8 @@ __Sample Linear model__: $$Y = \hat{\beta_0} + \hat{\beta_1}X_1 + ... + \hat{\be
 ### Vocabulary
 
 - **Response variable**: Variable whose behavior or variation you are trying to understand (y-axis)
+  - For a linear regression model, this must be numeric
 - **Explanatory variables**: Other variables that you want to use to explain the variation in the response (x-axis)
-- **Predicted value**: Output of the model function
-  + The model function gives the typical (expected) value of the response variable conditioning on the explanatory variables
   
   
 ---
@@ -199,7 +198,7 @@ $$\hat{y} = -19.55 + 1.8*hours$$
 - $H_0: \hat{\beta}_1 = 0$
 - $H_0: \hat{\beta}_1 \neq 0$
 
-  + Since the p-value (7.23e-11) is smaller than 0.05, there is a statistical significant relationship between arrival delay and hour.
+  + Since the p-value (7.23e-11) is smaller than 0.05, there is a "statistically significant" relationship between arrival delay and hour.
   
 ---
 ### Linear Model: One Categorical Predictor
@@ -240,6 +239,7 @@ When a categorical explanatory variable has many levels, they're encoded to **du
 ```{r}
 Chicago1000$carrier = relevel(as.factor(Chicago1000$carrier), 
                               ref = "UA")
+
 model3 = lm(arr_delay ~ carrier, data = Chicago1000)
 broom::tidy(model3)
 ```
@@ -252,32 +252,30 @@ Carrier UA is the reference level and every other levels will be compared to it.
 Writing out the proper model:
 
 $$\hat{\text{y}} = 4.86+4.35*\text{9E}-10.7*\text{AA}+20.8*\text{B6}+12.7*\text{MQ}+12.6*\text{WN}$$
---
+
 
 For UA:
-$$\hat{\text{y}} = 4.86 $$
 
-Flights using Carrier UA are on average 4.86 minutes late
+<br>
+<br>
+<br>
+<br>
+<br>
 
---
 
 For AA: 
-$$\hat{\text{y}} = 4.86+4.35*0-10.7*1+20.8*0+12.7*0+12.6*0 = 4.86-10.7$$
-$$\hat{\text{y}} = -5.84$$
-
-Flights using Carrier AA arrive, on average, 5.84 minutes earlier than flights from Carrier UA
 
 ---
 ## Linear Model with Categorical Explanatory
 
-Interpreting P-Value: 
+Interpreting p-value: 
 
 + P-Value for `carrierAA` = 0.00468
   - $H_0: \mu_{UA} = \mu_{AA}$
   - $H_A: \mu_{UA} \neq \mu_{AA}$
-+ Meaning that UA and AA have significantly different departure delays.
++ Meaning that we have evidence that UA and AA have significantly different departure delays.
 
-All p-values are comparing each category to the reference level, but what if you wanted to compare the other categories?
+All p-values are comparing each category to the reference level, which we generally don't care about.
 
 
 ---
@@ -297,13 +295,6 @@ At least one of the carrier has different mean arrival delay than the others (p-
 
 ---
 ### ANOVA: Multiple Comparisons
-
-**From Before**: We know that at least one of the carriers has different mean arrival delay than the others, thus carriers are significant related to the arrival delay. 
-
-```{r}
-model4 = aov(arr_delay ~ carrier, data = Chicago1000)
-summary(model4)
-```
 
 The ANOVA test itself provides only statistical evidence of a difference, but not any statistical evidence as to which mean or means are statistically different.
 
@@ -361,6 +352,13 @@ But if we suspect a variable may affect the relationship between another variabl
   - Individual tests
   
 ---
+
+```{r}
+model6 = lm(arr_delay ~ hour + carrier, data = Chicago1000)
+summary(model6)
+```
+  
+---
 ## Overall F Test
 
 Testing for significance of all predictor variables at once 
@@ -368,14 +366,6 @@ Testing for significance of all predictor variables at once
 - Alternative: The slope for at least one of the predictor variables is not 0
 
 Asking, is the regression model containing at least one of the predictors useful in predicting the response?
-
----
-### Overall F Test
-
-```{r, echo=FALSE}
-model6 = lm(arr_delay ~ hour + carrier, data = Chicago1000)
-summary(model6)
-```
 
 ---
 ### Individual Significance Tests
@@ -388,26 +378,7 @@ Similar to model with one predictor variable, but p-value is calculated assuming
 
 Coefficients and p-values may change when variables are added and taken away. 
 
-+ An increase in the hour of departure increases the arrival delay by 1.9 minutes, assume carrier is held constant
-
----
-### Adding an Interaction Term
-
-Interactions: used if you think two variables are related to each other
-
-  - Allows for different slopes (coefficient for an explanatory variable would change as another explanatory variable changes)
-  - Must keep both variables in the model if interaction is significant 
-  
-Let's suppose we think there is an interaction between `hour` and `dep_delay`
-
----
-### Adding an Interaction Term
-
-```{r}
-int = lm(arr_delay ~ hour + dep_delay + hour:dep_delay, 
-         data = Chicago1000)
-summary(int)
-```
++ An increase in the hour of departure increases the arrival delay by 1.9 minutes, assuming carrier is held constant
 
 ---
 ### Variable Selection
@@ -415,6 +386,8 @@ summary(int)
 - Adjusted $R^2$
 - AIC/BIC
 - Prediction Accuracy (next class period)
+
+**Note**: This is far from an exhaustive list
 
 ---
 ### Adjusted $R^2$
@@ -425,11 +398,10 @@ The Adjusted $R^2$ does not automatically increase for additional variables
   - If a variable is not useful, Adjusted $R^2$ will decrease 
   - Can use to help check variable importance
   
---
 
 **Example**: 
-- For our model with hour and carrier as explanatory variables, 7.361% of the variation in the response (arrival delay) is explained by the model 
-- For our model with hour only as the explanatory variable, 4.071% of the variation in the response (arrival delay) is explained by the model
+- For our model with hour and carrier: 7.361% of the variation in arrival delay is explained by the model 
+- For our model with hour only: 4.071% of the variation in arrival delay is explained by the model
 
 ---
 ### AIC and BIC
@@ -444,13 +416,13 @@ Other: Common Fit Statistics
 
 - AIC: penalize the inclusion of additional variables to a model. It adds a penalty that increases the error when including additional terms. 
 ```{r}
-AIC(int)
+AIC(model6)
 ```
 
 - BIC: Stronger penalty for including additional variables to the model.
 
 ```{r}
-BIC(int)
+BIC(model6)
 ```
 
 
@@ -459,17 +431,14 @@ BIC(int)
 
 1. The response has a normal distribution
 2. We need to have a linear relationship
-  - Need to do nonlinear regression if that’s the case
 3. Constant variance
 4. No perfect collinearity (i.e. one predictor isn’t a linear combination of another predictor in the model)
   - Focus on numerical predictor variables
-  - e.g. can’t include revenue, cost, and profit in a model because profit = revenue – cost
 5. Observations are independent
   
 ---
 ## Assumption: Normality
 
-Normality: assumes that any value can be attained for this response variable
 - If the response has a non-normal distribution, the estimates will be biased
 
 To check this assumption, we use a QQ-Plot
@@ -513,15 +482,8 @@ High correlation between predictor variables
   - Standard errors become inflated, which can lead to $\hat{\beta}$ having the wrong sign in our predictors
   - We interpret 1 variable while holding all others constant. Holding the others constant may not be possible
   
----
-## Assumption: No Perfect Collinearity
-
 When is this an issue:
 - Generally, the absolute value of a correlation above 0.8 is considered serious (caution is typically advised once you hit around 0.6)
-
-Typically, address by removing one predictor variable at a time 
-- If two variables are highly correlated, they’re both explaining the same variation in the response (redundant variable)
-- Check adjusted $R^2$ values
 
 
 ---
@@ -543,11 +505,13 @@ corrplot(M, method = "number", type = "upper")
   + Common transformation is the log-transformation or square root
   + Be careful with your interpretations (untransform your response variable)
 - If you notice a curve in your data, you can add a quadratic term
-  + $Y = \hat{\beta_0} + \hat{\beta_1}X_1 + \hat{\beta_2}X_1^2$
+  + $\hat{Y} = \hat{\beta_0} + \hat{\beta_1}X_1 + \hat{\beta_2}X_1^2$
   + `lm(arr_delay ~ hour + I(hour^2), data = Chicago1000)`
-- When writing about significant variables, include their p-value and standard error in the write-up
-
-
+- Interactions: used if you think two variables are related to each other
+  + Allows for different slopes (coefficient for an explanatory variable would change as another explanatory variable changes)
+    + $\hat{Y} = \hat{\beta_0} + \hat{\beta_1}X_1 + \hat{\beta_2}X_2 \hat{\beta_3}X_1X_2$
+  + `int = lm(arr_delay ~ hour + carrier + hour:carrier, data = Chicago1000)`
+  
 ---
 ## Your Turn!
 
