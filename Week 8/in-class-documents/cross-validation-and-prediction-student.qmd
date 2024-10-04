@@ -1,14 +1,8 @@
 ---
-title: "MTH365: Introduction to Data Science"
-author: "Statistical Inference"
+title: "DSC365: Introduction to Data Science"
+author: "Cross Validation and Prediction"
 date: "October 8, 2024"
-output: 
-  xaringan::moon_reader:
-    lib_dir: libs
-    nature:
-      highlightStyle: github
-      highlightLines: true
-      countIncrementalSlides: false
+format: html
 ---
 
 ```{r echo=FALSE, message=FALSE, warning = FALSE}
@@ -17,32 +11,9 @@ library(knitr)
 library(RColorBrewer)
 library(mosaic)
 library(infer)
-
-
-hook_output = knit_hooks$get('output')
-knit_hooks$set(output = function(x, options) {
-  # this hook is used only when the linewidth option is not NULL
-  if (!is.null(n <- options$linewidth)) {
-    x = xfun::split_lines(x)
-    # any lines wider than n should be wrapped
-    if (any(nchar(x) > n)) x = strwrap(x, width = n)
-    x = paste(x, collapse = '\n')
-  }
-  hook_output(x, options)
-})
-
 ```
 
-## Agenda
-
-
-
----
-## Announcements
-
-
----
-### Statistical Models
+# Statistical Models
 
 
 There are two things we can do with fitting a model:
@@ -50,8 +21,6 @@ There are two things we can do with fitting a model:
 2. Prediction
 
 Last week we focused on interpretation, today we are going to talk about prediction.
-
---
 
 Calculating a prediction is easy:
 
@@ -63,41 +32,21 @@ Getting a good prediction is hard:
 - There is no guarantee the model estimates you have are correct
 - Your model might not perform as well with new data as it did with your sample data
 
----
-### No one best model
+## No one best model
 
-.center["All models are wrong, some are just useful"]
-
---
+"All models are wrong, some are just useful"
 
 - Prediction Accuracy and Model Interpretability Trade-Off
   - A simple model is easier to interpret
   - A complicated model may have more accurate predictions
   
---
-
 - Bias vs Variance Trade-Off
   - Models should minimize both bias and variance, but to some extent these are mutually exclusive goals.
   - A complicated models have less bias, but generally have higher variance (overfit).
   - A simple model can reduce variance but at the cost of increased bias (underfit).
 
----
-##Bias vs Variance
-
-```{r echo=FALSE, fig.align='center', out.width="70%"}
-knitr::include_graphics("../Week 8/images/bias-variance.png")
-```
-
-
----
-### Over vs Under Fitting
-
-```{r echo=FALSE, fig.align='center'}
-knitr::include_graphics("../Week 8/images/model-fit.png")
-```
-
----
-### Splitting Our Data
+--------------------------------------------------------------------------------
+# Splitting Our Data
 
 - Several steps to create a useful statistical model: parameter estimation, model selection, performance assessment, etc.
 
@@ -109,8 +58,7 @@ knitr::include_graphics("../Week 8/images/model-fit.png")
   + Testing: After your model is built, this is the set used to test it by evaluating it against data that it has not previously seen.
 
 
----
-### Let's return to our flight data
+## Let's return to our flight data
 
 Consider a random sample of 1000 flights from NYC to Chicago in 2013. We want to create a model to predict arrival delay.
 
@@ -130,11 +78,11 @@ First we need to split it into a training and a testing set.
 set.seed(365)
 test_id <- sample(1:nrow(Chicago1000), 
                   size=round(0.2*nrow(Chicago1000)))
-TEST <- Chicago1000[test_id,]
-TRAIN <- Chicago1000[-test_id,]
+
+
+
 ```
 
----
 ### Flight Data: Workflow
 
 + Fit model to Training set (let's start with interaction model):
@@ -147,15 +95,12 @@ int = lm(arr_delay ~ hour + dep_delay + hour:dep_delay,
 + Predict outcome on the Testing Set:
 
 ```{r}
-predictions <- predict(int, TEST)
 ```
 
-3. Evaluate Performance
++ Evaluate Performance
 
   + Root Mean Square Error (RMSE) - for numerical response
 
-
----
 ### RMSE
 
 
@@ -166,27 +111,24 @@ $$\text{RMSE} = \sqrt{\frac{\sum^{n}_{i=1}(y_i - \hat{y}_i)^2}{n}}$$
 - Most popular metric in the Regression setting
 - Quantifies the extent to which the predicted value is close to the true response value for that observation
 
---
 
 RMSE for Test Set:
 
 ```{r, message=FALSE}
 #install.packages("Metrics")
 library(Metrics)
-rmse(TEST$arr_delay, predictions)
+
 ```
 
-
-
----
 ### Your Turn!
 
 Find another model to predict `arr_delay`. Compare it's predictive accuracy to the previous model.
 
+```{r}
 
+```
 
----
-### Cross Validation
+## Cross Validation
 
 Potential Problem with a single split into training/testing: you evaluated the model only once and you are not sure your good result is by luck or not
 
@@ -198,9 +140,6 @@ We can easily do this using cross validation
 - A resampling method that uses different portions of the data to test and train a model on different iterations
 - Specifically going to focus on *k-fold cross validation*
 
-
-
----
 ### k-fold Cross Validation
 
 Steps:
@@ -211,13 +150,6 @@ Steps:
 -  Repeat the above steps for K times i.e., until the model is not trained and tested on all subsets
 - Generate overall prediction error by taking the average of prediction errors in every case
 
-```{r echo=FALSE, fig.align='center', out.width="80%"}
-knitr::include_graphics("../Week 8/images/k-fold-cv1.png")
-```
-
----
-### k-fold Cross Validation
-
 What should you choose for *k*?
 
 - Generally choose *k* = 5 or *k* = 10. 
@@ -225,8 +157,6 @@ What should you choose for *k*?
   + Large *k* is very computationally expensive and has lots of variability
   + Small *k* can lead to a biased model
 
----
-### k-fold Cross Validation
 
 ```{r, message=FALSE}
 library(caret)
@@ -241,38 +171,27 @@ model
 
 
 
----
-### k-fold Cross Validation
-
 Linear Regression does not have hyperparameters (parameters of the model that cannot be directly learned from the data)
 
 If you were working with a model with hyperparameters (we'll work with some later), best to do it this way:
 
 
-```{r echo=FALSE, fig.align='center', out.width="80%"}
-knitr::include_graphics("../Week 8/images/k-fold-cv2.png")
-```
-
-
----
 ### Your Turn!
 
 Try k-fold Cross Validation on your model! How does your results change as you change $k$?
 
+```{r}
+
+```
 
 
----
-### Caution with Linear Models: Extrapolation
+
+## Caution with Linear Models: Extrapolation
 
 We extrapolate when we use the regression equation to produce a response value from an x-value that is outside the range of the observed x-values
 
 Let's look at the visualization of the relationship between year and diameter of a dinner plate.
 
-```{r echo=FALSE, fig.align='center', out.width="40%"}
-knitr::include_graphics("../Week 8/images/extrapolation.png")
-```
-
 The trend in the data as summarized by the estimated regression equation does not necessarily hold outside the scope of the model. If so, dinner plates would constantly be getting bigger. 
-
 
 

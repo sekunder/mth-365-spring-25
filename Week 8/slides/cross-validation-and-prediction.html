@@ -3,7 +3,7 @@
   <head>
     <title>MTH365: Introduction to Data Science</title>
     <meta charset="utf-8" />
-    <meta name="author" content="Statistical Inference" />
+    <meta name="author" content="Cross Validation and Prediction" />
     <meta name="date" content="2024-10-08" />
     <script src="libs/header-attrs-2.27/header-attrs.js"></script>
     <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
@@ -17,7 +17,7 @@ class: center, middle, inverse, title-slide
 # MTH365: Introduction to Data Science
 ]
 .author[
-### Statistical Inference
+### Cross Validation and Prediction
 ]
 .date[
 ### October 8, 2024
@@ -28,13 +28,15 @@ class: center, middle, inverse, title-slide
 
 
 
-## Agenda
-
-
-
----
 ## Announcements
 
+**Lab 5**: work day in class on Thursday October 10
+
+- Due Tuesday October 22nd, 2024 at 11:59 pm in Blueline
+
+**Mini Project 2**
+
+- Due Thursday October 24 at 11:59 in Blueline
 
 ---
 ### Statistical Models
@@ -79,13 +81,13 @@ Getting a good prediction is hard:
 ---
 ##Bias vs Variance
 
-&lt;img src="../Week 8/images/bias-variance.png" width="70%" style="display: block; margin: auto;" /&gt;
+&lt;img src="../../Week 8/slides/images/bias-variance.png" width="70%" style="display: block; margin: auto;" /&gt;
 
 
 ---
 ### Over vs Under Fitting
 
-&lt;img src="../Week 8/images/model-fit.png" width="2297" style="display: block; margin: auto;" /&gt;
+&lt;img src="../../Week 8/slides/images/model-fit.png" width="2297" style="display: block; margin: auto;" /&gt;
 
 ---
 ### Splitting Our Data
@@ -137,7 +139,7 @@ int = lm(arr_delay ~ hour + dep_delay + hour:dep_delay,
 predictions &lt;- predict(int, TEST)
 ```
 
-3. Evaluate Performance
++ Evaluate Performance
 
   + Root Mean Square Error (RMSE) - for numerical response
 
@@ -203,7 +205,7 @@ Steps:
 -  Repeat the above steps for K times i.e., until the model is not trained and tested on all subsets
 - Generate overall prediction error by taking the average of prediction errors in every case
 
-&lt;img src="../Week 8/images/k-fold-cv1.png" width="80%" style="display: block; margin: auto;" /&gt;
+&lt;img src="../../Week 8/slides/images/k-fold-cv1.png" width="80%" style="display: block; margin: auto;" /&gt;
 
 ---
 ### k-fold Cross Validation
@@ -257,7 +259,7 @@ Linear Regression does not have hyperparameters (parameters of the model that ca
 If you were working with a model with hyperparameters (we'll work with some later), best to do it this way:
 
 
-&lt;img src="../Week 8/images/k-fold-cv2.png" width="80%" style="display: block; margin: auto;" /&gt;
+&lt;img src="../../Week 8/slides/images/k-fold-cv2.png" width="80%" style="display: block; margin: auto;" /&gt;
 
 
 ---
@@ -274,7 +276,7 @@ We extrapolate when we use the regression equation to produce a response value f
 
 Let's look at the visualization of the relationship between year and diameter of a dinner plate.
 
-&lt;img src="../Week 8/images/extrapolation.png" width="40%" style="display: block; margin: auto;" /&gt;
+&lt;img src="../../Week 8/slides/images/extrapolation.png" width="40%" style="display: block; margin: auto;" /&gt;
 
 The trend in the data as summarized by the estimated regression equation does not necessarily hold outside the scope of the model. If so, dinner plates would constantly be getting bigger. 
 
