@@ -20,3 +20,4 @@ Date | Notes | Description | Additional Files | Homework Assigned
 9/26/2024 | **Finish MP1 Presentations and Lab 4** | Lab 4 Work Day | | **Due** Thursday October 3rd at 11:59 pm in Blueline
 10/1/2024 | [Statistical Foundations](Week 7/slides/statistical-foundations.html) | sampling distributions, bootstraping, and hypothesis tests |[in class document](Week 7/in-class-documents/statistical-foundations-student.qmd) | 
 10/3/2024 | [MLR](Week 7/slides/linear-models.html) | basics of linear regression models |[in class document](Week 7/in-class-documents/linear-models-student.qmd) | 
+10/8/2024 | [Prediction](Week 8/slides/cross-validation-and-prediction.html) | cross validation and predictions with regression models |[in class document](Week 8/in-class-documents/cross-validation-and-prediction-student.qmd) | 

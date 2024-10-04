@@ -50,9 +50,9 @@ Sometimes we want to know whether any variables are related, thus we need to fit
 - We will focus on linear models, but there are many other types of models too!
 
 .pull-left[
-![](linear-models_files/figure-html/unnamed-chunk-2-1.png)&lt;!-- --&gt;
+![](linear-models_files/figure-html/unnamed-chunk-6-1.png)&lt;!-- --&gt;
 ].pull-right[
-![](linear-models_files/figure-html/unnamed-chunk-3-1.png)&lt;!-- --&gt;
+![](linear-models_files/figure-html/unnamed-chunk-7-1.png)&lt;!-- --&gt;
 
 ]
 
@@ -129,7 +129,7 @@ Chicago1000 %&gt;%
   geom_smooth(method = "lm")
 ```
 
-&lt;img src="linear-models_files/figure-html/unnamed-chunk-7-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="linear-models_files/figure-html/unnamed-chunk-11-1.png" style="display: block; margin: auto;" /&gt;
 
 
 ---
@@ -192,9 +192,9 @@ summary(model)
 
 Linear Model:
 
-`$$\hat{y} = -19.55 + 1.8*hours$$`
+`$$\hat{y} = -19.55 + 2.0384*hours$$`
 
-**Coefficient Interpretation**: If the hour increases by one unit (one hour), then the arrival delay will increase by 1.8 units (minute). 
+**Coefficient Interpretation**: If the hour increases by one unit (one hour), then the arrival delay will increase by 2.0384 units (minute). 
 
 **Significance of Variable:** Hypothesis Test
 
@@ -208,7 +208,7 @@ Linear Model:
 
 **Example**: What about carrier? Do different carriers lead to different average arrival delay?
 
-&lt;img src="linear-models_files/figure-html/unnamed-chunk-9-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="linear-models_files/figure-html/unnamed-chunk-13-1.png" style="display: block; margin: auto;" /&gt;
 
 
 + Make sure `carrier` is being treated as a factor!
@@ -383,7 +383,7 @@ Chicago1000 %&gt;% ggplot(aes(x = hour, y = arr_delay)) +
   aes(color = carrier)
 ```
 
-&lt;img src="linear-models_files/figure-html/unnamed-chunk-14-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="linear-models_files/figure-html/unnamed-chunk-18-1.png" style="display: block; margin: auto;" /&gt;
 
 
 
@@ -532,7 +532,7 @@ To check this assumption, we use a QQ-Plot
 plot(model6, which = 2)
 ```
 
-&lt;img src="linear-models_files/figure-html/unnamed-chunk-18-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="linear-models_files/figure-html/unnamed-chunk-22-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 ## Assumption: Linearity
@@ -546,7 +546,7 @@ Look at the Residuals vs Fitted Plot
 plot(model6, which = 1)
 ```
 
-&lt;img src="linear-models_files/figure-html/unnamed-chunk-19-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="linear-models_files/figure-html/unnamed-chunk-23-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 ## Assumption: Constant Variance
@@ -559,7 +559,7 @@ plot(model6, which = 1)
 plot(model6, which = 3)
 ```
 
-&lt;img src="linear-models_files/figure-html/unnamed-chunk-20-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="linear-models_files/figure-html/unnamed-chunk-24-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 ## Assumption: No Perfect Collinearity
@@ -585,11 +585,18 @@ Let's look at the relationship between `air_time` and `distance`
 
 ``` r
 library(corrplot)
+```
+
+```
+## corrplot 0.92 loaded
+```
+
+``` r
 M &lt;- cor(Chicago1000[,c(15:16)])
 corrplot(M, method = "number", type = "upper")
 ```
 
-&lt;img src="linear-models_files/figure-html/unnamed-chunk-21-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="linear-models_files/figure-html/unnamed-chunk-25-1.png" style="display: block; margin: auto;" /&gt;
 
 
 ---

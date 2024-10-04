@@ -189,9 +189,9 @@ summary(model)
 
 Linear Model:
 
-$$\hat{y} = -19.55 + 1.8*hours$$
+$$\hat{y} = -19.55 + 2.0384*hours$$
 
-**Coefficient Interpretation**: If the hour increases by one unit (one hour), then the arrival delay will increase by 1.8 units (minute). 
+**Coefficient Interpretation**: If the hour increases by one unit (one hour), then the arrival delay will increase by 2.0384 units (minute). 
 
 **Significance of Variable:** Hypothesis Test
 
