@@ -26,9 +26,9 @@ Learning techniques fall into two categories:
 ## Tree-Based Methods
 
 - Can be used for both regression and classification
-  + Regression models have a quantitative response variable (and can thus often be visualized as a geometric surface), classification models have a categorical response (and are often visualized as a discrete surface, i.e., a tree).
-- These involve stratifying or segmenting the predictor space into a
-number of simple regions
+  + Regression models have a quantitative response variable (and can thus often be visualized as a geometric surface) 
+  + Classification models have a categorical response (and are often visualized as a discrete surface).
+- These involve stratifying or segmenting the predictor space into a number of simple regions
   + Have a set of decision rules that can be summarized in a tree
 
 
@@ -104,11 +104,23 @@ We predict that each observation belongs to the most commonly occurring class of
 
 
 How to decide to split?
-  + Gini Index: $$G = \sum^{K}_{k=1}\hat{p}_{mk}(1-\hat{p}_{mk})$$
+
+- As the number of predictors increases, so does the number of possible trees.
+  + Optimal decision trees do not exist (Hyafil & Rivest, 1976)
+  + So several competing methods for building decision trees
+  
+Recursive Partitioning: Split an infinite # of times until some stopping criterion is reached.
+
+Split:
+  + Gini Index (default): $$G = \sum^{K}_{k=1}\hat{p}_{mk}(1-\hat{p}_{mk})$$
 where $\hat{p}_{mk}$ is the proportion of training observations in the *m*th region that are from the *k*th class
-    + Gini Index is a measure of node purity (a pure node contains observations from a single class)
+    + Gini Index is a measure of node purity
     
-    + used to evaluate quality of a split (create a split if makes the node more pure)
+    
+Stop:
+
+- Complexity parameter: Prunes splits that don't sufficiently improve a model's predictive power
+
 
 ### Fitting A Decision Tree (Classification)
 
@@ -143,20 +155,8 @@ geom_boxplot(aes(col=LEGAL))
 
 ## Evaluating a decision tree: the three C’s
 
-- Complexity parameter
 - Confusion Matrix
 - Classification Accuracy
-
-
-### Complexity parameter
-
-It is the amount by which splitting that node improved the relative error.
-  - So splitting that node only resulted in an improvement of 0.01, so the tree building stopped there
-
-
-```{r, message=FALSE}
-printcp(tree)
-```
 
 
 ### Confusion Matrix
@@ -191,18 +191,33 @@ Testing Accuracy:
 sum(diag(confusion_test))/nrow(TEST)
 ```
 
+### Tuning Parameter: Complexity parameter
+
+Using recursive paritioning can overfit the training data - Prune Tree
+
+
+```{r, message=FALSE}
+printcp(tree)
+```
+
+- Change CP (Example)
+
+```{r, eval = FALSE}
+rpart(LEGAL~AGE, data=TRAIN, na.action = na.pass,
+      control = rpart.control(cp = 0.05))
+```
+
 
 ## Decision Trees (Regression)
 
-1. We divide the predictor space — that is, the set of possible values for $X_1,X_2, \dots ,X_p$ — into *J* distinct and non-overlapping regions, $R_1,R_2,\dots,R_J$.
-
-2. For every observation that falls into the region $R_j$, we make the same prediction, which is simply the mean of the response values for the training observations in $R_j$.
+We first divide the predictor space into *J* distinct overlapping regions. Then for every observation that falls into the region $R_j$, we make the same prediction, which is simply the mean of the response values for the training observations in $R_j$.
 
 
 How to decide to split?
 
-Find regions $(R_j)$ that minimizes the residual sum of squares $(RSS = \sum^{J}_{j=1}\sum_{i \in R_j}(y_i - \hat{y}_{R_j})^2)$. Stops when you reach some criterion.
+- Find regions $(R_j)$ that minimizes the residual sum of squares $$RSS = \sum^{J}_{j=1}\sum_{i \in R_j}(y_i - \hat{y}_{R_j})^2)$$. 
 
+  - Stops when you reach some criterion (cp).
 
 ### Fitting A Decision Tree (Regression)
 
@@ -237,12 +252,13 @@ What if we try to use both age and political affiliation to predict the view on 
 
 ### Trees Versus Linear Models
 
-- If the relationship between the features and the response is well approximated by
-a linear model, then an approach such as linear regression will likely work well, and will outperform a method such as a regression tree that does not exploit this linear structure. 
-- If instead there is a highly nonlinear and complex relationship between the features and the response as indicated by model, then decision trees may outperform classical approaches
+- If the relationship between the features and the response is well approximated by a linear model:
+  + linear regression (exploits linear structure).
+- If instead there is a highly nonlinear and complex relationship between the features and the response as indicated by model:
+  + decision trees
 
 
-- But should also consider other things like testing error and interpretability
+But should also consider other things like testing error and interpretability
 
 
 ### Advantages and Disadvantages of Decision Trees
@@ -258,17 +274,12 @@ a linear model, then an approach such as linear regression will likely work well
 
 A random forest is collection of decision trees that are aggregated by majority rule
 
-Random forest will expect you to have a relatively large number of input variables.
+  - Random forest will expect you to have a relatively large number of input variables.
 
-**Example**: Which variables are most important for predicting views on marijuana legalization?
+When to use random forest
 
-### When to use random forest
-
-1. When there are a lot of variables and you have no idea why one may be useful to explain the response variable.
-
-2. Potential collinearity in the predictors.
-
-Once the random forest tells you several potential important variables, you can try to fit linear model or decision tree for interpretation
+  - When there are a lot of variables and you have no idea why one may be useful to explain the response variable.
+  - Potential collinearity in the predictors.
 
 ## Building a Random Forest
 
@@ -279,9 +290,7 @@ In building a random forest, each time a split in a tree is considered, a random
 
 Hence, at each split in the tree, the algorithm is not even allowed to consider a majority of the available predictors. Why is this a good thing?
 
-- Suppose that there is one very strong predictor in the data set, along with a number of other moderately strong predictors
-- By forcing each split to consider only a subset of the predictors, some splits will not even consider the strong predictor, so other predictors will have more of a chance.        
-  + Decorrelating the trees - making the average of the resulting trees less variable and hence more reliable.
+Example: Which variables are most important for predicting views on marijuana legalization?
 
 ```{r, message=FALSE}
 #install.packages('randomForest')
@@ -310,9 +319,7 @@ TEST$Legal_RF[1:5]
 
 ### Variable Importance
 
-Since each tree in a random forest uses a different set of variables, we want to keep track of which variables seem to be the most consistently influential. This is captured by the notion of importance.
-
-Gini is a measure of how each variable contributes to the homogeneity of the nodes and leaves in the resulting random forest (lower is more pure).
+Since each tree in a random forest uses a different set of variables, we want to keep track of which variables seem to be the most consistently influential.
 
 ```{r}
 importance(forest_grass) %>% as.data.frame() %>% 

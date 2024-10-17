@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="" xml:lang="">
   <head>
-    <title>MTH365: Introduction to Data Science</title>
+    <title>DSC365: Introduction to Data Science</title>
     <meta charset="utf-8" />
     <meta name="author" content="Decision Trees and Random Forests" />
     <meta name="date" content="2024-10-22" />
@@ -14,7 +14,7 @@
 class: center, middle, inverse, title-slide
 
 .title[
-# MTH365: Introduction to Data Science
+# DSC365: Introduction to Data Science
 ]
 .author[
 ### Decision Trees and Random Forests
@@ -34,13 +34,17 @@ class: center, middle, inverse, title-slide
 }
 &lt;/style&gt;
 
-## Agenda
-
-- Decision Trees
-- Random Forests
-
----
 ## Announcements
+
+**Lab 5**: Due Tuesday October 22nd, 2024 at 11:59 pm in Blueline
+
+**Mini Project 2**
+
+- Due Thursday October 24 at 11:59 in Blueline
+
+**Lab 6**: work day in class on Thursday October 24
+
+- Due Tuesday October 29th, 2024 at 11:59 pm in Blueline
 
 ---
 ## Supervised vs Unsupervised Learning
@@ -56,45 +60,46 @@ Learning techniques fall into two categories:
 ## Tree-Based Methods
 
 - Can be used for both regression and classification
-  + Regression models have a quantitative response variable (and can thus often be visualized as a geometric surface), classification models have a categorical response (and are often visualized as a discrete surface, i.e., a tree).
-- These involve stratifying or segmenting the predictor space into a
-number of simple regions
+  + Regression models have a quantitative response variable (and can thus often be visualized as a geometric surface) 
+  + Classification models have a categorical response (and are often visualized as a discrete surface).
+- These involve stratifying or segmenting the predictor space into a number of simple regions
   + Have a set of decision rules that can be summarized in a tree
 
 
 ---
-## Example: Marijuana legalization
+### Example: Marijuana legalization
 
 The General Social Survey is a wide-ranging survey conducted biannually to measure cultural shifts in American society. We can use the GSS to get an idea of how popular opinion has changed.
 
 .tiny[
 
 ``` r
-GSS &lt;- read.csv("../../Week 9/slides/GSS2016.csv")
+GSS &lt;- read.csv("GSS2016.csv")
 glimpse(GSS)
 ```
+
 
 ```
 ## Rows: 9,423
 ## Columns: 18
-## $ YEAR     &lt;int&gt; 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2010…
-## $ NEWSFROM &lt;chr&gt; "Not applicable", "Not applicable", "Not applicable", "Not applicable", "Tv"…
-## $ HAPPY    &lt;chr&gt; "Pretty happy", "Not too happy", "Not too happy", "Not too happy", "Very hap…
-## $ RELIG    &lt;chr&gt; "Catholic", "None", "Catholic", "Catholic", "Protestant", "None", "Catholic"…
-## $ GRASS    &lt;chr&gt; "Don't know", "Legal", "Not applicable", "Not legal", "Not legal", "Legal", …
-## $ COURTS   &lt;chr&gt; "About right", "Too harsh", "Not harsh enough", "Not harsh enough", "Not har…
-## $ ENERGY   &lt;chr&gt; "Too little", "Too little", "Don't know", "About right", "Don't know", "Too …
-## $ EDUC     &lt;chr&gt; "Not applicable", "Too little", "Too little", "Not applicable", "About right…
-## $ ENVIR    &lt;chr&gt; "Not applicable", "Too little", "Too little", "Not applicable", "About right…
-## $ POLVIEWS &lt;chr&gt; "Slightly liberal", "Liberal", "Don't know", "Liberal", "Slightly liberal", …
-## $ PARTYID  &lt;chr&gt; "Democrat", "Democrat", "Democrat", "Republican", "Independent", "Democrat",…
-## $ REGION   &lt;chr&gt; "Middle atlantic", "Middle atlantic", "Middle atlantic", "Middle atlantic", …
-## $ INCOME   &lt;chr&gt; "$25000 or more", "$15000 - 19999", "$20000 - 24999", "$8000 to 9999", "Don'…
-## $ SEX      &lt;chr&gt; "Male", "Female", "Female", "Female", "Female", "Male", "Female", "Female", …
-## $ DEGREE   &lt;chr&gt; "Bachelor", "Bachelor", "Lt high school", "Lt high school", "Lt high school"…
-## $ AGE      &lt;chr&gt; "31", "23", "71", "82", "78", "40", "46", "80", "31", "No answer", "31", "21…
-## $ MARITAL  &lt;chr&gt; "Never married", "Never married", "Divorced", "Widowed", "Married", "Never m…
-## $ BALLOT   &lt;chr&gt; "Ballot b", "Ballot b", "Ballot a", "Ballot b", "Ballot c", "Ballot b", "Bal…
+## $ YEAR     &lt;int&gt; 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2010, …
+## $ NEWSFROM &lt;chr&gt; "Not applicable", "Not applicable", "Not applicable", "Not applicable", "Tv", …
+## $ HAPPY    &lt;chr&gt; "Pretty happy", "Not too happy", "Not too happy", "Not too happy", "Very happy…
+## $ RELIG    &lt;chr&gt; "Catholic", "None", "Catholic", "Catholic", "Protestant", "None", "Catholic", …
+## $ GRASS    &lt;chr&gt; "Don't know", "Legal", "Not applicable", "Not legal", "Not legal", "Legal", "D…
+## $ COURTS   &lt;chr&gt; "About right", "Too harsh", "Not harsh enough", "Not harsh enough", "Not harsh…
+## $ ENERGY   &lt;chr&gt; "Too little", "Too little", "Don't know", "About right", "Don't know", "Too li…
+## $ EDUC     &lt;chr&gt; "Not applicable", "Too little", "Too little", "Not applicable", "About right",…
+## $ ENVIR    &lt;chr&gt; "Not applicable", "Too little", "Too little", "Not applicable", "About right",…
+## $ POLVIEWS &lt;chr&gt; "Slightly liberal", "Liberal", "Don't know", "Liberal", "Slightly liberal", "S…
+## $ PARTYID  &lt;chr&gt; "Democrat", "Democrat", "Democrat", "Republican", "Independent", "Democrat", "…
+## $ REGION   &lt;chr&gt; "Middle atlantic", "Middle atlantic", "Middle atlantic", "Middle atlantic", "M…
+## $ INCOME   &lt;chr&gt; "$25000 or more", "$15000 - 19999", "$20000 - 24999", "$8000 to 9999", "Don't …
+## $ SEX      &lt;chr&gt; "Male", "Female", "Female", "Female", "Female", "Male", "Female", "Female", "F…
+## $ DEGREE   &lt;chr&gt; "Bachelor", "Bachelor", "Lt high school", "Lt high school", "Lt high school", …
+## $ AGE      &lt;chr&gt; "31", "23", "71", "82", "78", "40", "46", "80", "31", "No answer", "31", "21",…
+## $ MARITAL  &lt;chr&gt; "Never married", "Never married", "Divorced", "Widowed", "Married", "Never mar…
+## $ BALLOT   &lt;chr&gt; "Ballot b", "Ballot b", "Ballot a", "Ballot b", "Ballot c", "Ballot b", "Ballo…
 ```
 ]
 
@@ -129,48 +134,14 @@ GSS$AGE &lt;- as.numeric(GSS$AGE)
 ```
 
 ---
-## Cleaned Data
-
-.tiny[
-
-``` r
-head(GSS)
-```
-
-```
-##   YEAR       NEWSFROM        HAPPY    RELIG     GRASS           COURTS      ENERGY
-## 1 2016             Tv Pretty happy     None     Legal        Too harsh  Too little
-## 2 2016 Not applicable   Very happy Catholic Not legal       Don't know  Too little
-## 3 2016 Not applicable   Very happy     None     Legal       Don't know About right
-## 4 2016          Radio   Very happy     None     Legal Not harsh enough  Too little
-## 5 2016 Not applicable   Very happy Catholic Not legal Not harsh enough About right
-## 6 2016 Not applicable Pretty happy     None Not legal Not harsh enough About right
-##             EDUC          ENVIR             POLVIEWS     PARTYID          REGION
-## 1     Too little     Don't know              Liberal Independent     New england
-## 2     Too little    About right         Conservative  Republican     New england
-## 3 Not applicable Not applicable     Slightly liberal    Democrat     New england
-## 4     Too little     Too little     Slightly liberal    Democrat     New england
-## 5     Too little     Too little Slghtly conservative Independent Middle atlantic
-## 6 Not applicable Not applicable         Conservative  Republican Middle atlantic
-##           INCOME    SEX         DEGREE AGE       MARITAL   BALLOT     LEGAL
-## 1 $25000 or more   Male    High school  61 Never married Ballot b     Legal
-## 2 $25000 or more   Male       Bachelor  72       Married Ballot c Not legal
-## 3        Refused Female       Graduate  55       Married Ballot c     Legal
-## 4 $25000 or more Female Junior college  53       Married Ballot b     Legal
-## 5 $25000 or more Female    High school  23       Married Ballot c Not legal
-## 6 $25000 or more   Male Junior college  71      Divorced Ballot c Not legal
-```
-]
-
----
 ## Testing data v. training data
 
 **Goal**: Use Age to predict people’s opinion of marijuana legalization.
 
 
 ``` r
-set.seed(365)
-test_id &lt;- sample(1:nrow(GSS), size=round(0.4*nrow(GSS)))
+set.seed(4)
+test_id &lt;- sample(1:nrow(GSS), size=round(0.2*nrow(GSS)))
 TEST &lt;- GSS[test_id,]
 TRAIN &lt;- GSS[-test_id,]
 ```
@@ -188,8 +159,8 @@ TRAIN %&gt;% group_by(LEGAL) %&gt;% summarize(n=n())
 ## # A tibble: 2 × 2
 ##   LEGAL         n
 ##   &lt;chr&gt;     &lt;int&gt;
-## 1 Legal       694
-## 2 Not legal   480
+## 1 Legal       911
+## 2 Not legal   654
 ```
 
 
@@ -210,17 +181,32 @@ Decision trees: A tree-like model of decisions and their possible consequences
 ---
 ## Decision Trees (Classification)
 
-We predict that each observation belongs to the most commonly occurring class of training observations in the region to which it belongs.
+We first divide the predictor space into *J* distinct overlapping regions. We predict that each observation belongs to the most commonly occurring class of training observations in the region to which it belongs.
 
 --
 
 How to decide to split?
-  + Gini Index: `$$G = \sum^{K}_{k=1}\hat{p}_{mk}(1-\hat{p}_{mk})$$`
-where `\(\hat{p}_{mk}\)` is the proportion of training observations in the *m*th region that are from the *k*th class
-    + Gini Index is a measure of node purity (a pure node contains observations from a single class)
-    
-    + used to evaluate quality of a split (create a split if makes the node more pure)
 
+- As the number of predictors increases, so does the number of possible trees.
+  + Optimal decision trees do not exist (Hyafil &amp; Rivest, 1976)
+  + So several competing methods for building decision trees
+
+---
+## Decision Trees (Classification)
+
+Recursive Partitioning: Split an infinite # of times until some stopping criterion is reached.
+
+Split:
+  + Gini Index (default): `$$G = \sum^{K}_{k=1}\hat{p}_{mk}(1-\hat{p}_{mk})$$`
+where `\(\hat{p}_{mk}\)` is the proportion of training observations in the *m*th region that are from the *k*th class
+    + Gini Index is a measure of node purity
+    
+    
+Stop:
+
+- Complexity parameter: Prunes splits that don't sufficiently improve a model's predictive power
+
+  
 ---
 ## Fitting A Decision Tree (Classification)
 
@@ -232,14 +218,14 @@ rpart(LEGAL~AGE, data=TRAIN, na.action = na.pass)
 ```
 
 ```
-## n= 1174 
+## n= 1565 
 ## 
 ## node), split, n, loss, yval, (yprob)
 ##       * denotes terminal node
 ## 
-## 1) root 1174 480 Legal (0.5911414 0.4088586)  
-##   2) AGE&lt; 68.5 1026 385 Legal (0.6247563 0.3752437) *
-##   3) AGE&gt;=68.5 148  53 Not legal (0.3581081 0.6418919) *
+## 1) root 1565 654 Legal (0.5821086 0.4178914)  
+##   2) AGE&lt; 68.5 1350 521 Legal (0.6140741 0.3859259) *
+##   3) AGE&gt;=68.5 215  82 Not legal (0.3813953 0.6186047) *
 ```
 
 ---
@@ -282,42 +268,10 @@ geom_boxplot(aes(col=LEGAL))
 &lt;img src="decision-trees-random-forests_files/figure-html/unnamed-chunk-16-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
-## Evaluating a decision tree: the three C’s
+## Evaluating a decision tree
 
-- Complexity parameter
 - Confusion Matrix
 - Classification Accuracy
-
----
-### Complexity parameter
-
-It is the amount by which splitting that node improved the relative error.
-  - So splitting that node only resulted in an improvement of 0.01, so the tree building stopped there
-
-.tiny[
-
-``` r
-printcp(tree)
-```
-
-```
-## 
-## Classification tree:
-## rpart(formula = LEGAL ~ AGE, data = TRAIN, na.action = na.pass)
-## 
-## Variables actually used in tree construction:
-## [1] AGE
-## 
-## Root node error: 480/1174 = 0.40886
-## 
-## n= 1174 
-## 
-##       CP nsplit rel error xerror     xstd
-## 1 0.0875      0    1.0000 1.0000 0.035093
-## 2 0.0100      1    0.9125 0.9125 0.034522
-```
-]
-
 ---
 ### Confusion Matrix
 
@@ -333,8 +287,8 @@ confusion_train
 ```
 ##            LEGAL
 ## Legal_Tree  Legal Not legal
-##   Legal       641       385
-##   Not legal    53        95
+##   Legal       829       521
+##   Not legal    82       133
 ```
 
 
@@ -349,8 +303,8 @@ confusion_test
 ```
 ##            LEGAL
 ## Legal_Tree  Legal Not legal
-##   Legal       391       281
-##   Not legal    41        69
+##   Legal       203       145
+##   Not legal    12        31
 ```
 
 ---
@@ -364,7 +318,7 @@ sum(diag(confusion_train))/nrow(TRAIN)
 ```
 
 ```
-## [1] 0.6269165
+## [1] 0.6146965
 ```
 
 Testing Accuracy:
@@ -375,15 +329,52 @@ sum(diag(confusion_test))/nrow(TEST)
 ```
 
 ```
-## [1] 0.5882353
+## [1] 0.5984655
 ```
+
+
+---
+## Tuning Parameter: Complexity parameter
+
+Using recursive paritioning can overfit the training data - Prune Tree 
+
+.tiny[
+
+``` r
+printcp(tree)
+```
+
+```
+## 
+## Classification tree:
+## rpart(formula = LEGAL ~ AGE, data = TRAIN, na.action = na.pass)
+## 
+## Variables actually used in tree construction:
+## [1] AGE
+## 
+## Root node error: 654/1565 = 0.41789
+## 
+## n= 1565 
+## 
+##         CP nsplit rel error  xerror     xstd
+## 1 0.077982      0   1.00000 1.00000 0.029834
+## 2 0.010000      1   0.92202 0.94037 0.029544
+```
+]
+
+- Change CP (Example)
+
+
+``` r
+rpart(LEGAL~AGE, data=TRAIN, na.action = na.pass,
+      control = rpart.control(cp = 0.05))
+```
+
 
 ---
 ## Decision Trees (Regression)
 
-1. We divide the predictor space — that is, the set of possible values for `\(X_1,X_2, \dots ,X_p\)` — into *J* distinct and non-overlapping regions, `\(R_1,R_2,\dots,R_J\)`.
-
-2. For every observation that falls into the region `\(R_j\)`, we make the same prediction, which is simply the mean of the response values for the training observations in `\(R_j\)`.
+We first divide the predictor space into *J* distinct overlapping regions. Then for every observation that falls into the region `\(R_j\)`, we make the same prediction, which is simply the mean of the response values for the training observations in `\(R_j\)`.
 
 
 --
@@ -392,15 +383,15 @@ sum(diag(confusion_test))/nrow(TEST)
 
 How to decide to split?
 
-Find regions `\((R_j)\)` that minimizes the residual sum of squares `\((RSS = \sum^{J}_{j=1}\sum_{i \in R_j}(y_i - \hat{y}_{R_j})^2)\)`. Stops when you reach some criterion.
+- Find regions `\((R_j)\)` that minimizes the residual sum of squares `$$RSS = \sum^{J}_{j=1}\sum_{i \in R_j}(y_i - \hat{y}_{R_j})^2)$$`. 
+
+  - Stops when you reach some criterion (cp).
 
 
 ---
 ### Fitting A Decision Tree (Regression)
 
 Let's suppose we want to use people’s political view (POLVIEWS) and marital status (MARITAL) to estimate people’s age.
-
---
 
 
 ``` r
@@ -426,7 +417,7 @@ predict(tree2, TEST , method = "anova") %&gt;% head()
 
 ```
 ##        1        2        3        4        5        6 
-## 51.60315 51.60315 36.39895 51.60315 51.60315 36.39895
+## 51.93004 51.93004 51.93004 51.93004 35.25934 51.93004
 ```
 
 &lt;br&gt;
@@ -438,65 +429,15 @@ predict(tree2, TEST , method = "anova") %&gt;% head()
 
 What if we try to use both age and political affiliation to predict the view on marijuana legalization? Visualize the tree and calculate the classification accuracy.
 
---
-
-
-``` r
-tree3 &lt;- rpart(LEGAL~AGE+PARTYID, data=TRAIN)
-fancyRpartPlot(tree3)
-```
-
-
-
-&lt;img src="../../Week 9/slides/images/tree3.png" width="2080" style="display: block; margin: auto;" /&gt;
-
----
-### Try by Yourself
-
-
-``` r
-TRAIN &lt;- TRAIN %&gt;%
-  mutate(Legal_Tree = predict(tree3, type='class'))
-
-confusion_train &lt;- tally(Legal_Tree~LEGAL, data=TRAIN)
-```
-
-
-``` r
-TEST &lt;- TEST %&gt;%
-  mutate(Legal_Tree = predict(tree3, type='class', newdata = TEST))
-
-confusion_test &lt;- tally(Legal_Tree~LEGAL, data=TEST)
-```
-
-Training Accuracy:
-
-
-``` r
-sum(diag(confusion_train))/nrow(TRAIN)
-```
-
-```
-## [1] 0.6379898
-```
-
-Testing Accuracy:
-
-
-``` r
-sum(diag(confusion_test))/nrow(TEST)
-```
-
-```
-## [1] 0.6197183
-```
 
 ---
 ### Trees Versus Linear Models
 
 - If the relationship between the features and the response is well approximated by
-a linear model, then an approach such as linear regression will likely work well, and will outperform a method such as a regression tree that does not exploit this linear structure. 
-- If instead there is a highly nonlinear and complex relationship between the features and the response as indicated by model, then decision trees may outperform classical approaches
+a linear model: 
+  + linear regression (exploits linear structure). 
+- If instead there is a highly nonlinear and complex relationship between the features and the response as indicated by model: 
+  + decision trees
 
 &lt;br&gt;
 
@@ -507,7 +448,7 @@ a linear model, then an approach such as linear regression will likely work well
 
 - Easy to explain to people
   + Can visualize
-  + Some people believe that it mirrors human decision-making
+  + Mirrors human decision-making
 - Can handle qualitative predictors with dummy variables
 - However, they generally do not have the same level of predictive accuracy as other approaches
   + Can approve prediction accuracy by aggregating many trees!
@@ -519,18 +460,14 @@ a linear model, then an approach such as linear regression will likely work well
 
 A random forest is collection of decision trees that are aggregated by majority rule
 
-Random forest will expect you to have a relatively large number of input variables.
+  - Random forest will expect you to have a relatively large number of input variables.
 
-**Example**: Which variables are most important for predicting views on marijuana legalization?
+&lt;br&gt;
 
----
-### When to use random forest
+When to use random forest
 
-1. When there are a lot of variables and you have no idea why one may be useful to explain the response variable.
-
-2. Potential collinearity in the predictors.
-
-Once the random forest tells you several potential important variables, you can try to fit linear model or decision tree for interpretation
+  - When there are a lot of variables and you have no idea why one may be useful to explain the response variable.
+  - Potential collinearity in the predictors.
 
 ---
 ## Building a Random Forest
@@ -542,12 +479,11 @@ In building a random forest, each time a split in a tree is considered, a random
 
 Hence, at each split in the tree, the algorithm is not even allowed to consider a majority of the available predictors. Why is this a good thing?
 
-- Suppose that there is one very strong predictor in the data set, along with a number of other moderately strong predictors
-- By forcing each split to consider only a subset of the predictors, some splits will not even consider the strong predictor, so other predictors will have more of a chance.        
-  + Decorrelating the trees - making the average of the resulting trees less variable and hence more reliable.
-
 ---
 ## Random Forests 
+
+**Example**: Which variables are most important for predicting views on marijuana legalization?
+
 
 .tiny[
 
@@ -573,11 +509,11 @@ forest_grass
 ##                      Number of trees: 201
 ## No. of variables tried at each split: 4
 ## 
-##         OOB estimate of  error rate: 36.75%
+##         OOB estimate of  error rate: 33.96%
 ## Confusion matrix:
 ##           Legal Not legal class.error
-## Legal       528       163   0.2358900
-## Not legal   264       207   0.5605096
+## Legal       704       202   0.2229581
+## Not legal   325       321   0.5030960
 ```
 ]
 
@@ -599,38 +535,45 @@ TEST$Legal_RF[1:5]
 ## Levels: Legal Not legal
 ```
 
+``` r
+confusion_test &lt;- tally(Legal_RF~LEGAL, data=TEST)
+sum(diag(confusion_test))/nrow(TEST)
+```
+
+```
+## [1] 0.5717949
+```
+
 ---
 ### Variable Importance
 
-Since each tree in a random forest uses a different set of variables, we want to keep track of which variables seem to be the most consistently influential. This is captured by the notion of importance.
-
-Gini is a measure of how each variable contributes to the homogeneity of the nodes and leaves in the resulting random forest (lower is more pure).
+Since each tree in a random forest uses a different set of variables, we want to keep track of which variables seem to be the most consistently influential. 
 
 .tiny[
 
 ``` r
-importance(forest_grass) %&gt;% as.data.frame() %&gt;% 
+randomForest::importance(forest_grass) %&gt;% as.data.frame() %&gt;% 
   rownames_to_column() %&gt;% arrange(desc(MeanDecreaseGini))
 ```
 
 ```
 ##     rowname MeanDecreaseGini
-## 1       AGE         98.99517
-## 2  POLVIEWS         51.16884
-## 3    REGION         49.68865
-## 4    DEGREE         37.41108
-## 5    INCOME         35.65191
-## 6     RELIG         35.55887
-## 7   MARITAL         33.76458
-## 8    COURTS         32.47684
-## 9   PARTYID         28.61363
-## 10   ENERGY         27.42172
-## 11    HAPPY         25.79851
-## 12    ENVIR         25.38195
-## 13     EDUC         22.04172
-## 14 NEWSFROM         17.76259
-## 15      SEX         16.73957
-## 16   BALLOT         14.78124
+## 1       AGE        128.51054
+## 2    REGION         68.41636
+## 3  POLVIEWS         65.99878
+## 4    INCOME         52.25881
+## 5    DEGREE         48.04504
+## 6    COURTS         45.31095
+## 7   MARITAL         44.85723
+## 8     RELIG         44.83231
+## 9   PARTYID         41.61337
+## 10   ENERGY         36.68400
+## 11    HAPPY         35.53879
+## 12    ENVIR         34.43033
+## 13     EDUC         29.67761
+## 14 NEWSFROM         24.74390
+## 15      SEX         22.24408
+## 16   BALLOT         20.41207
 ```
 ]
 
@@ -651,65 +594,7 @@ fancyRpartPlot(tree4)
 ---
 ### Your Turn: Age
 
-Which variables are most important for predicting ages? Use these to create a Decision Tree. Note: Check column name when you arrange the importance variables.
-
---
-
-``` r
-forest_age &lt;- randomForest(AGE~NEWSFROM+ HAPPY+RELIG+COURTS+ENERGY
-                           +EDUC+ENVIR+ POLVIEWS+PARTYID+REGION+
-                            INCOME+SEX+ DEGREE+LEGAL+MARITAL+BALLOT, 
-                           data=TRAIN,
-                           ntree=201, mtry=3, na.action = na.omit)
-
-forest_age
-```
-
-```
-## 
-## Call:
-##  randomForest(formula = AGE ~ NEWSFROM + HAPPY + RELIG + COURTS +      ENERGY + EDUC + ENVIR + POLVIEWS + PARTYID + REGION + INCOME +      SEX + DEGREE + LEGAL + MARITAL + BALLOT, data = TRAIN, ntree = 201,      mtry = 3, na.action = na.omit) 
-##                Type of random forest: regression
-##                      Number of trees: 201
-## No. of variables tried at each split: 3
-## 
-##           Mean of squared residuals: 214.6301
-##                     % Var explained: 26.32
-```
-
----
-### Your Turn: Age
-
-
-
-``` r
-importance(forest_age) %&gt;% as.data.frame() %&gt;%
-  rownames_to_column() %&gt;% arrange(desc(IncNodePurity))
-```
-
-```
-##     rowname IncNodePurity
-## 1   MARITAL     71987.888
-## 2    REGION     22675.746
-## 3  POLVIEWS     21153.517
-## 4    INCOME     17773.530
-## 5    DEGREE     17247.317
-## 6     RELIG     16593.254
-## 7  NEWSFROM     15691.347
-## 8   PARTYID     14172.918
-## 9    COURTS     13872.600
-## 10    ENVIR     12287.841
-## 11    HAPPY     11598.273
-## 12   ENERGY     11547.199
-## 13     EDUC     10329.886
-## 14    LEGAL      8537.511
-## 15      SEX      7443.911
-## 16   BALLOT      6319.413
-```
-
-``` r
-tree5 &lt;- rpart(AGE~MARITAL+REGION+POLVIEWS, data=TRAIN)
-```
+Which variables are most important for predicting `Age`? Use these to create a Decision Tree. Note: Check column name when you arrange the importance variables.
 
 
 ---
@@ -726,118 +611,6 @@ data("iris")
 2. Fit a random Forest Model (Species)- Decide variable importance
 3. Using your most important variables, create a decision tree
 4. Evaluate your decision Tree
-
-
----
-### If Time: Iris Data
-
-
-``` r
-set.seed(10)
-test_id &lt;- sample(1:nrow(iris), size=round(0.4*nrow(iris)))
-TEST &lt;- iris[test_id,]
-TRAIN &lt;- iris[-test_id,]
-```
-
-.tiny[
-
-``` r
-forest_species &lt;- randomForest(Species~Sepal.Length + Sepal.Width+ 
-                                 Petal.Length+Petal.Width, data=TRAIN,
-                               ntree=50, mtry=2, na.action =na.omit)
-
-forest_species
-```
-
-```
-## 
-## Call:
-##  randomForest(formula = Species ~ Sepal.Length + Sepal.Width +      Petal.Length + Petal.Width, data = TRAIN, ntree = 50, mtry = 2,      na.action = na.omit) 
-##                Type of random forest: classification
-##                      Number of trees: 50
-## No. of variables tried at each split: 2
-## 
-##         OOB estimate of  error rate: 5.56%
-## Confusion matrix:
-##            setosa versicolor virginica class.error
-## setosa         35          0         0  0.00000000
-## versicolor      0         29         2  0.06451613
-## virginica       0          3        21  0.12500000
-```
-]
-
----
-### If Time: Iris Data
-
-
-``` r
-importance(forest_species) %&gt;% as.data.frame() %&gt;%
-  rownames_to_column() %&gt;% arrange(desc(MeanDecreaseGini))
-```
-
-```
-##        rowname MeanDecreaseGini
-## 1 Petal.Length        29.035207
-## 2  Petal.Width        21.343675
-## 3 Sepal.Length         6.047485
-## 4  Sepal.Width         1.862966
-```
-
-``` r
-tree6 &lt;- rpart(Species ~ Petal.Width + Petal.Length, data=TRAIN)
-```
-
----
-### If Time: Iris Data
-
-
-``` r
-fancyRpartPlot(tree6)
-```
-
-&lt;img src="../../Week 9/slides/images/tree6.png" width="1405" style="display: block; margin: auto;" /&gt;
-
----
-### If Time: Iris Data
-
-
-``` r
-TRAIN &lt;- TRAIN %&gt;%
-  mutate(Species_Tree = predict(tree6, type='class'))
-
-confusion_train &lt;- tally(Species_Tree~Species, data=TRAIN)
-```
-
-
-``` r
-TEST &lt;- TEST %&gt;%
-  mutate(Species_Tree = predict(tree6, type='class', newdata = TEST))
-
-confusion_test &lt;- tally(Species_Tree~Species, data=TEST)
-```
-
-Training Accuracy:
-
-
-``` r
-sum(diag(confusion_train))/nrow(TRAIN)
-```
-
-```
-## [1] 0.9666667
-```
-
-Testing Accuracy:
-
-
-``` r
-sum(diag(confusion_test))/nrow(TEST)
-```
-
-```
-## [1] 0.95
-```
-
 
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
