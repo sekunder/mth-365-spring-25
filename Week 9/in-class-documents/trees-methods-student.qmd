@@ -210,7 +210,7 @@ rpart(LEGAL~AGE, data=TRAIN, na.action = na.pass,
 
 ## Decision Trees (Regression)
 
-We first divide the predictor space into *J* distinct overlapping regions. Then for every observation that falls into the region $R_j$, we make the same prediction, which is simply the mean of the response values for the training observations in $R_j$.
+We first divide the predictor space into *J* distinct non-overlapping regions. Then for every observation that falls into the region $R_j$, we make the same prediction, which is simply the mean of the response values for the training observations in $R_j$.
 
 
 How to decide to split?
@@ -266,7 +266,7 @@ But should also consider other things like testing error and interpretability
 - Easy to explain to people
   + Can visualize
   + Some people believe that it mirrors human decision-making
-- Can handle qualitative predictors with dummy variables
+- Can handle qualitative predictors without dummy variables
 - However, they generally do not have the same level of predictive accuracy as other approaches
   + Can approve prediction accuracy by aggregating many trees!
   

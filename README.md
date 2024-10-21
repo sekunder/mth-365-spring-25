@@ -21,3 +21,7 @@ Date | Notes | Description | Additional Files | Homework Assigned
 10/1/2024 | [Statistical Foundations](Week 7/slides/statistical-foundations.html) | sampling distributions, bootstraping, and hypothesis tests |[in class document](Week 7/in-class-documents/statistical-foundations-student.qmd) | 
 10/3/2024 | [MLR](Week 7/slides/linear-models.html) | basics of linear regression models |[in class document](Week 7/in-class-documents/linear-models-student.qmd) | 
 10/8/2024 | [Prediction](Week 8/slides/cross-validation-and-prediction.html) | cross validation and predictions with regression models |[in class document](Week 8/in-class-documents/cross-validation-and-prediction-student.qmd) | 
+10/10/2024 | **Lab 5** | Lab 5 Work Day | | **Due** Tuesday October 22 at 11:59 pm in Blueline
+10/22/2024 | [Trees](Week 9/slides/decision-trees-random-forests.html) | Introduction to Tree-Based Methods |[in class document](Week 9/tree-methods-student/.qmd) | 
+10/10/2024 | **Lab 6** | Lab 6 Work Day | | **Due** Tuesday October 29 at 11:59 pm in Blueline
+

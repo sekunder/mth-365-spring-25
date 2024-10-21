@@ -154,7 +154,7 @@ knitr::include_graphics("../../Week 9/slides/images/decision-tree.png")
 ---
 ## Decision Trees (Classification)
 
-We first divide the predictor space into *J* distinct overlapping regions. We predict that each observation belongs to the most commonly occurring class of training observations in the region to which it belongs.
+We first divide the predictor space into *J* distinct non-overlapping regions. We predict that each observation belongs to the most commonly occurring class of training observations in the region to which it belongs.
 
 --
 
@@ -291,7 +291,7 @@ rpart(LEGAL~AGE, data=TRAIN, na.action = na.pass,
 ---
 ## Decision Trees (Regression)
 
-We first divide the predictor space into *J* distinct overlapping regions. Then for every observation that falls into the region $R_j$, we make the same prediction, which is simply the mean of the response values for the training observations in $R_j$.
+We first divide the predictor space into *J* distinct non-overlapping regions. Then for every observation that falls into the region $R_j$, we make the same prediction, which is simply the mean of the response values for the training observations in $R_j$.
 
 
 --
