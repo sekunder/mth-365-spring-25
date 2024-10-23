@@ -3,7 +3,7 @@
   <head>
     <title>MTH365: Introduction to Data Science</title>
     <meta charset="utf-8" />
-    <meta name="author" content="KNN And Classification" />
+    <meta name="author" content="KNN" />
     <meta name="date" content="2024-10-29" />
     <script src="libs/header-attrs-2.27/header-attrs.js"></script>
     <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
@@ -17,7 +17,7 @@ class: center, middle, inverse, title-slide
 # MTH365: Introduction to Data Science
 ]
 .author[
-### KNN And Classification
+### KNN
 ]
 .date[
 ### October 29, 2024
@@ -36,6 +36,16 @@ class: center, middle, inverse, title-slide
 
 
 ## Announcements
+
+**Lab 6**: Due tonight at 11:59 pm in Blueline
+
+**Mini Project 3**
+
+- Due Thursday November 7 at 2:00pm in Blueline
+
+**Lab 7**: work day in class on Thursday October 31
+
+- Due Tuesday November 12, 2024 at 11:59 pm in Blueline
 
 
 ---
@@ -65,14 +75,26 @@ How should a new data point, `\((0.2, 0.5)\)` be classified? What about `\((0.4,
 
 &lt;img src="knn-and-classification_files/figure-html/unnamed-chunk-5-1.png" style="display: block; margin: auto;" /&gt;
 
+---
+## Bayes Classifier
+
+A good classifier minimizes Testing Error 
+
++ Bayes Classifier produce the lowest possible test error rate [(proof)](https://www.ee.columbia.edu/~vittorio/BayesProof.pdf)
+
+Bayes Classifier assigns each observation to is most likely class using:
+
+`$$P(Y = j|X = x_0)$$`
+**Problem**: Don't know the conditional distribution
 
 ---
-## `\(k\)`-nearest neighbor (k-NN or KNN): 
+## `\(k\)`-nearest neighbor (k-NN or KNN) classifier: 
 
-A non-parametric supervised learning method that can be used for both classification and regression
 
-1. In k-NN classification, the output is a class membership. An object is classified by a plurality vote of its neighbors, with the object being assigned to the class most common among its k nearest neighbors (k is a positive integer, typically small). 
-2. In k-NN regression, the output is the property value for the object. This value is the average of the values of k nearest neighbors.
+A non-parametric supervised learning method that estimates the conditional probability.
+
+- In k-NN classification, the output is a class membership. An object is classified by a plurality vote of its neighbors, with the object being assigned to the class most common among its k nearest neighbors (k is a positive integer). 
+
 
 ---
 ## KNN for Classification Steps
@@ -138,11 +160,12 @@ knnModel
 ---
 ## Advantages and disadvantages of `\(k\)`-nearest neighbors
 
-The algorithm is easy to implement and straight forward. New data can be added seamlessly which will not impact the accuracy of the algorithm. No training period, relatively fast. 
+- The algorithm is easy to implement and straight forward. 
 
-However, sometimes it is hard to decide the k value. With more variables included, the accuracy will be affected. Sensitive to the outliers, you need to scale the data sometimes. 
+- Sometimes it is hard to decide the k value. With more variables included, the accuracy will be affected. Sensitive to outliers, you need to scale the data sometimes. 
+- To provide accurate classification, KNN requires a lot of observations relative to the number of predictors—that is, n much larger than p.
 
-Further, to provide accurate classification, KNN requires a lot of observations relative to the number of predictors—that is, n much larger than p.
+- Since using Euclidean distance, can only use quantitative predictors
 
 ---
 ## Choice of k
@@ -161,12 +184,13 @@ Further, to provide accurate classification, KNN requires a lot of observations 
 ---
 ## Example: Credit Utilization
 
-__Example__: Can we use kNN to predict which utilization quantile a new customer falls into based on their application data?
+__Example__: Can we use KNN to predict which utilization quantile a new customer falls into based on their application data?
 
 
 ``` r
 library(ISLR)
 data(Credit)
+
 Credit &lt;- Credit %&gt;% mutate(Utilization = Balance/Limit) %&gt;% 
   mutate(Quartile = ifelse(Utilization&lt;0.01851, 'Q1', 
                            ifelse(Utilization&lt;0.09873, 'Q2',
@@ -182,7 +206,7 @@ We want to predict the utilization quantile based on two application characteris
 &lt;img src="knn-and-classification_files/figure-html/unnamed-chunk-12-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
-## Example: Credit Utilization
+### Example: Credit Utilization
 
 New applicants:
 
@@ -193,41 +217,12 @@ Zach|47|400
 Ashlee|21|250
 
 
-``` r
-applicants &lt;- data.frame(Age = c(33, 47, 21), 
-                         Rating = c(750, 400, 250), 
-                         Quartile=c('New', 'New', 'New'))
-```
 
-
----
-## Example: Credit Utilization
 
 Plotting the new applicants. Use `fct_relevel()` to reorder the categories.
 
 
-``` r
-old = Credit %&gt;% dplyr::select(Age, Rating, Quartile)
-full = rbind(old, applicants)
-full = full %&gt;%
-  mutate(Quartile = fct_relevel(Quartile,
-                                "Q1", "Q2", "Q3", "Q4", "New"))
-str(full$Quartile)
-```
 
-```
-##  Factor w/ 5 levels "Q1","Q2","Q3",..: 2 3 2 3 2 3 2 3 2 4 ...
-```
-
----
-## Example: Credit Utilization
-
-
-``` r
-ggplot(full, aes(x=Age, y=Rating, group=Quartile)) + 
-  geom_point(aes(col=Quartile, pch=Quartile)) + 
-  scale_color_brewer(palette='Set1')
-```
 
 &lt;img src="knn-and-classification_files/figure-html/unnamed-chunk-15-1.png" style="display: block; margin: auto;" /&gt;
 
@@ -294,7 +289,7 @@ knn100
 ```
 
 ---
-## Evaluate models with Cross-validation
+## Evaluate Prediction Accuracy
 
 __Example__: Let's add some more dimensions to the model. We want to know if k-nearest neighbor is effective at predicting quartile membership using an applicant's age, credit rating, income, number of existing credit cards, and education level. I'll randomly select 100 observations for testing, and assign the other 300 to my training data set.
 
@@ -307,7 +302,7 @@ TRAIN = Credit[-test_ID, ]
 ```
 
 ---
-## Evaluate models with Cross-validation
+## Evaluate models 
 
 Now, we'll set the testing data as "new data", and make predictions using the k-nearest neighbors from the training data.
 
@@ -329,17 +324,18 @@ knn50
 ##  [57] Q1 Q2 Q1 Q1 Q1 Q4 Q1 Q4 Q4 Q1 Q4 Q4 Q4 Q4 Q2 Q1 Q4 Q2 Q3 Q2 Q2 Q1 Q1 Q4 Q2 Q4 Q2 Q3
 ##  [85] Q2 Q4 Q1 Q4 Q4 Q2 Q4 Q4 Q4 Q4 Q2 Q2 Q4 Q2 Q1 Q2
 ## attr(,"prob")
-##   [1] 0.66 0.86 0.54 0.96 0.50 0.40 0.36 0.52 0.96 0.66 0.54 0.56 0.54 0.42 0.38 0.96 0.92
-##  [18] 0.42 0.46 0.98 0.44 0.52 0.40 0.54 0.60 0.46 0.46 0.42 0.62 0.52 0.52 0.56 0.40 0.54
-##  [35] 0.58 0.46 0.52 0.38 0.46 0.52 0.96 0.44 0.44 0.42 0.98 0.50 0.44 0.48 0.54 0.46 0.50
-##  [52] 0.58 0.46 0.90 0.50 0.94 0.96 0.42 0.96 0.82 0.54 0.48 0.54 0.58 0.44 0.96 0.44 0.46
-##  [69] 0.58 0.54 0.34 0.96 0.44 0.58 0.42 0.34 0.54 0.96 0.96 0.42 0.60 0.52 0.56 0.40 0.48
-##  [86] 0.54 0.64 0.34 0.60 0.56 0.44 0.50 0.48 0.50 0.46 0.52 0.44 0.58 0.78 0.58
+##   [1] 0.66 0.86 0.54 0.96 0.50 0.40 0.36 0.52 0.96 0.66 0.54 0.56 0.54 0.42 0.38 0.96
+##  [17] 0.92 0.42 0.46 0.98 0.44 0.52 0.40 0.54 0.60 0.46 0.46 0.42 0.62 0.52 0.52 0.56
+##  [33] 0.40 0.54 0.58 0.46 0.52 0.38 0.46 0.52 0.96 0.44 0.44 0.42 0.98 0.50 0.44 0.48
+##  [49] 0.54 0.46 0.50 0.58 0.46 0.90 0.50 0.94 0.96 0.42 0.96 0.82 0.54 0.48 0.54 0.58
+##  [65] 0.44 0.96 0.44 0.46 0.58 0.54 0.34 0.96 0.44 0.58 0.42 0.34 0.54 0.96 0.96 0.42
+##  [81] 0.60 0.52 0.56 0.40 0.48 0.54 0.64 0.34 0.60 0.56 0.44 0.50 0.48 0.50 0.46 0.52
+##  [97] 0.44 0.58 0.78 0.58
 ## Levels: Q1 Q2 Q3 Q4
 ```
 
 ---
-## Evaluate models with Cross-validation
+## Evaluate models 
 
 Now, we'll set the testing data as "new data", and make predictions using the k-nearest neighbors from the training data.
 
@@ -367,25 +363,35 @@ sum(diag(t))/nrow(TEST) #Classification Accuracy
 ## [1] 0.57
 ```
 
-
 ---
-## Try by yourself
+## Scaling Data
 
-Let's see whether we can predict people's ethnicity based on their credit card information (Age, Rating, Income, Cards, Education, Balance). Try to fit a KNN model with K = 5, 10, 25, 50, 100. See how the prediction values change and think about why.
+Prevents features with larger magnitudes from dominating the distance calculation (not always necessary)
 
---
 
+``` r
+knn_train_scale &lt;- knn_train %&gt;% scale()
+knn_test_scale &lt;- knn_test %&gt;% scale()
+
+knn50_scale = knn(train = knn_train_scale, 
+            test = knn_test_scale,
+            cl = TRAIN$Quartile, 
+            k = 50, prob = TRUE)
+
+
+t_scale = table(knn50_scale, TEST$Quartile)
+
+sum(diag(t_scale))/nrow(TEST) #Classification Accuracy
+```
 
 ```
-## [1] 0.9
-## [1] 0.87
-## [1] 0.82
-## [1] 0.76
-## [1] 0.72
+## [1] 0.44
 ```
 
 ---
-### KNN for Regression Steps
+### KNN for Regression 
+
+Can also use KNN to predict a quantiative response (alternative to Linear Regression)
 
 In the KNN algorithm, `\(k\)` specifies the number of neighbors and its algorithm is as follows:
 
@@ -435,26 +441,25 @@ rmse(TEST$Utilization, knn50$pred)
 Parametric approaches will outperform nonparametric approaches if the parametric form that has been selected is close to the true form of the data
 ]
 
---
-
 &lt;br&gt;
 
 So in situations where the relationship is nonlinear, KNN regression may perform better than Linear Regression
 
 - But, Linear Regression may actually perform better than KNN as the number of variables (dimensions) increase
-  + curse of dimensionality
+  + Curse of dimensionality
+
   
 ---
 ## Try by yourself
 
-Run a multiple linear regression model on the same data, and compare the RMSE with the KNN regression model. Which method is performing better? Will increasing/decreasing *k* lower the RMSE?
-  
+1. Let's see whether we can predict people's ethnicity based on their credit card information (Age, Rating, Income, Cards, Education, Balance). Try to fit a KNN model with K = 5, 10, 25, 50, 100. See how the prediction values change and think about why. Write a function/loop to help
+
+2. Run a multiple linear regression model on the same data, and compare the RMSE with the KNN regression model. Which method is performing better? Will increasing/decreasing *k* lower the RMSE?
+
 ---
 ## Summary 
 
 Linear model: The basic model for regression, easy for interpretation, but has strict assumption thus hard to get a better prediction
-
-Quadratic model: If you see a quadratic trend (in the EDA plot or residual plots) when fitting the linear model, you may consider quadratic model
 
 Decision tree: Can be applied to regression and classification. Has good data visualization but it has high variance. 
 
