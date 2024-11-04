@@ -23,5 +23,11 @@ Date | Notes | Description | Additional Files | Homework Assigned
 10/8/2024 | [Prediction](Week 8/slides/cross-validation-and-prediction.html) | cross validation and predictions with regression models |[in class document](Week 8/in-class-documents/cross-validation-and-prediction-student.qmd) | 
 10/10/2024 | **Lab 5** | Lab 5 Work Day | | **Due** Tuesday October 22 at 11:59 pm in Blueline
 10/22/2024 | [Trees](Week 9/slides/decision-trees-random-forests.html) | Introduction to Tree-Based Methods |[in class document](Week 9/tree-methods-student/.qmd) | 
-10/10/2024 | **Lab 6** | Lab 6 Work Day | | **Due** Tuesday October 29 at 11:59 pm in Blueline
+10/24/2024 | **Lab 6** | Lab 6 Work Day | | **Due** Tuesday October 29 at 11:59 pm in Blueline
+10/29/2024 | [KNN](Week 10/slides/knn-and-classification.html) | k-nearest neighbors |[in class document](Week 10/KNN-student.qmd) | 
+10/31/2024 | **Lab 7** | Lab 7 Work Day | | **Due** Tuesday November 12 at 11:59 pm in Blueline
+11/5/2024 | **Text Data** | Basics of Working with Text Data |[in class document](Week 11/DSC365-text-data-student.qmd) | 
+11/7/2024 | **Peer Review** | Review of MP3 | | **Due** Tuesday November 12 at 11:59 pm in Blueline
+
+
 

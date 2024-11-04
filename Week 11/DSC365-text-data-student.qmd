@@ -26,7 +26,7 @@ Following a data set that captures tweets from Taylor Swift between 2009 and 202
 
 ```{r}
 library(readr)
-TaylorSwift13 <- read_csv("../Week 11/TaylorSwift13.csv")
+TaylorSwift13 <- read_csv("TaylorSwift13.csv")
 glimpse(TaylorSwift13)
 ```
 
@@ -75,7 +75,7 @@ library(udpipe)
 
 detect_ps = function(text){
   tokens = udpipe::udpipe(text, "english")
-  NumNoun = tokens %>% filter(upos == "PROPN") %>% summarise(N = n()) %>% pull()
+  NumNoun = tokens %>% filter(upos == "NOUN") %>% summarise(N = n()) %>% pull()
   NumVerb = tokens %>% filter(upos == "VERB") %>% summarise(N = n()) %>% pull()
   return(c(NumNoun, NumVerb))
 }
