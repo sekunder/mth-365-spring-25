@@ -3,9 +3,9 @@
   <head>
     <title>Welcome to DSC365: Introduction to Data Science!</title>
     <meta charset="utf-8" />
-    <meta name="author" content="Alison Kleffner" />
-    <meta name="date" content="2024-08-20" />
-    <script src="libs/header-attrs-2.27/header-attrs.js"></script>
+    <meta name="author" content="Alex Kunin" />
+    <meta name="date" content="2025-01-14" />
+    <script src="libs/header-attrs-2.29/header-attrs.js"></script>
     <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
   </head>
@@ -17,10 +17,10 @@ class: center, middle, inverse, title-slide
 # Welcome to DSC365: Introduction to Data Science!
 ]
 .author[
-### Alison Kleffner
+### Alex Kunin
 ]
 .date[
-### August 20, 2024
+### January 14, 2025
 ]
 
 ---
@@ -31,7 +31,7 @@ class: center, middle, inverse, title-slide
 ## Agenda
 
 - Introductions
-- What is Data Science
+- What is Data Science?
 - Syllabus/Course Specifics
 - Software Set-up
   + What is `R`?
@@ -39,24 +39,24 @@ class: center, middle, inverse, title-slide
 ---
 ## Homework
 
-- Software downloaded by beginning of class on **Thursday August 22**
-  + Should hopefully have time at end of class
+- Software downloaded by beginning of class on **Thursday January 16**
+  + Should hopefully have time at end of class today
 
 
 
 ---
+## Instructor: Alex Kunin, PhD
 
-## Alison Kleffner, PhD
-
-- BS in Applied Mathematics and Economics at Rockhurst University
-- Master and PhD in Statistics at University of Nebraska at Lincoln
-- Thesis: *Visualization and Modeling of Multivariate Data in Environmental Applications*
+- BS in Mathematics, minor in computer science, Stony Brook University
+- MS in Computer Science (U. Alabama Huntsville), MS in Math (U. Nebraska Lincoln), PhD in Math (Penn State), postdoctoral training in computational neuroscience and biomedical informatics (Baylor College of Medicine)
+- Thesis: *Properties and Applications of Convex Neural Codes*
 
 --
 
-**Now let introduce yourselves! Get into groups of 2-3**
+**Now introduce yourselves! Get into groups of 2-3**
 
-- Name
+Talk for a few minutes, then share...
+- Your names
 - Something your group has in common (besides things like major ...)
 
 ---
@@ -83,8 +83,22 @@ Data science is an exciting discipline that allows you to turn raw data into und
 - Data science is a vast field, and there’s no way you can master it all by taking a single course. But we are going to lay a solid foundation.
 
 .center[
-&lt;img src="../images/data-flowchart.png" width="1477" /&gt;
+![](../images/data-flowchart.png)&lt;!-- --&gt;
 ]
+
+---
+
+&lt;br/&gt;
+&lt;br/&gt;
+&gt; Computer science is more than just programming; it is the creation of appropriate abstractions to express computational structures and the development of algorithms that operate on those abstractions. Similarly, statistics is more than just collections of estimators and tests; it is the interplay of general notions of sampling, models, distributions and decision-making. [Data science] is based on the idea that these styles of thinking support each other.
+
+.pull-right[*-- Michael Jordan*]
+
+&lt;br/&gt;
+&lt;br/&gt;
+&lt;br/&gt;
+&lt;br/&gt;
+*Source:* Pierson, S. 2016. “Jordan Urges Both Computational and Inferential Thinking in Data Science.” Amstat News.
 
 ---
 class:inverse
@@ -107,7 +121,7 @@ class:inverse
 ## What will be in this course?
 
 - This is a programming course using *R*, the most commonly used statistical language
-- We will also cover some statistical concepts (different than math!)
+- We will also cover some statistical concepts
 - In this course you will complete in-class labs, projects, and presentations.
 - Since this course involves using *R*, please bring your laptops to class with you
 
@@ -146,7 +160,7 @@ If you have never used *R* (or even heard of it) before, it is totally OK! We wi
 - Don't reinvent the wheel
 - Google is your friend!
 ].pull-right[
-&lt;img src="../images/begin-R.png" width="1565" /&gt;
+![](../images/begin-R.png)&lt;!-- --&gt;
 .center[&lt;font size = "0.75"&gt;Artwork by Allison Horst&lt;/font&gt;]
 ]
 
@@ -157,8 +171,10 @@ If you have never used *R* (or even heard of it) before, it is totally OK! We wi
 *R* is a free software environment and programming language for statistical computing and graphics
 
 - Open-source
-- According to it's website, "R is a system for statistical computation and graphics" [(Source)](https://www.r-project.org)
-- **Interpreted language**: we interact with R through a “command line” interpreter, which translates our “code” to machine code
+- According to its website, "R is a system for statistical computation and graphics" [(Source)](https://www.r-project.org)
+&lt;!-- - **Interpreted language**: we interact with R through a “command line” interpreter, which translates our “code” to machine code --&gt;
+- *Interpreted language*: You can interact with R either by writing scripts and running them, or in an interactive environment like R studio (which is what we will do in this class)
+  + In this way it's similar to Python
 - CRAN is R's central software repository. Contains contributed packages
 
 
