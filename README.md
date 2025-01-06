@@ -2,6 +2,10 @@
 
 This webpage includes links to the slides along with additional files needed for class. 
 
+### Online Texts
+
+ * [Modern Data Science with *R*](https://mdsr-book.github.io/mdsr3e/01-intro.html) by Benjamin S. Baumer, Daniel T. Kaplan, and Nicholas J. Horton
+
 ### Schedule
 
 Week | Date | Notes | Description | Additional Files | Homework Assigned
