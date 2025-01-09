@@ -1,0 +1,426 @@
+---
+title: "DSC 365: Introduction to Data Science"
+subtitle: "Course Policies and Syllabus, Fall 2024"
+
+format: 
+  pdf:
+    keep-tex: true
+    # include-in-header: "in-header.tex"
+    include-in-header: 
+      text: |
+        \makeatletter
+        \def\@maketitle{%
+          \begin{center}%
+          \let \footnote \thanks
+            {\LARGE \@title \par}%
+            {\large \@author \par}%
+            {\large \@date}
+          \end{center}%
+          \par
+          \vskip 1em}
+        \makeatother
+        \RedeclareSectionCommand[beforeskip=1ex plus -.2ex minus -.2ex,afterskip=.25ex plus -.1ex minus -.1ex]{section}
+        \RedeclareSectionCommand[beforeskip=1ex plus -.2ex minus -.2ex,afterskip=.25ex plus -.1ex minus -.1ex]{subsection}
+        \RedeclareSectionCommand[beforeskip=1ex plus -.2ex minus -.2ex,afterskip=.25ex plus -.1ex minus -.1ex]{subsubsection}
+        \raggedbottom
+        \usepackage{enumitem}
+        \setlist{nolistsep}
+    latex-engine: xelatex
+dev: png
+geometry: margin=1in
+
+fontfamily: mathpazo
+fontsize: 11pt
+---
+
+<!-- ![](CAS_DeptofMath_Centered_Blk.png){#fig-creigh fig-align="center"} -->
+
+## Course Policies and Syllabus, Spring 2025
+
++---------------------------------------------------------------------------------------------+------------------------------------------+
+| Instructor: Alex Kunin                                                                      | Office: Hixson-Lied 439                  |
++---------------------------------------------------------------------------------------------+------------------------------------------+
+| Email: [alexkunin\@creighton.edu](mailto:alexkunin@creighton.edu?subject=DSC%365)           |                                          |
++---------------------------------------------------------------------------------------------+------------------------------------------+
+| Lecture: Tuesday/Thursday 9:30-10:45                                                        | Hixson-Lied 522                          |
++---------------------------------------------------------------------------------------------+------------------------------------------+
+| Office Hours:\                                                                              | \                                        |
+| Mondays\                                                                                    | 11-12 and 2:30-4\                        |
+| Wednesdays                                                                                  | 2-4\                                     |
++---------------------------------------------------------------------------------------------+------------------------------------------+
+
+```{r setup, include=FALSE}
+# knitr::opts_chunk$set(cache=FALSE, dev='pdf')
+knitr::opts_chunk$set(cache=F,
+                      fig.path = 'figs/',
+                      cache.path='cache/',
+                      warning=F,
+                      message=F)
+
+knitr::opts_chunk$set(
+                  fig.process = function(x) {
+                      x2 = sub('-\\d+([.][a-z]+)$', '\\1', x)
+                      if (file.rename(x, x2)) x2 else x
+                      }
+                  )
+
+library(tidyverse)
+library(lubridate)
+
+# Create a calendar for your syllabus ----
+# Source: http://svmiller.com/blog/2020/08/a-ggplot-calendar-for-your-semester/
+
+# 1) what is the first Monday of the semester?
+# Any number of ways to identify dates in R, but we'll use {lubridate} and the ymd() function here.
+# Format: YYYYMMDD. In this example, 4 January 2022.
+
+# What are the full dates of the semester? Here, I'll exclude exam week as I like to do.
+# In this case: 6 January to 23 April
+semester_dates <- seq(ymd(20250113), ymd(20250506), by=1)
+# semester_dates <- seq(ymd(20240819), ymd(20241206), by=1)
+
+# Weekday(s) of class
+class_wdays <- c("Tue", "Thu")
+
+not_here_dates <- c(
+  # MLK Day
+  ymd(20250120),
+  # Spring Break
+  seq(ymd(20250310), ymd(20250314), by = 1),
+  # Easter
+  ymd(20250418), ymd(20250421))
+
+
+#exam_dates <- c(ymd(20231005))
+#project_dates <- c(ymd(20221104), ymd(20221205), ymd(20221209))
+finals_week <- ymd(20250514)
+project_dates <- c(ymd(20250213), ymd(20250320), ymd(20250403), ymd(20250429))
+
+# Custom function for treating the first day of the month as the first week 
+# of the month up until the first Sunday 
+# (unless Sunday was the start of the month)
+wom <- function(date) {
+    first <- wday(as.Date(paste(year(date), month(date), 1, sep = "-")))
+    return((mday(date) + (first - 2)) %/% 7 + 1)
+  }
+
+# Create a data frame of dates, assign to Cal
+Cal <- tibble(date = seq(ymd(20250101), ymd(20250531), by=1))  %>%
+  mutate(mon = lubridate::month(date, label=T, abbr=F),
+         wkdy = weekdays(date, abbreviate=T),
+         wkdy = fct_relevel(wkdy, "Sun", "Mon", "Tue", "Wed", "Thu","Fri","Sat"), # make sure Sunday comes first
+         semester = date %in% semester_dates, 
+         #exams = date %in% exam_dates, # is it an exam?
+         not_here = date %in% not_here_dates, # is it a day off?
+         exam_wk = date %in% finals_week,
+         proj = date %in% project_dates,
+         day = lubridate::mday(date), 
+         week = wom(date))
+
+Cal <- Cal %>%
+  mutate(category = case_when(
+    #exams ~ "Exam",
+    not_here ~ "Creighton holiday",
+    proj ~ "Mini Project Due",
+    semester & wkdy %in% class_wdays & !not_here & !exam_wk ~ "Class Day",
+    semester ~ "Semester",
+    exam_wk ~ "Final Project Due",
+    TRUE ~ "NA"
+  ))
+
+
+class_cal <- Cal %>% 
+  ggplot(.,aes(wkdy, week)) +
+  theme_bw() +
+  theme(panel.grid.major.x = element_blank(),
+        legend.position = c(1, 0), legend.justification = c(1,0),
+        legend.direction = "vertical", legend.title = element_blank(),
+        axis.title.y = element_blank(), axis.title.x = element_blank(),
+        axis.ticks.y = element_blank(), axis.text.y = element_blank()) +
+  geom_tile(alpha=0.8, aes(fill=category), color="black", size=.45) +
+  facet_wrap(~mon, scales = "free", ncol=3) +
+  geom_text(aes(label = day, color = semester & (!not_here))) +
+  # put your y-axis down, flip it, and reverse it
+  scale_y_reverse(breaks=NULL) +
+  # manually fill scale colors to something you like...
+  scale_color_manual(values = c("FALSE" = "grey80", "TRUE" = "black"), guide = "none") + 
+  scale_fill_manual(values=c("Class Day"="purple", 
+                             "Semester"="white",
+                             "Creighton holiday" = "grey10",
+                             "NA" = "white", # I like these whited out...
+                             #"Exam"="orange",
+                             "Final Project Due" = "blue",
+                             "Mini Project Due" = "green"),
+                    #... but also suppress a label for a non-class semester day
+                    breaks=c("Semester", "Creighton holiday", "Class Day", "Final Project Due", "Mini Project Due"))
+# class_cal
+
+# exam_days <- filter(Cal, category == "Exam") %>% 
+#   mutate(topic = c("Midterm", "Final"),
+#          time = c("In Class", "1-3 pm"))
+
+
+proj_days <- filter(Cal, category == "Mini Project Due") %>%
+  mutate(thursday = c("P")) %>%
+  mutate(Date = format(date, "%b %e"),
+         sem_week = isoweek(date)) %>%
+  mutate(tues = "Project Due")
+
+class_days <- filter(Cal, category == "Class Day" | category == "Mini Project Due" | category == "Final Project Due") %>%
+  mutate(sem_week = isoweek(date)) %>%
+  group_by(sem_week) %>%
+  summarize(Date = paste(format(date, "%b %e"), sep = ",", collapse = ", ")) %>%
+  mutate(tues = c(
+    "Syllabus", 
+    "Basic R and Quarto", 
+    "Data Visualization",
+    "Data Wrangling",
+    "Data Communication and Ethics",
+    "Loops and Function Writing",
+    "Statistical Modeling",
+    "Statistical Modeling",
+    "Random Forests",
+    "KNN",
+    "Text Data",
+    "PCA/Clustering",
+    "Spatial Data",
+    "Lab 9",
+    "Present MP 4",
+    "Present MP 4",
+    ""
+    )) %>% 
+  mutate(thursday = c(
+    "Introduction to R",
+    "Lab 1",
+    "Lab 2",
+    "Lab 3",
+    "Present MP 1",
+    "Lab 4",
+    "Statistical Modeling",
+    "Lab 5",
+    "Lab 6",
+    "Lab 7",
+    "Peer Review MP 3",
+    "Lab 8",
+    "Web-Scraping",
+    "Present MP 4",
+    "Present MP 4",
+    "",
+    ""
+    )) %>% 
+  mutate(Project = c(
+    "",
+    "",
+    "MP 1 Relesase",
+    "",
+    "MP 1 Due",
+    "MP 2 Release",
+    "",
+    "",
+    "MP 2 due, MP 3 release",
+    "",
+    "",
+    "MP3 Reflection due, MP4 release",
+    "",
+    "MP4 due, Final Project Relsease",
+    "",
+    "",
+    "Final Project Due"
+  )) %>%
+  #bind_rows(finals_week) %>%
+  arrange(sem_week) %>%
+  select(Date, Tuesday = tues, Thursday = thursday, Project = Project)
+
+```
+
+<!-- ### TA Information -->
+
+<!-- Kaylee Van Handel -->
+
+<!-- -   Tuesdays 5:30 -- 7:00 and Wednesdays 7:30 -- 9:00 in Hixson-Lied 518 -->
+
+### Class Materials
+
+**Textbook**: *Modern Data Science with R*
+
+-   Baumer (ISBN-13: 978-0367191498) - \url{https://mdsr-book.github.io/mdsr3e/}
+
+**Software**
+
+-   R: \url{https://cran.r-project.org}
+-   RStudio: \url{https://www.rstudio.com/}
+
+### Course Description
+
+*Introduction to Data Science* uses computing tools to gather, manage and analyze large and complex data sets. Topics include data wrangling and formatting, web scraping, data analysis, statistical modeling techniques, text mining and language processing.
+
+DSC 365 also addresses Department of Mathematics Learning Objectives 2 and 4:
+
+-   Objective 2. Communication in Mathematics: The ability to communicate effectively in both oral and written forms while applying their mathematical skills. Students will learn the basic language of proof and counterexample. Students will organize and present significant ideas and calculations in written form.
+-   Objective 4. Breadth and Depth: Students will develop an awareness of the breadth and depth of mathematics. This will include an awareness of historical and contemporary contexts in which mathematics is practiced. They will develop critical perspectives of the inherent limitations of the discipline.
+
+### Objectives
+
+There are six major topics in Introduction to Data Science:
+
+-   Exploratory data analysis, including data visualization using ggplot2.
+-   Data wrangling and formatting using the tidyverse set of R libraries.
+-   Data acquisition using web-scraping and APIs.
+-   Statistical modeling techniques such as regression models and clustering techniques.
+-   Text mining and language processing.
+-   Reproducible research and dynamic programming using R/RStudio.
+
+We'll work through many of these topics simultaneously. This class is all about building skills and techniques to begin your data science journey.
+
+### Class Preparation
+
+**General**: Students should come to each class meeting prepared to write and talk intelligently about the material. This means watching any required videos or reading any required materials before class. The assignments will require thought and analysis, which cannot be had in 15 minutes or less. Give yourself adequate time to read carefully, to think and reflect, to sleep on it, then maybe glance it over before class.
+
+**Computing and Software**: Computing is an essential part of modern statistical practice: meaningful data science is impossible without computing. We will be using the open-source statistical computing language R and user interface program RStudio to graph probability distributions, calculate probabilities, demonstrate theoretical results, and investigate complex problems. You should plan to bring a charged laptop to class every day. Further, please make sure you turn the sound off so that you do not disrupt other students' learning. In addition, if you are doing anything other than taking notes or looking at course materials I will revoke your ability to use it.
+
+**Textbook**: The textbook provides background material that is meant to supplement lectures. Lecture notes indicate what sections of the text you should read if you choose to do so.
+
+**Attendance**: All students are expected to come to class prepared to learn and actively participate. However, if you must be absent check BlueLine for assignments, announcements, and any other information you may have missed. If you must be absent for one of the Mini-Project Presentation days, please make all efforts to notify me ahead of time and be prepared to present oﬀicial documentation of the reason for your absence (doctor's note, etc.).
+
+If chronic mental or physical health issues may/will lead to repeated absences or absences beyond course syllabus expectations, please contact [Student Accessibility Services](https://www.creighton.edu/student-success/student-accessibility-services) located in the Old Gym (suite 437; 402-280-2166) to ensure accommodations are granted and communicated with your instructors.
+
+### Course Assessment
+
+Your grade in DCS365 will contain the following components.
+
+1.  Weekly Labs (35%): Each (typically) Thursday we'll start a lab designed to explore new techniques for working with data. These labs are designed to take about 2-3 hours to complete, so you'll most likely need to finish them outside of class. Labs are due in BlueLine. The lowest score will be dropped. You can talk about the assignment in a group, but each student will submit assignments individually unless otherwise noted.
+
+2.  Mini-Projects (45%): We will divide one project into four mini steps to help you understand the process for data analysis. These projects will be completed on your own. One Mini-Project will be due every 2-3 weeks (typically on Thursdays). The grading of the mini-projects will be a combination of presentation, peer review and instructor grading. Here are the details:
+
+-   Presentation for mini project 1 (5%)
+-   Written submission for mini project 2, instructor grading (10%)
+-   Self-Reflection on Peer Review/Written submission for mini project 3, instructor grading (5%)
+-   Written submission for mini project 4, instructor grading (15%)
+-   Presentation for mini project 4, peer grading (5%)
+-   Presentation for mini project 4, instructor grading (5%)
+
+3.  Analysis plan (20%): Your Final Project will represent a complete exploration of a large-scale data project, suitable for use in a portfolio of your work. Final Projects are due on day of university assigned final exam date (Tuesday December 10 at 11:59pm). You will have the option to either complete this project on your own or in a group of two.
+
+All assignments must be readable, and when appropriate, all work must be shown to receive credit (meaning code included). A missed work will result in a score of zero unless you contact me before class with a note from your advisor, physician, organization, or coach stating explicit reasons for your absence. Adjustments may be made in extraordinary circumstances. Please make sure you upload the correct assignment. A 10 point penalty will occur for improperly uploaded assignments (ie. wrong assignment, blank file).
+
+### Course Grades
+
+Your overall course score will be a weighted average of each element as noted above. Grades may be curved at the instructors' discretion. A letter grade will be assigned based on:
+
+|                 |                 |                 |                 |                 |                 |
+|-----------------|-----------------|-----------------|-----------------|-----------------|-----------------|
+| **A**: 93 - 100 | **A-**: 90-92.9 | **B+**: 87-89.9 | **B**: 83-86.9  | **B-**: 80-82.9 | **C+**: 77-79.9 |
+| **C**: 73-76.9  | **C-**: 70-72.9 | **D**: 60-69.9  | **F**: Below 60 |                 |                 |
+
+## Other Policies
+
+**Emails** : Sending email to your instructor should be treated as professional communication. Students should not assume their emails will be answered immediately, and should allow (at least) 24 hours for a response.
+
+-   To increase the chances of a quick response, start the subject line with "DSC365" so that it is clear that the email pertains to this class.
+
+-   If having an issue running code, please include the error and the line trying to run
+
+**Office hours**: The purpose of office hours is to provide you with an opportunity for additional conversation, guidance or help. Please feel free to come to our office hours at the time designated above. If you are not able to attend the office hour, *please email me to set up an appointment*.
+
+**Grades and regrades**: Course grades will appear on BlueLine. Each student is responsible for verifying his or her recorded scores on an ongoing basis. If there is any homework question that you want to request for a regrade, please come to the office hour or email me. *Any regrade request should be submitted within 1 week of the homework being graded*
+
+**Late Policy**: If you know you are to be absent for an assignment, please work with me to complete it prior to your absence. Work that is submitted late for any reason may be deducted 20% per day that it is late, and (in general) it will not be accepted after five (5) days. However, please contact me if there is an emergent or unique situation that keeps you from completing your work on time.
+
+### Academic Honesty
+
+This course is governed by the Policy on Academic Honesty of the College of Arts and Science. The CCAS policy on academic honesty can be found at the link below. \url{https://www.creighton.edu/fileadmin/user/CCAS/curriculum/CCAS\_Academic\_Honesty\_Policy\_.pdf}
+
+You are encouraged to work together on homework labs and in-class activities, but all work you submit must be your own (unless the assignment specifically states otherwise).
+
+Special Note: Academic Dishonesty also includes using unauthorized sources for the completion of a particular assignment. For example, this would include consulting old solutions, looking up solutions to problems on the internet, using Google or Microsoft translate, or using other resources like other textbooks or online services like Chegg.com or other websites to complete your work. This also includes using any form of generative AI to do entire assignments, though using it as a study aide is allowed.
+
+Any assignment turned in that fails to meet this policy on academic honesty will be scored as a zero, and the College of Arts and Sciences will be notified. Repeated violations of this policy will result in an automatic failure of this course.
+
+## Grade Appeal:
+
+If you feel that I have not followed the syllabus, you have a right to appeal your final grade. As there are a number of requirements that must be met in order to submit a formal grade appeal, I suggest you closely read the [policy](https://catalog.creighton.edu/pharmacy-health-professions/administration-academic-policies/grade-appeals-policy/grade-appeals-policy.pdf) (in the student handbook) before doing so.
+
+## Class cancellation statement:
+
+If class is canceled I will notify you as soon as possible through BlueLine. There are a variety of assignments in Blue Line that I will use if class is canceled due to my own illness or emergent situation. If I am not able to contact you for some reason, please watch for an email from the chair of the department, Dr. Pennington, or the department administrative assistant Nicole Lakeman.
+
+### Force Majeure Policy
+
+Creighton University may modify, suspend, or postpone any and all activities and services immediately and without notice because of force majeure causes beyond Creighton's control and occurring without its fault or negligence including, but not limited to, acts of god, fire, war, governmental action, terrorism, epidemic, pandemic, weather, national emergencies, or other threats to the safety of students or staff. Creighton may, at its option, alter the academic schedule or provide alternate instruction modalities to meet course objectives and competencies and program outcomes, including, but not limited to, distance or remote learning, until such time as Creighton determines normal operations may resume safely.
+
+In the event of a disruption of normal classroom activities due to emergencies such as a disease outbreak the format for this course may be modified to enable completion of the course. In that event, you will be provided an addendum to this syllabus that will supersede this version.
+
+### ADA Statement
+
+Creighton University is committed to providing a supportive educational atmosphere for all students. Students requesting accommodations are encouraged to contact the Office of Student Accessibility Services (SAS) as soon as possible to discuss the request process and eligibility requirements, as accommodations are not retroactive. If you believe that you may qualify or have questions regarding accommodations, please visit the [SAS website](https://www.creighton.edu/student-success/student-accessibility-services) for more information.
+
+### Take Care of Yourself
+
+**Healthy Lifestyle:** Do your best to maintain a healthy lifestyle by eating well, exercising, avoiding excessive drug and alcohol use, getting enough sleep and taking some time to relax. This will help you achieve your goals and cope with stress. Your mental health is more important than your grade in this course. All of us benefit from support during times of struggle. You are not alone. An important part of the college experience is learning how to ask for help.
+
+**Student Counseling Services:** If you or anyone you know experiences any academic stress, difficult life events, or feelings like anxiety or depression, I strongly encourage you to seek support. The Office of Student Retention offers students assistance in navigating their way at Creighton through support, resources and advising. Student Counseling Services is also here to help: call 402-280-2735 and visit their [website](https://studentlife.creighton.edu/wellness/health-and-counseling/student-counseling-services). Consider reaching out to us, a friend, faculty or family member you trust for help getting connected to the support that can help. If the situation is life threatening, call the police:
+
+On campus: Creighton Public Safety: 402-280-2911; Off campus: 911
+
+### Title IX, Harassment, and Discrimination
+
+Individuals who may have experienced harassment, discrimination, or an incident of discrimination under Title IX (sexual assault, sexual harassment, dating violence, stalking, sex discrimination, or pregnancy discrimination) are encouraged to contact the Office of Title IX and Civil Rights Compliance at 402-280-3189 or [TitleIX\@creighton.edu](mailto:TitleIX@creighton.edu) (Omaha) or 602-812-4590 or [TitleIXPHX\@creighton.edu](mailto:TitleIXPHX@creighton.edu) (Phoenix) to make a report or learn more about support services available on campus.
+
+Faculty members are required under Creighton policy to report Title IX incidents to the Office of Title IX and Civil Rights Compliance to ensure compliance with federal law, and to maintain the safety of the campus community and its members. For more information, please visit the Office of Title IX and Civil Rights Compliance.
+
+Students with documented disabilities or those who are pregnant may request accommodations from Student Accessibility Services. For more information, contact 402.280.2166 or visit the Student Accessibility Services page.
+
+### Community Standards
+
+According to the Creighton University Student Handbook, all Creighton students are to uphold the following standards of conduct:
+
+1.  Act with professional, academic, and personal integrity.
+2.  Respect and promote the dignity of all persons.
+3.  Respect the policies and procedures of the Creighton University community and the rights of its members both on and off campus, as well as the just laws of the civic community and the rights of its members.
+4.  Support the personal, professional, academic, and vocational development of the members of the Creighton University Community.
+
+Upon the first violation of this standard of conduct, you will be notified in writing (via university email) or via a face-to-face meeting with the instructor. If the behavior continues, you will be asked to leave class and referred to the Office of Community Standards and Well-Being. You will not be permitted to return to class without instructor permission.
+
+For any conduct perceived to pose an immediate threat to the well-being of others in the classroom, Public Safety (402-280-2911) shall be contacted immediately for assistance, at the instructor's discretion.
+
+### Confidential Services
+
+Creighton University offers free, confidential support to students.
+
+Violence Intervention and Prevention (VIP) Center 402.280.3794
+
+Student Counseling Services 402.280.2735
+
+### Important Univeristy Dates:
+
+-   Monday January 20 -- Martin Luther King, Jr. Day -- no classes
+-   Tuesday January 21 -- last day to ADD classes
+-   Thursday January 23 at 4:30 pm -- last day to DROP classes without a "W"
+-   Monday February 10 -- last to change to audit or P/NP
+-   Spring Break: March 10-14 -- no classes
+-   Thursday April 3 -- last day to withdraw with a "W"
+-   Easter Recess April 18-21 -- no classes after 5pm on April 17th
+-   Final semester examinations: May 8-14
+
+\newpage
+
+### Class Schedule and Topic Outline
+
+This schedule is tentative and subject to change. The most up-to-date schedule is on Blueline.
+
+```{r calendar}
+#| echo: false
+#| eval: true
+#| warning: false
+#| fig-width: 8
+#| fig-height: 4.5
+class_cal
+```
+
+```{r schedule}
+#| echo: false
+#| eval: true
+#| fig-pos: 'h'
+class_days %>% 
+kableExtra::kable(caption = "Tentative schedule of class topics and important due dates", format = "simple")
+```
