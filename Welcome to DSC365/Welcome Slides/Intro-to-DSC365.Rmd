@@ -49,16 +49,21 @@ knit_hooks$set(output = function(x, options) {
 ## Instructor: Alex Kunin, PhD
 
 - BS in Mathematics, minor in computer science, Stony Brook University
-- MS in Computer Science (U. Alabama Huntsville), MS in Math (U. Nebraska Lincoln), PhD in Math (Penn State), postdoctoral training in computational neuroscience and biomedical informatics (Baylor College of Medicine)
-- Thesis: *Properties and Applications of Convex Neural Codes*
+- MS in Computer Science (U. Alabama Huntsville)
+  - Thesis: *Self-stabilizing algorithms for independence, domination, and
+coloring*
+- MS in Math (U. Nebraska Lincoln) finished as a PhD in Math (Penn State)
+  - Dissertation: *Properties and Applications of Convex Neural Codes*
+- postdoctoral training in computational neuroscience and biomedical informatics (Baylor College of Medicine)
 
 --
 
-**Now introduce yourselves! Get into groups of 2-3**
+**Now introduce yourselves**
 
+Turn and say hi to the people near you!
 Talk for a few minutes, then share...
 - Your names
-- Something your group has in common (besides things like major ...)
+- Something your group has in common (besides, like your major ...)
 
 ---
 class:inverse
@@ -134,6 +139,7 @@ class:inverse
 
 ## Syllabus
 
+Now's a good time to get familiar with the blueline site...
 
 
 ---
