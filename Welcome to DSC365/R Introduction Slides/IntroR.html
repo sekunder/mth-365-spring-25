@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="" xml:lang="">
   <head>
-    <title>DSC365: Introduction to Data Science</title>
+    <title>Introduction to R</title>
     <meta charset="utf-8" />
-    <meta name="author" content="Introduction to R" />
-    <meta name="date" content="2024-08-22" />
-    <script src="libs/header-attrs-2.27/header-attrs.js"></script>
+    <meta name="author" content="DSC365: Introduction to Data Science" />
+    <meta name="date" content="2025-01-16" />
+    <script src="libs/header-attrs-2.29/header-attrs.js"></script>
     <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link href="libs/remark-css-0.0.1/metropolis-fonts.css" rel="stylesheet" />
     <link rel="stylesheet" href="modal.css" type="text/css" />
@@ -13,17 +13,30 @@
   </head>
   <body>
     <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Introduction to R
+]
+.author[
+### DSC365: Introduction to Data Science
+]
+.date[
+### January 16, 2025
+]
+
+---
 
 
 
 
 
-class:inverse
+&lt;!-- class:inverse --&gt;
 
-&lt;br&gt;&lt;br&gt;&lt;br&gt;
-## DSC365: Intro to Data Science
-### Introduction to R
-#### August 22, 2024
+&lt;!-- &lt;br&gt;&lt;br&gt;&lt;br&gt; --&gt;
+&lt;!-- ## DSC365: Intro to Data Science --&gt;
+&lt;!-- ### Introduction to R --&gt;
+&lt;!-- #### August 22, 2024 --&gt;
 
 ---
 ## Agenda
@@ -42,16 +55,16 @@ class:inverse
 ---
 ### R Studio Set-Up
 
-&lt;img src="../images/rstudio.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="images/rstudio.png" width="100%" style="display: block; margin: auto;" /&gt;
 
 To Create a Script, Click the Following: File -&gt; New File -&gt; R script
 
-[R Studio IDE Cheatsheet](cheatsheets/rstudio-ide.pdf)
+[R Studio IDE Cheatsheet](../cheatsheets/rstudio-ide.pdf)
 
 ---
 ### R Studio Set-Up - Editor (Top Left)
 
-&lt;img src="../images/editor.jpeg" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="images/editor.jpeg" width="100%" style="display: block; margin: auto;" /&gt;
 &lt;br&gt;
 **Shortcuts for running code**: To run code from your script:
 + Windows: Ctrl + Enter
@@ -60,22 +73,22 @@ To Create a Script, Click the Following: File -&gt; New File -&gt; R script
 ---
 ### R Studio Set-Up - Console (Bottom Left)
 
-&lt;img src="../images/console.jpeg" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="images/console.jpeg" width="100%" style="display: block; margin: auto;" /&gt;
 
 ---
 ### R Studio Set-Up - Environment  (Top Right)
 
-&lt;img src="../images/environment.jpeg" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="images/environment.jpeg" width="100%" style="display: block; margin: auto;" /&gt;
 
 ---
 ### R Studio Set-Up - Environment  (Bottom Right)
 
 &lt;!-- Trigger the Modal --&gt;
-&lt;img id='imgfiles' src='../images/files.png' alt='Files' width='30%'&gt;
+&lt;img id='imgfiles' src='images/files.png' alt='Files' width='30%'&gt;
 &lt;!-- Trigger the Modal --&gt;
-&lt;img id='imgpackages' src='../images/packages.png' alt='Packages' width='30%'&gt;
+&lt;img id='imgpackages' src='images/packages.png' alt='Packages' width='30%'&gt;
 &lt;!-- Trigger the Modal --&gt;
-&lt;img id='imghelp' src='../images/help.png' alt='Help' width='30%'&gt;
+&lt;img id='imghelp' src='images/help.png' alt='Help' width='30%'&gt;
 &lt;!-- The Modal --&gt;
 &lt;div id='modalfiles' class='modal'&gt;
   &lt;!-- Modal Content (The Image) --&gt;
@@ -527,15 +540,18 @@ head(data, n = 3) #make sure data loads in correctly
 ```
 
 ```
-## Film Script.Type Average.critics Average.audience Primary.Genre
-## 1 12 Strong adaptation 54 64 drama
-## 2 7 Days in Entebbe based on a true story 38 49 thriller
-## 3 A Quiet Place original screenplay 89 79 horror
-## Opening.Weekend Domestic.Gross Foreign.Gross Worldwide.Gross
-Budget...million. Release.Date..US.
-## 1 15815025 45500164 21533253 67033417 35 19-Jan-18
-## 2 1592645 3189220 5465548 8654768 NA 16-Mar-18
-## 3 50203562 188024361 144559086 332583447 17 6-Apr-18
+##                Film           Script.Type Average.critics Average.audience
+## 1         12 Strong            adaptation              54               64
+## 2 7 Days in Entebbe based on a true story              38               49
+## 3     A Quiet Place   original screenplay              89               79
+##   Primary.Genre Opening.Weekend Domestic.Gross Foreign.Gross Worldwide.Gross
+## 1         drama        15815025       45500164      21533253        67033417
+## 2      thriller         1592645        3189220       5465548         8654768
+## 3        horror        50203562      188024361     144559086       332583447
+##   Budget...million. Release.Date..US.
+## 1                35         19-Jan-18
+## 2                NA         16-Mar-18
+## 3                17          6-Apr-18
 ```
 
 Should see data in environment panel (upper right)
@@ -605,10 +621,12 @@ data[1,] #first row
 ```
 
 ```
-##        Film Script.Type Average.critics Average.audience Primary.Genre Opening.Weekend
-## 1 12 Strong  adaptation              54               64         drama        15815025
-##   Domestic.Gross Foreign.Gross Worldwide.Gross Budget...million. Release.Date..US.
-## 1       45500164      21533253        67033417                35         19-Jan-18
+##        Film Script.Type Average.critics Average.audience Primary.Genre
+## 1 12 Strong  adaptation              54               64         drama
+##   Opening.Weekend Domestic.Gross Foreign.Gross Worldwide.Gross
+## 1        15815025       45500164      21533253        67033417
+##   Budget...million. Release.Date..US.
+## 1                35         19-Jan-18
 ```
 
 ``` r
@@ -616,86 +634,166 @@ data[,1] #first column
 ```
 
 ```
-##   [1] "12 Strong"                                   "7 Days in Entebbe"                          
-##   [3] "A Quiet Place"                               "A Simple Favor"                             
-##   [5] "A Star is Born"                              "A Wrinkle in Time"                          
-##   [7] "A.X.L."                                      "Action Point"                               
-##   [9] "Adrift"                                      "Alpha"                                      
-##  [11] "American Animals"                            "Annihilation"                               
-##  [13] "Ant-Man and the Wasp"                        "Aquaman "                                   
-##  [15] "Avengers: Infinity War"                      "Baaghi 2"                                   
-##  [17] "Bad Samaritan"                               "Bad Times at the El Royale"                 
-##  [19] "Beirut (aka The Negotiator)"                 "Black Panther"                              
-##  [21] "BlacKkKlansman"                              "Blindspotting"                              
-##  [23] "Blockers"                                    "Bohemian Rhapsody"                          
-##  [25] "Book Club"                                   "Breaking In"                                
-##  [27] "Bumblebee"                                   "Call Me By Your Name"                       
-##  [29] "Chappaquiddick"                              "Christopher Robin"                          
-##  [31] "Crazy Rich Asians"                           "Creed II"                                   
-##  [33] "Deadpool 2"                                  "Death Wish"                                 
-##  [35] "Den of Thieves"                              "Detective Chinatown 2"                      
-##  [37] "Disobedience"                                "Dog Days"                                   
-##  [39] "Dr Seuss' The Grinch"                        "Early Man"                                  
-##  [41] "Eighth Grade"                                "Every Day"                                  
-##  [43] "Fantastic Beasts: The Crimes of Grindelwald" "Fifty Shades Freed"                         
-##  [45] "Finding Your Feet"                           "First Man"                                  
-##  [47] "First Reformed"                              "Forever My Girl"                            
-##  [49] "Game Night"                                  "God's Not Dead: A Light in Darkness"        
-##  [51] "Goosebumps 2: Haunted Halloween"             "Gotti"                                      
-##  [53] "Green Book"                                  "Gringo"                                     
-##  [55] "Halloween "                                  "Hearts Beat Loud"                           
-##  [57] "Hereditary"                                  "Holmes and Watson"                          
-##  [59] "Hostiles"                                    "Hotel Artemis"                              
-##  [61] "Hotel Transylvania 3: Summer Vacation"       "Hunter Killer"                              
-##  [63] "I Can Only Imagine"                          "I Feel Pretty"                              
-##  [65] "Incredibles 2"                               "Insidious: The Last Key"                    
-##  [67] "Instant Family"                              "Isle of Dogs"                               
-##  [69] "Jurassic World: Fallen Kingdom"              "La Boda de Valentina"                       
-##  [71] "Lean on Pete"                                "Leave No Trace"                             
-##  [73] "Life of the Party"                           "Love, Simon"                                
-##  [75] "Mamma Mia: Here We Go Again!"                "Mary Poppins Returns"                       
-##  [77] "Maze Runner: The Death Cure"                 "Midnight Sun"                               
-##  [79] "Mile 22"                                     "Mission: Impossible - Fallout"              
-##  [81] "Molly's Game"                                "Mortal Engines"                             
-##  [83] "Night School"                                "Nobody's Fool"                              
-##  [85] "Ocean’s 8"                                   "Operation Finale"                           
-##  [87] "Operation Red Sea"                           "Overboard"                                  
-##  [89] "Overlord"                                    "Pacific Rim: Uprising"                      
-##  [91] "Paddington 2"                                "Papillon"                                   
-##  [93] "Paul, Apostle of Christ"                     "Peppermint"                                 
-##  [95] "Peter Rabbit"                                "Proud Mary"                                 
-##  [97] "Puzzle"                                      "Raid"                                       
-##  [99] "Ralph Breaks the Internet"                   "Rampage"                                    
-## [101] "Ready Player One"                            "Red Sparrow"                                
-## [103] "Robin Hood"                                  "Samson"                                     
-## [105] "Searching"                                   "Second Act"                                 
-## [107] "Sgt. Stubby: An American Hero"               "Sherlock Gnomes"                            
-## [109] "Show Dogs"                                   "Sicario: Day of the Soldado"                
-## [111] "Skyscraper"                                  "Slender Man"                                
-## [113] "Smallfoot"                                   "Solo: A Star Wars Story"                    
-## [115] "Sorry to Bother You"                         "Spider-man: Into the Spider-verse"          
-## [117] "Super Troopers 2"                            "Superfly"                                   
-## [119] "Tag"                                         "Teen Titans Go! To The Movies"              
-## [121] "The 15:17 to Paris"                          "The Commuter"                               
-## [123] "The Darkest Minds"                           "The Death of Stalin"                        
-## [125] "The Equalizer 2"                             "The Favourite"                              
-## [127] "The First Purge"                             "The Girl in the Spider's Web"               
-## [129] "The Happytime Murders"                       "The Hate U Give"                            
-## [131] "The House with a Clock in its Walls"         "The Hurricane Heist"                        
-## [133] "The Leisure Seeker"                          "The Meg"                                    
-## [135] "The Miracle Season"                          "The Mule"                                   
-## [137] "The Nun"                                     "The Nutcracker and the Four Realms"         
-## [139] "The Post"                                    "The Predator"                               
-## [141] "The Rider"                                   "The Seagull"                                
-## [143] "The Spy Who Dumped Me"                       "The Strangers: Prey at Night"               
-## [145] "Thoroughbreds"                               "Tomb Raider"                                
-## [147] "Traffik"                                     "Truth or Dare"                              
-## [149] "Tully"                                       "Tyler Perry's Acrimony"                     
-## [151] "Uncle Drew"                                  "Unfriended: Dark Web"                       
-## [153] "Unsane"                                      "Upgrade"                                    
-## [155] "Venom"                                       "Vice"                                       
-## [157] "White Boy Rick"                              "Widows"                                     
-## [159] "Winchester"                                  "You Were Never Really Here"
+##   [1] "12 Strong"                                  
+##   [2] "7 Days in Entebbe"                          
+##   [3] "A Quiet Place"                              
+##   [4] "A Simple Favor"                             
+##   [5] "A Star is Born"                             
+##   [6] "A Wrinkle in Time"                          
+##   [7] "A.X.L."                                     
+##   [8] "Action Point"                               
+##   [9] "Adrift"                                     
+##  [10] "Alpha"                                      
+##  [11] "American Animals"                           
+##  [12] "Annihilation"                               
+##  [13] "Ant-Man and the Wasp"                       
+##  [14] "Aquaman "                                   
+##  [15] "Avengers: Infinity War"                     
+##  [16] "Baaghi 2"                                   
+##  [17] "Bad Samaritan"                              
+##  [18] "Bad Times at the El Royale"                 
+##  [19] "Beirut (aka The Negotiator)"                
+##  [20] "Black Panther"                              
+##  [21] "BlacKkKlansman"                             
+##  [22] "Blindspotting"                              
+##  [23] "Blockers"                                   
+##  [24] "Bohemian Rhapsody"                          
+##  [25] "Book Club"                                  
+##  [26] "Breaking In"                                
+##  [27] "Bumblebee"                                  
+##  [28] "Call Me By Your Name"                       
+##  [29] "Chappaquiddick"                             
+##  [30] "Christopher Robin"                          
+##  [31] "Crazy Rich Asians"                          
+##  [32] "Creed II"                                   
+##  [33] "Deadpool 2"                                 
+##  [34] "Death Wish"                                 
+##  [35] "Den of Thieves"                             
+##  [36] "Detective Chinatown 2"                      
+##  [37] "Disobedience"                               
+##  [38] "Dog Days"                                   
+##  [39] "Dr Seuss' The Grinch"                       
+##  [40] "Early Man"                                  
+##  [41] "Eighth Grade"                               
+##  [42] "Every Day"                                  
+##  [43] "Fantastic Beasts: The Crimes of Grindelwald"
+##  [44] "Fifty Shades Freed"                         
+##  [45] "Finding Your Feet"                          
+##  [46] "First Man"                                  
+##  [47] "First Reformed"                             
+##  [48] "Forever My Girl"                            
+##  [49] "Game Night"                                 
+##  [50] "God's Not Dead: A Light in Darkness"        
+##  [51] "Goosebumps 2: Haunted Halloween"            
+##  [52] "Gotti"                                      
+##  [53] "Green Book"                                 
+##  [54] "Gringo"                                     
+##  [55] "Halloween "                                 
+##  [56] "Hearts Beat Loud"                           
+##  [57] "Hereditary"                                 
+##  [58] "Holmes and Watson"                          
+##  [59] "Hostiles"                                   
+##  [60] "Hotel Artemis"                              
+##  [61] "Hotel Transylvania 3: Summer Vacation"      
+##  [62] "Hunter Killer"                              
+##  [63] "I Can Only Imagine"                         
+##  [64] "I Feel Pretty"                              
+##  [65] "Incredibles 2"                              
+##  [66] "Insidious: The Last Key"                    
+##  [67] "Instant Family"                             
+##  [68] "Isle of Dogs"                               
+##  [69] "Jurassic World: Fallen Kingdom"             
+##  [70] "La Boda de Valentina"                       
+##  [71] "Lean on Pete"                               
+##  [72] "Leave No Trace"                             
+##  [73] "Life of the Party"                          
+##  [74] "Love, Simon"                                
+##  [75] "Mamma Mia: Here We Go Again!"               
+##  [76] "Mary Poppins Returns"                       
+##  [77] "Maze Runner: The Death Cure"                
+##  [78] "Midnight Sun"                               
+##  [79] "Mile 22"                                    
+##  [80] "Mission: Impossible - Fallout"              
+##  [81] "Molly's Game"                               
+##  [82] "Mortal Engines"                             
+##  [83] "Night School"                               
+##  [84] "Nobody's Fool"                              
+##  [85] "Ocean’s 8"                                  
+##  [86] "Operation Finale"                           
+##  [87] "Operation Red Sea"                          
+##  [88] "Overboard"                                  
+##  [89] "Overlord"                                   
+##  [90] "Pacific Rim: Uprising"                      
+##  [91] "Paddington 2"                               
+##  [92] "Papillon"                                   
+##  [93] "Paul, Apostle of Christ"                    
+##  [94] "Peppermint"                                 
+##  [95] "Peter Rabbit"                               
+##  [96] "Proud Mary"                                 
+##  [97] "Puzzle"                                     
+##  [98] "Raid"                                       
+##  [99] "Ralph Breaks the Internet"                  
+## [100] "Rampage"                                    
+## [101] "Ready Player One"                           
+## [102] "Red Sparrow"                                
+## [103] "Robin Hood"                                 
+## [104] "Samson"                                     
+## [105] "Searching"                                  
+## [106] "Second Act"                                 
+## [107] "Sgt. Stubby: An American Hero"              
+## [108] "Sherlock Gnomes"                            
+## [109] "Show Dogs"                                  
+## [110] "Sicario: Day of the Soldado"                
+## [111] "Skyscraper"                                 
+## [112] "Slender Man"                                
+## [113] "Smallfoot"                                  
+## [114] "Solo: A Star Wars Story"                    
+## [115] "Sorry to Bother You"                        
+## [116] "Spider-man: Into the Spider-verse"          
+## [117] "Super Troopers 2"                           
+## [118] "Superfly"                                   
+## [119] "Tag"                                        
+## [120] "Teen Titans Go! To The Movies"              
+## [121] "The 15:17 to Paris"                         
+## [122] "The Commuter"                               
+## [123] "The Darkest Minds"                          
+## [124] "The Death of Stalin"                        
+## [125] "The Equalizer 2"                            
+## [126] "The Favourite"                              
+## [127] "The First Purge"                            
+## [128] "The Girl in the Spider's Web"               
+## [129] "The Happytime Murders"                      
+## [130] "The Hate U Give"                            
+## [131] "The House with a Clock in its Walls"        
+## [132] "The Hurricane Heist"                        
+## [133] "The Leisure Seeker"                         
+## [134] "The Meg"                                    
+## [135] "The Miracle Season"                         
+## [136] "The Mule"                                   
+## [137] "The Nun"                                    
+## [138] "The Nutcracker and the Four Realms"         
+## [139] "The Post"                                   
+## [140] "The Predator"                               
+## [141] "The Rider"                                  
+## [142] "The Seagull"                                
+## [143] "The Spy Who Dumped Me"                      
+## [144] "The Strangers: Prey at Night"               
+## [145] "Thoroughbreds"                              
+## [146] "Tomb Raider"                                
+## [147] "Traffik"                                    
+## [148] "Truth or Dare"                              
+## [149] "Tully"                                      
+## [150] "Tyler Perry's Acrimony"                     
+## [151] "Uncle Drew"                                 
+## [152] "Unfriended: Dark Web"                       
+## [153] "Unsane"                                     
+## [154] "Upgrade"                                    
+## [155] "Venom"                                      
+## [156] "Vice"                                       
+## [157] "White Boy Rick"                             
+## [158] "Widows"                                     
+## [159] "Winchester"                                 
+## [160] "You Were Never Really Here"
 ```
 
 ---
@@ -721,8 +819,8 @@ head(data$Film)
 ```
 
 ```
-## [1] "12 Strong"         "7 Days in Entebbe" "A Quiet Place"     "A Simple Favor"   
-## [5] "A Star is Born"    "A Wrinkle in Time"
+## [1] "12 Strong"         "7 Days in Entebbe" "A Quiet Place"    
+## [4] "A Simple Favor"    "A Star is Born"    "A Wrinkle in Time"
 ```
 
 
@@ -770,12 +868,16 @@ table(data$Script.Type)
 
 ```
 ## 
-##                    adaptation            adaptation, sequel         based on a true story 
-##                            37                             2                            22 
-## based on a true story, remake           original screenplay                       prequel 
-##                             1                            58                             2 
-##                        remake                   semi-sequel                        sequel 
-##                             6                             1                            31
+##                    adaptation            adaptation, sequel 
+##                            37                             2 
+##         based on a true story based on a true story, remake 
+##                            22                             1 
+##           original screenplay                       prequel 
+##                            58                             2 
+##                        remake                   semi-sequel 
+##                             6                             1 
+##                        sequel 
+##                            31
 ```
 
 
@@ -841,7 +943,7 @@ Introduction points from: https://ourcodingclub.github.io/tutorials/intro-to-r/
 ---
 ## Learning to code can be challenging
 
-&lt;img src="../images/debug.png" width="1175" /&gt;
+![](images/debug.png)&lt;!-- --&gt;
 
 Artwork by @allison_horst
 
@@ -867,7 +969,7 @@ Here is a few strategies if your code does not work:
 
 - Check your spelling
 
-&lt;img src="images/spelling-error.png" width="70%" style="display: block; margin: auto;" /&gt;
+&lt;img src="../R Introduction Slides/images/spelling-error.png" width="70%" style="display: block; margin: auto;" /&gt;
 
 - Rubber ducking [(Source)](https://duckly.com/blog/improve-how-to-code-with-rubber-duck-debugging/)
 ---
@@ -1233,6 +1335,669 @@ if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
           /* When the user clicks on the modalImg, close it*/
           modalImgspellingerror.onclick = function() {
             modalspellingerror.style.display = 'none';
+          }
+</script>
+<script>
+        /* Get the modal*/
+          var modalfiles = document.getElementById('modalfiles');
+        /* Get the image and insert it inside the modal - use its 'alt' text as a caption*/
+        var imgfiles = document.getElementById('imgfiles');
+          var modalImgfiles = document.getElementById('imgmodalfiles');
+          var captionTextfiles = document.getElementById('captionfiles');
+          imgfiles.onclick = function(){
+            modalfiles.style.display = 'block';
+            modalImgfiles.src = this.src;
+            captionTextfiles.innerHTML = this.alt;
+          }
+          /* When the user clicks on the modalImg, close it*/
+          modalImgfiles.onclick = function() {
+            modalfiles.style.display = 'none';
+          }
+</script>
+<script>
+        /* Get the modal*/
+          var modalpackages = document.getElementById('modalpackages');
+        /* Get the image and insert it inside the modal - use its 'alt' text as a caption*/
+        var imgpackages = document.getElementById('imgpackages');
+          var modalImgpackages = document.getElementById('imgmodalpackages');
+          var captionTextpackages = document.getElementById('captionpackages');
+          imgpackages.onclick = function(){
+            modalpackages.style.display = 'block';
+            modalImgpackages.src = this.src;
+            captionTextpackages.innerHTML = this.alt;
+          }
+          /* When the user clicks on the modalImg, close it*/
+          modalImgpackages.onclick = function() {
+            modalpackages.style.display = 'none';
+          }
+</script>
+<script>
+        /* Get the modal*/
+          var modalhelp = document.getElementById('modalhelp');
+        /* Get the image and insert it inside the modal - use its 'alt' text as a caption*/
+        var imghelp = document.getElementById('imghelp');
+          var modalImghelp = document.getElementById('imgmodalhelp');
+          var captionTexthelp = document.getElementById('captionhelp');
+          imghelp.onclick = function(){
+            modalhelp.style.display = 'block';
+            modalImghelp.src = this.src;
+            captionTexthelp.innerHTML = this.alt;
+          }
+          /* When the user clicks on the modalImg, close it*/
+          modalImghelp.onclick = function() {
+            modalhelp.style.display = 'none';
+          }
+</script>
+<script>
+        /* Get the modal*/
+          var modalfiles = document.getElementById('modalfiles');
+        /* Get the image and insert it inside the modal - use its 'alt' text as a caption*/
+        var imgfiles = document.getElementById('imgfiles');
+          var modalImgfiles = document.getElementById('imgmodalfiles');
+          var captionTextfiles = document.getElementById('captionfiles');
+          imgfiles.onclick = function(){
+            modalfiles.style.display = 'block';
+            modalImgfiles.src = this.src;
+            captionTextfiles.innerHTML = this.alt;
+          }
+          /* When the user clicks on the modalImg, close it*/
+          modalImgfiles.onclick = function() {
+            modalfiles.style.display = 'none';
+          }
+</script>
+<script>
+        /* Get the modal*/
+          var modalpackages = document.getElementById('modalpackages');
+        /* Get the image and insert it inside the modal - use its 'alt' text as a caption*/
+        var imgpackages = document.getElementById('imgpackages');
+          var modalImgpackages = document.getElementById('imgmodalpackages');
+          var captionTextpackages = document.getElementById('captionpackages');
+          imgpackages.onclick = function(){
+            modalpackages.style.display = 'block';
+            modalImgpackages.src = this.src;
+            captionTextpackages.innerHTML = this.alt;
+          }
+          /* When the user clicks on the modalImg, close it*/
+          modalImgpackages.onclick = function() {
+            modalpackages.style.display = 'none';
+          }
+</script>
+<script>
+        /* Get the modal*/
+          var modalhelp = document.getElementById('modalhelp');
+        /* Get the image and insert it inside the modal - use its 'alt' text as a caption*/
+        var imghelp = document.getElementById('imghelp');
+          var modalImghelp = document.getElementById('imgmodalhelp');
+          var captionTexthelp = document.getElementById('captionhelp');
+          imghelp.onclick = function(){
+            modalhelp.style.display = 'block';
+            modalImghelp.src = this.src;
+            captionTexthelp.innerHTML = this.alt;
+          }
+          /* When the user clicks on the modalImg, close it*/
+          modalImghelp.onclick = function() {
+            modalhelp.style.display = 'none';
+          }
+</script>
+<script>
+        /* Get the modal*/
+          var modalfiles = document.getElementById('modalfiles');
+        /* Get the image and insert it inside the modal - use its 'alt' text as a caption*/
+        var imgfiles = document.getElementById('imgfiles');
+          var modalImgfiles = document.getElementById('imgmodalfiles');
+          var captionTextfiles = document.getElementById('captionfiles');
+          imgfiles.onclick = function(){
+            modalfiles.style.display = 'block';
+            modalImgfiles.src = this.src;
+            captionTextfiles.innerHTML = this.alt;
+          }
+          /* When the user clicks on the modalImg, close it*/
+          modalImgfiles.onclick = function() {
+            modalfiles.style.display = 'none';
+          }
+</script>
+<script>
+        /* Get the modal*/
+          var modalpackages = document.getElementById('modalpackages');
+        /* Get the image and insert it inside the modal - use its 'alt' text as a caption*/
+        var imgpackages = document.getElementById('imgpackages');
+          var modalImgpackages = document.getElementById('imgmodalpackages');
+          var captionTextpackages = document.getElementById('captionpackages');
+          imgpackages.onclick = function(){
+            modalpackages.style.display = 'block';
+            modalImgpackages.src = this.src;
+            captionTextpackages.innerHTML = this.alt;
+          }
+          /* When the user clicks on the modalImg, close it*/
+          modalImgpackages.onclick = function() {
+            modalpackages.style.display = 'none';
+          }
+</script>
+<script>
+        /* Get the modal*/
+          var modalhelp = document.getElementById('modalhelp');
+        /* Get the image and insert it inside the modal - use its 'alt' text as a caption*/
+        var imghelp = document.getElementById('imghelp');
+          var modalImghelp = document.getElementById('imgmodalhelp');
+          var captionTexthelp = document.getElementById('captionhelp');
+          imghelp.onclick = function(){
+            modalhelp.style.display = 'block';
+            modalImghelp.src = this.src;
+            captionTexthelp.innerHTML = this.alt;
+          }
+          /* When the user clicks on the modalImg, close it*/
+          modalImghelp.onclick = function() {
+            modalhelp.style.display = 'none';
+          }
+</script>
+<script>
+        /* Get the modal*/
+          var modalfiles = document.getElementById('modalfiles');
+        /* Get the image and insert it inside the modal - use its 'alt' text as a caption*/
+        var imgfiles = document.getElementById('imgfiles');
+          var modalImgfiles = document.getElementById('imgmodalfiles');
+          var captionTextfiles = document.getElementById('captionfiles');
+          imgfiles.onclick = function(){
+            modalfiles.style.display = 'block';
+            modalImgfiles.src = this.src;
+            captionTextfiles.innerHTML = this.alt;
+          }
+          /* When the user clicks on the modalImg, close it*/
+          modalImgfiles.onclick = function() {
+            modalfiles.style.display = 'none';
+          }
+</script>
+<script>
+        /* Get the modal*/
+          var modalpackages = document.getElementById('modalpackages');
+        /* Get the image and insert it inside the modal - use its 'alt' text as a caption*/
+        var imgpackages = document.getElementById('imgpackages');
+          var modalImgpackages = document.getElementById('imgmodalpackages');
+          var captionTextpackages = document.getElementById('captionpackages');
+          imgpackages.onclick = function(){
+            modalpackages.style.display = 'block';
+            modalImgpackages.src = this.src;
+            captionTextpackages.innerHTML = this.alt;
+          }
+          /* When the user clicks on the modalImg, close it*/
+          modalImgpackages.onclick = function() {
+            modalpackages.style.display = 'none';
+          }
+</script>
+<script>
+        /* Get the modal*/
+          var modalhelp = document.getElementById('modalhelp');
+        /* Get the image and insert it inside the modal - use its 'alt' text as a caption*/
+        var imghelp = document.getElementById('imghelp');
+          var modalImghelp = document.getElementById('imgmodalhelp');
+          var captionTexthelp = document.getElementById('captionhelp');
+          imghelp.onclick = function(){
+            modalhelp.style.display = 'block';
+            modalImghelp.src = this.src;
+            captionTexthelp.innerHTML = this.alt;
+          }
+          /* When the user clicks on the modalImg, close it*/
+          modalImghelp.onclick = function() {
+            modalhelp.style.display = 'none';
+          }
+</script>
+<script>
+        /* Get the modal*/
+          var modalfiles = document.getElementById('modalfiles');
+        /* Get the image and insert it inside the modal - use its 'alt' text as a caption*/
+        var imgfiles = document.getElementById('imgfiles');
+          var modalImgfiles = document.getElementById('imgmodalfiles');
+          var captionTextfiles = document.getElementById('captionfiles');
+          imgfiles.onclick = function(){
+            modalfiles.style.display = 'block';
+            modalImgfiles.src = this.src;
+            captionTextfiles.innerHTML = this.alt;
+          }
+          /* When the user clicks on the modalImg, close it*/
+          modalImgfiles.onclick = function() {
+            modalfiles.style.display = 'none';
+          }
+</script>
+<script>
+        /* Get the modal*/
+          var modalpackages = document.getElementById('modalpackages');
+        /* Get the image and insert it inside the modal - use its 'alt' text as a caption*/
+        var imgpackages = document.getElementById('imgpackages');
+          var modalImgpackages = document.getElementById('imgmodalpackages');
+          var captionTextpackages = document.getElementById('captionpackages');
+          imgpackages.onclick = function(){
+            modalpackages.style.display = 'block';
+            modalImgpackages.src = this.src;
+            captionTextpackages.innerHTML = this.alt;
+          }
+          /* When the user clicks on the modalImg, close it*/
+          modalImgpackages.onclick = function() {
+            modalpackages.style.display = 'none';
+          }
+</script>
+<script>
+        /* Get the modal*/
+          var modalhelp = document.getElementById('modalhelp');
+        /* Get the image and insert it inside the modal - use its 'alt' text as a caption*/
+        var imghelp = document.getElementById('imghelp');
+          var modalImghelp = document.getElementById('imgmodalhelp');
+          var captionTexthelp = document.getElementById('captionhelp');
+          imghelp.onclick = function(){
+            modalhelp.style.display = 'block';
+            modalImghelp.src = this.src;
+            captionTexthelp.innerHTML = this.alt;
+          }
+          /* When the user clicks on the modalImg, close it*/
+          modalImghelp.onclick = function() {
+            modalhelp.style.display = 'none';
+          }
+</script>
+<script>
+        /* Get the modal*/
+          var modalfiles = document.getElementById('modalfiles');
+        /* Get the image and insert it inside the modal - use its 'alt' text as a caption*/
+        var imgfiles = document.getElementById('imgfiles');
+          var modalImgfiles = document.getElementById('imgmodalfiles');
+          var captionTextfiles = document.getElementById('captionfiles');
+          imgfiles.onclick = function(){
+            modalfiles.style.display = 'block';
+            modalImgfiles.src = this.src;
+            captionTextfiles.innerHTML = this.alt;
+          }
+          /* When the user clicks on the modalImg, close it*/
+          modalImgfiles.onclick = function() {
+            modalfiles.style.display = 'none';
+          }
+</script>
+<script>
+        /* Get the modal*/
+          var modalpackages = document.getElementById('modalpackages');
+        /* Get the image and insert it inside the modal - use its 'alt' text as a caption*/
+        var imgpackages = document.getElementById('imgpackages');
+          var modalImgpackages = document.getElementById('imgmodalpackages');
+          var captionTextpackages = document.getElementById('captionpackages');
+          imgpackages.onclick = function(){
+            modalpackages.style.display = 'block';
+            modalImgpackages.src = this.src;
+            captionTextpackages.innerHTML = this.alt;
+          }
+          /* When the user clicks on the modalImg, close it*/
+          modalImgpackages.onclick = function() {
+            modalpackages.style.display = 'none';
+          }
+</script>
+<script>
+        /* Get the modal*/
+          var modalhelp = document.getElementById('modalhelp');
+        /* Get the image and insert it inside the modal - use its 'alt' text as a caption*/
+        var imghelp = document.getElementById('imghelp');
+          var modalImghelp = document.getElementById('imgmodalhelp');
+          var captionTexthelp = document.getElementById('captionhelp');
+          imghelp.onclick = function(){
+            modalhelp.style.display = 'block';
+            modalImghelp.src = this.src;
+            captionTexthelp.innerHTML = this.alt;
+          }
+          /* When the user clicks on the modalImg, close it*/
+          modalImghelp.onclick = function() {
+            modalhelp.style.display = 'none';
+          }
+</script>
+<script>
+        /* Get the modal*/
+          var modalfiles = document.getElementById('modalfiles');
+        /* Get the image and insert it inside the modal - use its 'alt' text as a caption*/
+        var imgfiles = document.getElementById('imgfiles');
+          var modalImgfiles = document.getElementById('imgmodalfiles');
+          var captionTextfiles = document.getElementById('captionfiles');
+          imgfiles.onclick = function(){
+            modalfiles.style.display = 'block';
+            modalImgfiles.src = this.src;
+            captionTextfiles.innerHTML = this.alt;
+          }
+          /* When the user clicks on the modalImg, close it*/
+          modalImgfiles.onclick = function() {
+            modalfiles.style.display = 'none';
+          }
+</script>
+<script>
+        /* Get the modal*/
+          var modalpackages = document.getElementById('modalpackages');
+        /* Get the image and insert it inside the modal - use its 'alt' text as a caption*/
+        var imgpackages = document.getElementById('imgpackages');
+          var modalImgpackages = document.getElementById('imgmodalpackages');
+          var captionTextpackages = document.getElementById('captionpackages');
+          imgpackages.onclick = function(){
+            modalpackages.style.display = 'block';
+            modalImgpackages.src = this.src;
+            captionTextpackages.innerHTML = this.alt;
+          }
+          /* When the user clicks on the modalImg, close it*/
+          modalImgpackages.onclick = function() {
+            modalpackages.style.display = 'none';
+          }
+</script>
+<script>
+        /* Get the modal*/
+          var modalhelp = document.getElementById('modalhelp');
+        /* Get the image and insert it inside the modal - use its 'alt' text as a caption*/
+        var imghelp = document.getElementById('imghelp');
+          var modalImghelp = document.getElementById('imgmodalhelp');
+          var captionTexthelp = document.getElementById('captionhelp');
+          imghelp.onclick = function(){
+            modalhelp.style.display = 'block';
+            modalImghelp.src = this.src;
+            captionTexthelp.innerHTML = this.alt;
+          }
+          /* When the user clicks on the modalImg, close it*/
+          modalImghelp.onclick = function() {
+            modalhelp.style.display = 'none';
+          }
+</script>
+<script>
+        /* Get the modal*/
+          var modalfiles = document.getElementById('modalfiles');
+        /* Get the image and insert it inside the modal - use its 'alt' text as a caption*/
+        var imgfiles = document.getElementById('imgfiles');
+          var modalImgfiles = document.getElementById('imgmodalfiles');
+          var captionTextfiles = document.getElementById('captionfiles');
+          imgfiles.onclick = function(){
+            modalfiles.style.display = 'block';
+            modalImgfiles.src = this.src;
+            captionTextfiles.innerHTML = this.alt;
+          }
+          /* When the user clicks on the modalImg, close it*/
+          modalImgfiles.onclick = function() {
+            modalfiles.style.display = 'none';
+          }
+</script>
+<script>
+        /* Get the modal*/
+          var modalpackages = document.getElementById('modalpackages');
+        /* Get the image and insert it inside the modal - use its 'alt' text as a caption*/
+        var imgpackages = document.getElementById('imgpackages');
+          var modalImgpackages = document.getElementById('imgmodalpackages');
+          var captionTextpackages = document.getElementById('captionpackages');
+          imgpackages.onclick = function(){
+            modalpackages.style.display = 'block';
+            modalImgpackages.src = this.src;
+            captionTextpackages.innerHTML = this.alt;
+          }
+          /* When the user clicks on the modalImg, close it*/
+          modalImgpackages.onclick = function() {
+            modalpackages.style.display = 'none';
+          }
+</script>
+<script>
+        /* Get the modal*/
+          var modalhelp = document.getElementById('modalhelp');
+        /* Get the image and insert it inside the modal - use its 'alt' text as a caption*/
+        var imghelp = document.getElementById('imghelp');
+          var modalImghelp = document.getElementById('imgmodalhelp');
+          var captionTexthelp = document.getElementById('captionhelp');
+          imghelp.onclick = function(){
+            modalhelp.style.display = 'block';
+            modalImghelp.src = this.src;
+            captionTexthelp.innerHTML = this.alt;
+          }
+          /* When the user clicks on the modalImg, close it*/
+          modalImghelp.onclick = function() {
+            modalhelp.style.display = 'none';
+          }
+</script>
+<script>
+        /* Get the modal*/
+          var modalfiles = document.getElementById('modalfiles');
+        /* Get the image and insert it inside the modal - use its 'alt' text as a caption*/
+        var imgfiles = document.getElementById('imgfiles');
+          var modalImgfiles = document.getElementById('imgmodalfiles');
+          var captionTextfiles = document.getElementById('captionfiles');
+          imgfiles.onclick = function(){
+            modalfiles.style.display = 'block';
+            modalImgfiles.src = this.src;
+            captionTextfiles.innerHTML = this.alt;
+          }
+          /* When the user clicks on the modalImg, close it*/
+          modalImgfiles.onclick = function() {
+            modalfiles.style.display = 'none';
+          }
+</script>
+<script>
+        /* Get the modal*/
+          var modalpackages = document.getElementById('modalpackages');
+        /* Get the image and insert it inside the modal - use its 'alt' text as a caption*/
+        var imgpackages = document.getElementById('imgpackages');
+          var modalImgpackages = document.getElementById('imgmodalpackages');
+          var captionTextpackages = document.getElementById('captionpackages');
+          imgpackages.onclick = function(){
+            modalpackages.style.display = 'block';
+            modalImgpackages.src = this.src;
+            captionTextpackages.innerHTML = this.alt;
+          }
+          /* When the user clicks on the modalImg, close it*/
+          modalImgpackages.onclick = function() {
+            modalpackages.style.display = 'none';
+          }
+</script>
+<script>
+        /* Get the modal*/
+          var modalhelp = document.getElementById('modalhelp');
+        /* Get the image and insert it inside the modal - use its 'alt' text as a caption*/
+        var imghelp = document.getElementById('imghelp');
+          var modalImghelp = document.getElementById('imgmodalhelp');
+          var captionTexthelp = document.getElementById('captionhelp');
+          imghelp.onclick = function(){
+            modalhelp.style.display = 'block';
+            modalImghelp.src = this.src;
+            captionTexthelp.innerHTML = this.alt;
+          }
+          /* When the user clicks on the modalImg, close it*/
+          modalImghelp.onclick = function() {
+            modalhelp.style.display = 'none';
+          }
+</script>
+<script>
+        /* Get the modal*/
+          var modalfiles = document.getElementById('modalfiles');
+        /* Get the image and insert it inside the modal - use its 'alt' text as a caption*/
+        var imgfiles = document.getElementById('imgfiles');
+          var modalImgfiles = document.getElementById('imgmodalfiles');
+          var captionTextfiles = document.getElementById('captionfiles');
+          imgfiles.onclick = function(){
+            modalfiles.style.display = 'block';
+            modalImgfiles.src = this.src;
+            captionTextfiles.innerHTML = this.alt;
+          }
+          /* When the user clicks on the modalImg, close it*/
+          modalImgfiles.onclick = function() {
+            modalfiles.style.display = 'none';
+          }
+</script>
+<script>
+        /* Get the modal*/
+          var modalpackages = document.getElementById('modalpackages');
+        /* Get the image and insert it inside the modal - use its 'alt' text as a caption*/
+        var imgpackages = document.getElementById('imgpackages');
+          var modalImgpackages = document.getElementById('imgmodalpackages');
+          var captionTextpackages = document.getElementById('captionpackages');
+          imgpackages.onclick = function(){
+            modalpackages.style.display = 'block';
+            modalImgpackages.src = this.src;
+            captionTextpackages.innerHTML = this.alt;
+          }
+          /* When the user clicks on the modalImg, close it*/
+          modalImgpackages.onclick = function() {
+            modalpackages.style.display = 'none';
+          }
+</script>
+<script>
+        /* Get the modal*/
+          var modalhelp = document.getElementById('modalhelp');
+        /* Get the image and insert it inside the modal - use its 'alt' text as a caption*/
+        var imghelp = document.getElementById('imghelp');
+          var modalImghelp = document.getElementById('imgmodalhelp');
+          var captionTexthelp = document.getElementById('captionhelp');
+          imghelp.onclick = function(){
+            modalhelp.style.display = 'block';
+            modalImghelp.src = this.src;
+            captionTexthelp.innerHTML = this.alt;
+          }
+          /* When the user clicks on the modalImg, close it*/
+          modalImghelp.onclick = function() {
+            modalhelp.style.display = 'none';
+          }
+</script>
+<script>
+        /* Get the modal*/
+          var modalfiles = document.getElementById('modalfiles');
+        /* Get the image and insert it inside the modal - use its 'alt' text as a caption*/
+        var imgfiles = document.getElementById('imgfiles');
+          var modalImgfiles = document.getElementById('imgmodalfiles');
+          var captionTextfiles = document.getElementById('captionfiles');
+          imgfiles.onclick = function(){
+            modalfiles.style.display = 'block';
+            modalImgfiles.src = this.src;
+            captionTextfiles.innerHTML = this.alt;
+          }
+          /* When the user clicks on the modalImg, close it*/
+          modalImgfiles.onclick = function() {
+            modalfiles.style.display = 'none';
+          }
+</script>
+<script>
+        /* Get the modal*/
+          var modalpackages = document.getElementById('modalpackages');
+        /* Get the image and insert it inside the modal - use its 'alt' text as a caption*/
+        var imgpackages = document.getElementById('imgpackages');
+          var modalImgpackages = document.getElementById('imgmodalpackages');
+          var captionTextpackages = document.getElementById('captionpackages');
+          imgpackages.onclick = function(){
+            modalpackages.style.display = 'block';
+            modalImgpackages.src = this.src;
+            captionTextpackages.innerHTML = this.alt;
+          }
+          /* When the user clicks on the modalImg, close it*/
+          modalImgpackages.onclick = function() {
+            modalpackages.style.display = 'none';
+          }
+</script>
+<script>
+        /* Get the modal*/
+          var modalhelp = document.getElementById('modalhelp');
+        /* Get the image and insert it inside the modal - use its 'alt' text as a caption*/
+        var imghelp = document.getElementById('imghelp');
+          var modalImghelp = document.getElementById('imgmodalhelp');
+          var captionTexthelp = document.getElementById('captionhelp');
+          imghelp.onclick = function(){
+            modalhelp.style.display = 'block';
+            modalImghelp.src = this.src;
+            captionTexthelp.innerHTML = this.alt;
+          }
+          /* When the user clicks on the modalImg, close it*/
+          modalImghelp.onclick = function() {
+            modalhelp.style.display = 'none';
+          }
+</script>
+<script>
+        /* Get the modal*/
+          var modalfiles = document.getElementById('modalfiles');
+        /* Get the image and insert it inside the modal - use its 'alt' text as a caption*/
+        var imgfiles = document.getElementById('imgfiles');
+          var modalImgfiles = document.getElementById('imgmodalfiles');
+          var captionTextfiles = document.getElementById('captionfiles');
+          imgfiles.onclick = function(){
+            modalfiles.style.display = 'block';
+            modalImgfiles.src = this.src;
+            captionTextfiles.innerHTML = this.alt;
+          }
+          /* When the user clicks on the modalImg, close it*/
+          modalImgfiles.onclick = function() {
+            modalfiles.style.display = 'none';
+          }
+</script>
+<script>
+        /* Get the modal*/
+          var modalpackages = document.getElementById('modalpackages');
+        /* Get the image and insert it inside the modal - use its 'alt' text as a caption*/
+        var imgpackages = document.getElementById('imgpackages');
+          var modalImgpackages = document.getElementById('imgmodalpackages');
+          var captionTextpackages = document.getElementById('captionpackages');
+          imgpackages.onclick = function(){
+            modalpackages.style.display = 'block';
+            modalImgpackages.src = this.src;
+            captionTextpackages.innerHTML = this.alt;
+          }
+          /* When the user clicks on the modalImg, close it*/
+          modalImgpackages.onclick = function() {
+            modalpackages.style.display = 'none';
+          }
+</script>
+<script>
+        /* Get the modal*/
+          var modalhelp = document.getElementById('modalhelp');
+        /* Get the image and insert it inside the modal - use its 'alt' text as a caption*/
+        var imghelp = document.getElementById('imghelp');
+          var modalImghelp = document.getElementById('imgmodalhelp');
+          var captionTexthelp = document.getElementById('captionhelp');
+          imghelp.onclick = function(){
+            modalhelp.style.display = 'block';
+            modalImghelp.src = this.src;
+            captionTexthelp.innerHTML = this.alt;
+          }
+          /* When the user clicks on the modalImg, close it*/
+          modalImghelp.onclick = function() {
+            modalhelp.style.display = 'none';
+          }
+</script>
+<script>
+        /* Get the modal*/
+          var modalfiles = document.getElementById('modalfiles');
+        /* Get the image and insert it inside the modal - use its 'alt' text as a caption*/
+        var imgfiles = document.getElementById('imgfiles');
+          var modalImgfiles = document.getElementById('imgmodalfiles');
+          var captionTextfiles = document.getElementById('captionfiles');
+          imgfiles.onclick = function(){
+            modalfiles.style.display = 'block';
+            modalImgfiles.src = this.src;
+            captionTextfiles.innerHTML = this.alt;
+          }
+          /* When the user clicks on the modalImg, close it*/
+          modalImgfiles.onclick = function() {
+            modalfiles.style.display = 'none';
+          }
+</script>
+<script>
+        /* Get the modal*/
+          var modalpackages = document.getElementById('modalpackages');
+        /* Get the image and insert it inside the modal - use its 'alt' text as a caption*/
+        var imgpackages = document.getElementById('imgpackages');
+          var modalImgpackages = document.getElementById('imgmodalpackages');
+          var captionTextpackages = document.getElementById('captionpackages');
+          imgpackages.onclick = function(){
+            modalpackages.style.display = 'block';
+            modalImgpackages.src = this.src;
+            captionTextpackages.innerHTML = this.alt;
+          }
+          /* When the user clicks on the modalImg, close it*/
+          modalImgpackages.onclick = function() {
+            modalpackages.style.display = 'none';
+          }
+</script>
+<script>
+        /* Get the modal*/
+          var modalhelp = document.getElementById('modalhelp');
+        /* Get the image and insert it inside the modal - use its 'alt' text as a caption*/
+        var imghelp = document.getElementById('imghelp');
+          var modalImghelp = document.getElementById('imgmodalhelp');
+          var captionTexthelp = document.getElementById('captionhelp');
+          imghelp.onclick = function(){
+            modalhelp.style.display = 'block';
+            modalImghelp.src = this.src;
+            captionTexthelp.innerHTML = this.alt;
+          }
+          /* When the user clicks on the modalImg, close it*/
+          modalImghelp.onclick = function() {
+            modalhelp.style.display = 'none';
           }
 </script>
 <script>
