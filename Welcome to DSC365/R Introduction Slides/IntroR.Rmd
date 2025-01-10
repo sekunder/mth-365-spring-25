@@ -392,7 +392,7 @@ Think of a function like a verb:
 do_this(to_this)
 ```
 
-**Functions** are sets of instructions that take **arguments** and **return** values
+**Functions** are sets of instructions that take input **arguments**, do some calculation, and **return** output values
 
 
 *R* has pre-made functions found in packages, but later in the semester we will talk about how to create your own functions
@@ -406,12 +406,12 @@ First Check your working directory!
 
 Method 1:
 ```{r, eval = FALSE}
-getwd() #What is your working directory
+getwd() # What is your working directory
 setwd() # Change Working directory
 
 ```
 
-Method 2 (recommendation):
+Method 2 (recommended when you're starting out):
 
 Session -> Set Working Directory -> Choose Directory -> Select folder data set is located -> Apply
 
@@ -437,7 +437,7 @@ head(data, n = 3) #make sure data loads in correctly
 
 ```
 
-Should see data in environment panel (upper right)
+Should see `data` in environment panel (upper right)
 
 ---
 
