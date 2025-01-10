@@ -23,9 +23,9 @@ Today we will work with two packages: `datasauRus` which contains the data set, 
 
 Install these packages by running the following code. You can do that in a Quarto document by clicking the green arrow "Run" button. You should have installed `tidyverse` already last week.
 
-```{r}
-#install.packages("tidyverse")
-#install.packages("datasauRus")
+```{r, eval = FALSE}
+install.packages("tidyverse")
+install.packages("datasauRus")
 ```
 
 Another way to install the package: Click on the "Packages" tab, and click the Install button. Type the package name and click install.

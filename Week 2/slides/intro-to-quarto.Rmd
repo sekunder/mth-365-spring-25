@@ -1,7 +1,7 @@
 ---
-title: "DSC365: Introduction to Data Science!"
-author: "Basic R and Quarto"
-date: "August 27, 2024"
+title: "Basic R and Quarto"
+author: "DSC365: Introduction to Data Science"
+date: "Jan 21, 2025"
 output: 
   xaringan::moon_reader:
     lib_dir: libs
@@ -36,14 +36,14 @@ knit_hooks$set(output = function(x, options) {
 - Quarto set-up
 - Looking at an actual Quarto Document
 
-**Notes Document**: DSC365-quarto-intro-student.qmd
+**Notes Document**: [DSC365-quarto-intro-student.qmd](../in-class-documents/DSC365-quarto-intro-student.qmd)
 
 
 ---
 ## Announcements
 
 - Start Lab 1 in class on Thursday!
-  + Due **Thursday September 5th, 2024 at 11:59 pm** (extra time due to labor day)
+  + Due **Wednesday, January 29th** (by end of)
 
 ---
 ## What do you use to write?
@@ -135,7 +135,7 @@ knitr::include_graphics("../../Week 2/slides/images/quarto.jpg")
 
 ## Contents of a .qmd
 
-1. An (optional) YAML header surrounded by `---s`
+1. An (optional) `YAML` header surrounded by `---`
 2. Code chunks beginning with ````{r}`
 3. Text mixed with simple text formatting (the markdown)
 
@@ -251,3 +251,5 @@ knitr::include_graphics("../../Week 2/slides/images/visual-editor.png")
 
 ---
 ## Next: Download Quarto Document from BlueLine
+
+*or using this link:* [DSC365-quarto-intro-student.qmd](../in-class-documents/DSC365-quarto-intro-student.qmd)
