@@ -47,6 +47,7 @@ knit_hooks$set(output = function(x, options) {
 - Interesting talk on Monday, January 27 at 2pm
   + Topic will include topological data analysis (TDA)
   + Probably in this room, but keep an eye on Blueline announcements
+- Start thinking about what you'll do this summer
 
 ---
 ## What do you use to write?
