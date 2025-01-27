@@ -1,7 +1,7 @@
 ---
 title: "DSC365: Introduction to Data Science"
 author: "ggplot2"
-date: "September 3, 2024"
+date: "January 28, 2025"
 output: 
   xaringan::moon_reader:
     lib_dir: libs
@@ -34,11 +34,13 @@ knit_hooks$set(output = function(x, options) {
 
 ## Announcements
 
+- Lab 1 is due tonight!
+
 - Start Lab 2 in class on Thursday!
-  + Due **Tuesday September 10th, 2024 at 11:59 pm** 
+  + Due **Tuesday, February 4 at 11:59 pm** 
   
 - Will Discuss Mini-Project 1 on Thursday
-  + Due **Thursday September 19th, 2024 at 12:29 pm** (ie. before class starts)
+  + Due **Thursday, February 13 at 12:29 pm** (i.e. before class starts)
 
 
 ---
@@ -158,7 +160,7 @@ grid.arrange(gg1, gg2, gg3, ncol = 3, nrow = 1)
 
 ```{r, echo=FALSE, out.width="40%", fig.align = "center"}
 
-knitr::include_graphics("../../Week 3/slides/images/ggplot-hex.png")
+knitr::include_graphics("images/ggplot-hex.png")
 
 ```
 
