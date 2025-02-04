@@ -125,15 +125,16 @@ Rules of `dplyr`:
 &lt;img src="../../Week 4/slides/images/dplyr.png" width="70%" style="display: block; margin: auto;" /&gt;
 
 ---
-### dplyr uses the Pipe (%&gt;%) Operator
+### dplyr uses the Pipe (`%&gt;%`) Operator
 
 Use the pipe operator to combine dplyr functions in chain, which allows us to perform more complicated data manipulations
 
-In programming, a pipe is a technique for passing information from one process to another. (in the Unix shell, it's the `|` character)
+In programming, a pipe is a technique for passing information from one process to another. (in the Unix shell, it's the `|` character, hence the name)
 
-+ Syntax:  dataframe %&gt;% dplyr_function()
-+ read %&gt;% as "then do"
-+ f(x) %&gt;% g(y) is equivalent to g(f(x),y)
++ Syntax:  `dataframe %&gt;% dplyr_function()`
++ `Cmd + shift + M` (Mac) or `Ctrl + shift + M` (Windows)
++ read `%&gt;%` as "then do"
++ `f(x) %&gt;% g(y)` is equivalent to `g(f(x),y)`
 + Recently `R` has developed the native pipe operator: `|&gt;`
 
 &lt;img src="../../Week 4/slides/images/pipe.png" style="display: block; margin: auto;" /&gt;
@@ -157,7 +158,7 @@ There are some of the primary dplyr verbs, representing distinct data analysis t
 
 `summarise()`: Create collapsed summaries of a data frame
 
-`group_by`: Introduce structure to a data frame
+`group_by()`: Introduce structure to a data frame
 
 
     </textarea>
