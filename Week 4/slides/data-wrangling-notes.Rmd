@@ -33,6 +33,10 @@ knit_hooks$set(output = function(x, options) {
 
 ## Announcements
 
+- We have a TA! Her name is Sydney Whitemiller
+  - TA sessions Tuesday and Wednesday, 5:00 - 6:30pm in Hixson-Lied 404
+  - great person to ask when you're stuck on the labs or projects!
+
 - Lab 2 due date pushed back to **this weekend (February 8th)** - turn it in by Sunday night!
 
 - Start Lab 3 in class on Thursday!
