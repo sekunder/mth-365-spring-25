@@ -1,7 +1,7 @@
 ---
 title: "DSC365: Introduction to Data Science"
 author: "Data Communication and Ethics"
-date: "September 17, 2024"
+date: "February 11, 2025"
 output: 
   xaringan::moon_reader:
     lib_dir: libs
@@ -87,15 +87,15 @@ class:inverse
 <br><br><br>
 ## DSC365: Introduction to Data Science
 ### Data Communication and Ethics
-#### September 17, 2024
+#### February 11, 2025
 
 ---
 ## Announcements
 
-- Lab 3: Due **Tuesday September 24th, 2024 at 11:59 pm** 
+- Lab 3: Due **Tuesday, February 18, 205 at 11:59 pm** 
   
 - **Mini-Project 1**
-  + Due **Thursday September 19th, 2024 at 12:29 pm** (ie. before class starts)
+  + Due **Thursday, February 13 at 9:29 am** (ie. before class starts)
   + Presentations during class that day
 
 
