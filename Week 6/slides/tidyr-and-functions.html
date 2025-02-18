@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="" xml:lang="">
   <head>
-    <title>DSC365: Introduction to Data Science</title>
+    <title>tidyr and Function Writing</title>
     <meta charset="utf-8" />
-    <meta name="author" content="tidyr and Function Writing" />
-    <meta name="date" content="2024-09-24" />
-    <script src="libs/header-attrs-2.27/header-attrs.js"></script>
+    <meta name="author" content="DSC365: Introduction to Data Science" />
+    <meta name="date" content="2025-02-18" />
+    <script src="libs/header-attrs-2.29/header-attrs.js"></script>
     <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
   </head>
@@ -14,13 +14,13 @@
 class: center, middle, inverse, title-slide
 
 .title[
-# DSC365: Introduction to Data Science
+# tidyr and Function Writing
 ]
 .author[
-### tidyr and Function Writing
+### DSC365: Introduction to Data Science
 ]
 .date[
-### September 24, 2024
+### February 18, 2025
 ]
 
 ---
@@ -30,13 +30,16 @@ class: center, middle, inverse, title-slide
 
 ## Announcements
 
-**Lab 4**: Work day Thursday September 26
+**Mini Project 1** Feedback will be on blueline tomorrow
 
-- Due Thursday October 3rd, 2024 at 11:59 pm in Blueline
+
+**Lab 4**: Work day Thursday February 20
+
+- Due Tuesday, February 25th
 
 **Mini Project 2**
 
-- Due Thursday October 24 at 11:59 in Blueline
+- Due Thursday, March 20th (the Thursday after Spring break)
 
 ---
 class:inverse
@@ -55,14 +58,14 @@ class:inverse
 ---
 ### Throwback: What is tidy data?
 
-&lt;img src="../../Week 6/slides/images/tidy-data-illustration.png" width="2339" /&gt;
+![](../../Week 6/slides/images/tidy-data-illustration.png)&lt;!-- --&gt;
 
 
 ---
 ### What Makes Data tidy? Key-Value Pairs
 
 .pull-left[
-&lt;img src="../../Week 6/slides/images/tidy-data.png" width="696" /&gt;
+![](../../Week 6/slides/images/tidy-data.png)&lt;!-- --&gt;
 ].pull-right[
 
 + Treatment and Patient uniquely describe a single row in the dataset.
@@ -101,6 +104,20 @@ One way of telling whether a data set is tidy is to check that all keys for a va
 
 ``` r
 library(reshape2)
+```
+
+```
+## 
+## Attaching package: 'reshape2'
+```
+
+```
+## The following object is masked from 'package:tidyr':
+## 
+##     smiths
+```
+
+``` r
 data("french_fries")
 head(french_fries)
 ```
@@ -246,6 +263,7 @@ Writing a function has three big advantages over using copy-and-paste:
 - As requirements change, you only need to update code in one place, instead of many.
 
 - You eliminate the chance of making incidental mistakes when you copy and paste (i.e. updating a variable name in one place, but not in another).
+  _(Did you get dinged on lab 1 for accidentally doing the same plot of name popularity twice?)_
 
 
 ---
@@ -286,8 +304,8 @@ How many inputs do we have?
 ```
 
 ```
-##  [1] 0.4379888 1.0000000 0.8736174 0.2023909 0.9942649 0.5973739 0.9255128 0.2658723 0.0000000
-## [10] 0.8558285
+##  [1] 0.86547652 0.56554634 0.00000000 0.31636613 0.58097673 0.04996268
+##  [7] 0.39593029 0.60455598 1.00000000 0.40014736
 ```
 
 ---
@@ -357,8 +375,8 @@ rescale01(df$a)
 ```
 
 ```
-##  [1] 0.4379888 1.0000000 0.8736174 0.2023909 0.9942649 0.5973739 0.9255128 0.2658723 0.0000000
-## [10] 0.8558285
+##  [1] 0.86547652 0.56554634 0.00000000 0.31636613 0.58097673 0.04996268
+##  [7] 0.39593029 0.60455598 1.00000000 0.40014736
 ```
 
 ``` r
@@ -366,8 +384,8 @@ rescale01(df$b)
 ```
 
 ```
-##  [1] 0.4233613 0.4817810 0.8648927 0.4031169 0.3465004 1.0000000 0.6166668 0.9831133 0.0000000
-## [10] 0.2859909
+##  [1] 1.0000000 0.9116625 0.7585524 0.3857740 0.7601607 0.5831607 0.0000000
+##  [8] 0.3830798 0.7430603 0.9013256
 ```
 
 ---
@@ -456,7 +474,8 @@ ifelse_example(-2)
 
 Another tool for reducing duplication is iteration, which helps you when you need to do the same thing to multiple inputs: repeating the same operation on different columns, or on different datasets. 
 
-`for` loops are an example of imperative programming and is a good starting point
+`for` loops are an example of _imperative programming_ 
+&lt;!-- and is a good starting point --&gt;
 
 - they make iteration very explicit, so it’s obvious what’s happening. 
 
@@ -493,17 +512,17 @@ output
 ```
 
 ```
-##           X1        X2        X3         X4
-## 1  0.4379888 0.4233613 0.2481862 0.21204822
-## 2  1.0000000 0.4817810 0.5032068 0.22515426
-## 3  0.8736174 0.8648927 0.3772877 0.59491725
-## 4  0.2023909 0.4031169 0.6690809 0.34268812
-## 5  0.9942649 0.3465004 0.0000000 0.78829729
-## 6  0.5973739 1.0000000 0.3008370 0.07232481
-## 7  0.9255128 0.6166668 0.3114563 0.70405192
-## 8  0.2658723 0.9831133 0.4558441 0.00000000
-## 9  0.0000000 0.0000000 0.5925794 1.00000000
-## 10 0.8558285 0.2859909 1.0000000 0.42770339
+##            X1        X2         X3         X4
+## 1  0.86547652 1.0000000 0.82971472 0.17263386
+## 2  0.56554634 0.9116625 0.00000000 0.49859606
+## 3  0.00000000 0.7585524 0.05274222 0.02141351
+## 4  0.31636613 0.3857740 0.85905315 1.00000000
+## 5  0.58097673 0.7601607 0.67828670 0.43251205
+## 6  0.04996268 0.5831607 1.00000000 0.00000000
+## 7  0.39593029 0.0000000 0.43374767 0.47664729
+## 8  0.60455598 0.3830798 0.44719180 0.13852335
+## 9  1.00000000 0.7430603 0.47449420 0.25620020
+## 10 0.40014736 0.9013256 0.60586719 0.21890158
 ```
 
 ---
@@ -542,7 +561,8 @@ Each function takes a vector as input, applies a function to each piece, and the
 - `map_dbl()` makes a double vector.
 - `map_chr()` makes a character vector.
 
-Once you master these functions, you’ll find it takes much less time to solve iteration problems. - The important thing is that you solve the problem that you’re working on, not write the most concise and elegant code.
+Once you master these functions, you’ll find it takes much less time to solve iteration problems.
+  - The important thing is that you solve the problem that you’re working on, not write the most concise and elegant code.
 
 
 
@@ -565,14 +585,14 @@ class:inverse
 
 R is (usually) good at figuring out the best data type, but sometimes we'll need to take corrective action! The four data types we'll interact with the most are:
 
-- Logical: Can take on values of either `TRUE` or `FALSE`
-- Double: numeric data with decimals.
-- Integer: are numeric data without decimals.
+- `Logical`: Can take on values of either `TRUE` or `FALSE`
+- `Double`: numeric data with decimals.
+- `Integer`:  numeric data without decimals.
   - When R stores a number in a variable, it converts the number into a “double” value or a decimal type with at least two decimal places.
-- Character: The data type character is used when storing text, known as strings in R.
+- `Character`: The data type character is used when storing text, known as strings in R.
   - The simplest ways to store data under the character format is by using "" around the piece of text
   - Note that everything inside "" will be considered as character, no matter if it looks like character or not.
-- lists: R objects which contain elements of different types like − numbers, strings, vectors
+- `lists`: R objects which contain elements of different types -− like numbers, strings, vectors
 
 
 ---

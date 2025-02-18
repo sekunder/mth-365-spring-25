@@ -1,7 +1,7 @@
 ---
-title: "DSC365: Introduction to Data Science"
-author: "tidyr and Function Writing"
-date: "September 24, 2024"
+author: "DSC365: Introduction to Data Science"
+title: "tidyr and Function Writing"
+date: "February 18, 2025"
 output: 
   xaringan::moon_reader:
     lib_dir: libs
@@ -33,13 +33,16 @@ knit_hooks$set(output = function(x, options) {
 
 ## Announcements
 
-**Lab 4**: Work day Thursday September 26
+**Mini Project 1** Feedback will be on blueline tomorrow
 
-- Due Thursday October 3rd, 2024 at 11:59 pm in Blueline
+
+**Lab 4**: Work day Thursday February 20
+
+- Due Tuesday, February 25th
 
 **Mini Project 2**
 
-- Due Thursday October 24 at 11:59 in Blueline
+- Due Thursday, March 20th (the Thursday after Spring break)
 
 ---
 class:inverse
@@ -224,6 +227,7 @@ Writing a function has three big advantages over using copy-and-paste:
 - As requirements change, you only need to update code in one place, instead of many.
 
 - You eliminate the chance of making incidental mistakes when you copy and paste (i.e. updating a variable name in one place, but not in another).
+  _(Did you get dinged on lab 1 for accidentally doing the same plot of name popularity twice?)_
 
 
 ---
@@ -376,7 +380,8 @@ ifelse_example(-2)
 
 Another tool for reducing duplication is iteration, which helps you when you need to do the same thing to multiple inputs: repeating the same operation on different columns, or on different datasets. 
 
-`for` loops are an example of imperative programming and is a good starting point
+`for` loops are an example of _imperative programming_ 
+<!-- and is a good starting point -->
 
 - they make iteration very explicit, so it’s obvious what’s happening. 
 
@@ -435,7 +440,8 @@ Each function takes a vector as input, applies a function to each piece, and the
 - `map_dbl()` makes a double vector.
 - `map_chr()` makes a character vector.
 
-Once you master these functions, you’ll find it takes much less time to solve iteration problems. - The important thing is that you solve the problem that you’re working on, not write the most concise and elegant code.
+Once you master these functions, you’ll find it takes much less time to solve iteration problems.
+  - The important thing is that you solve the problem that you’re working on, not write the most concise and elegant code.
 
 
 
@@ -458,14 +464,14 @@ class:inverse
 
 R is (usually) good at figuring out the best data type, but sometimes we'll need to take corrective action! The four data types we'll interact with the most are:
 
-- Logical: Can take on values of either `TRUE` or `FALSE`
-- Double: numeric data with decimals.
-- Integer: are numeric data without decimals.
+- `Logical`: Can take on values of either `TRUE` or `FALSE`
+- `Double`: numeric data with decimals.
+- `Integer`:  numeric data without decimals.
   - When R stores a number in a variable, it converts the number into a “double” value or a decimal type with at least two decimal places.
-- Character: The data type character is used when storing text, known as strings in R.
+- `Character`: The data type character is used when storing text, known as strings in R.
   - The simplest ways to store data under the character format is by using "" around the piece of text
   - Note that everything inside "" will be considered as character, no matter if it looks like character or not.
-- lists: R objects which contain elements of different types like − numbers, strings, vectors
+- `lists`: R objects which contain elements of different types -− like numbers, strings, vectors
 
 
 ---
