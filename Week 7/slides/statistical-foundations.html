@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="" xml:lang="">
   <head>
-    <title>MTH365: Introduction to Data Science</title>
+    <title>Statistical Foundations</title>
     <meta charset="utf-8" />
-    <meta name="author" content="Statistical Foundations" />
-    <meta name="date" content="2024-10-01" />
-    <script src="libs/header-attrs-2.27/header-attrs.js"></script>
+    <meta name="author" content="MTH365: Introduction to Data Science" />
+    <meta name="date" content="2025-02-25" />
+    <script src="libs/header-attrs-2.29/header-attrs.js"></script>
     <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
   </head>
@@ -14,13 +14,13 @@
 class: center, middle, inverse, title-slide
 
 .title[
-# MTH365: Introduction to Data Science
+# Statistical Foundations
 ]
 .author[
-### Statistical Foundations
+### MTH365: Introduction to Data Science
 ]
 .date[
-### October 1, 2024
+### February 25, 2025
 ]
 
 ---
@@ -32,15 +32,15 @@ class: center, middle, inverse, title-slide
 
 **Lab 4**
 
-- Due Thursday October 3rd, 2024 at 11:59 pm in Blueline
+- Due Thursday, February 27th at 11:59 pm in Blueline
 
-**Lab 5**: work day in class on Thursday October 10
+**Lab 5**: work day in class *next* Thursday (March 6th)
 
-- Due Tuesday October 22nd, 2024 at 11:59 pm in Blueline
+- Due Tuesday, March 18 at 11:59 pm in Blueline (Tuesday after spring break)
 
 **Mini Project 2**
 
-- Due Thursday October 24 at 11:59 in Blueline
+- Due Thursday, March 20 at 11:59 in Blueline (Thursday after spring break)
 
 
 
@@ -48,11 +48,11 @@ class: center, middle, inverse, title-slide
 ---
 ## Isn't this data science?
 
-- Statistics: Statistics is a mathematically based field which seeks to collect and interpret quantitative data. 
+- **Statistics** is a branch of mathematics which seeks to collect and interpret quantitative data. 
 
-- Data science: Data science is a multidisciplinary filed which uses scientific methods, processes and system to extract information from data in a large range of forms. 
+- **Data science** is a multidisciplinary filed which uses scientific methods, processes and system to extract information from data in a large range of forms. 
 
-Data science techniques can provide us a clean data and its visualization but statistical theory is still useful to figure out what the data is tell us. 
+Data science techniques can provide us a clean data and its visualization but statistical theory is still useful to figure out what the data actually tells us 
 
 ---
 ## Samples and Population
@@ -158,7 +158,7 @@ mean(Chicago$arr_delay) # population value
 ---
 ## What constitutes an “unacceptable” delay?
 
-How about an one and forty-five minuted delay (105 minutes)?
+How about an hour and forty-five minute delay (105 minutes)?
 
 
 ``` r
@@ -452,7 +452,7 @@ Bootstrapping does not create new cases (not for data collection)
 ---
 ## Bootstraping
 
-&lt;img src="images/bootstrap.png" width="2107" style="display: block; margin: auto;" /&gt;
+&lt;img src="images/bootstrap.png" style="display: block; margin: auto;" /&gt;
 
   
 ---
@@ -607,7 +607,7 @@ Simpson's paradox is a phenomenon where a trend appears in several groups of dat
 
 
 ---
-### Hypothesis Tests and its Perils
+### Hypothesis Tests and Their Perils
 
 Used to test an assumption about a population parameter
 
@@ -632,7 +632,7 @@ The Patriots’ fan base is hugely devoted, probably due to their long run of su
 
 Believe it or not, many people think so. That’s because, for a stretch of 25 games spanning the 2014-15 NFL seasons, the Patriots won 19 out of 25 coin tosses, for a suspiciously high 76% winning percentage. For the Patriots’ detractors, this fact was clear evidence that something fishy was going on. 
 
-But before turning to fraud or the Force as an explanation, let’s take a closer look at the evidence. Just how likely is it that one team could win the pre-game coin toss at least 19 out of 25 times, assuming that there’s no cheating going on? We are going to examine this using a hypothesis test
+But before turning to fraud or the Force as an explanation, let’s take a closer look at the evidence. Just how likely is it that one team could win the pre-game coin toss at least 19 out of 25 times, assuming that there’s no cheating going on? We are going to examine this using a hypothesis test.
 
 
 
@@ -648,6 +648,17 @@ But before turning to fraud or the Force as an explanation, let’s take a close
 
 Our burning question: just how likely is it that one team could win the pre-game coin toss at least 19 out of 25 times, assuming that there’s no cheating going on? We’d “expect” any given team to win only about half of its pre-game coin tosses, but we also have to account for the possibility that they just got lucky. Hence we want to simulate a random process, assuming the null hypothesis is true, called a **Null Distribution**
 
+---
+### Simulating the null distribution
+
+
+``` r
+set.seed(4)
+patriots_sim = do(10000)*nflip(25)
+
+ggplot(patriots_sim) + 
+  geom_histogram(aes(x=nflip), binwidth=1)
+```
 
 &lt;img src="statistical-foundations_files/figure-html/unnamed-chunk-28-1.png" style="display: block; margin: auto;" /&gt;
 
@@ -708,6 +719,7 @@ Need to distinguish between statistical significance and practical significance.
 - Statistical significance just means whether we reject `\(H_0\)`
 - Practical significance, means whether the numerical magnitude of something is large enough to matter to actual human persons
   + Hypothesis tests with small differences in values can produce very low p-values if you have large sample size or the data have low variability.
+  + "Matter to human persons" isn't just, like, your opinion, man: we need to know if medicine is actually effective!
 
 
 ---

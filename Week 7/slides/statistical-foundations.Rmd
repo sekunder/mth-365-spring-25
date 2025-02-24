@@ -1,7 +1,7 @@
 ---
-title: "MTH365: Introduction to Data Science"
-author: "Statistical Foundations"
-date: "October 1, 2024"
+author: "MTH365: Introduction to Data Science"
+title: "Statistical Foundations"
+date: "February 25, 2025"
 output: 
   xaringan::moon_reader:
     lib_dir: libs
@@ -37,15 +37,15 @@ knit_hooks$set(output = function(x, options) {
 
 **Lab 4**
 
-- Due Thursday October 3rd, 2024 at 11:59 pm in Blueline
+- Due Thursday, February 27th at 11:59 pm in Blueline
 
-**Lab 5**: work day in class on Thursday October 10
+**Lab 5**: work day in class *next* Thursday (March 6th)
 
-- Due Tuesday October 22nd, 2024 at 11:59 pm in Blueline
+- Due Tuesday, March 18 at 11:59 pm in Blueline (Tuesday after spring break)
 
 **Mini Project 2**
 
-- Due Thursday October 24 at 11:59 in Blueline
+- Due Thursday, March 20 at 11:59 in Blueline (Thursday after spring break)
 
 
 
@@ -53,11 +53,11 @@ knit_hooks$set(output = function(x, options) {
 ---
 ## Isn't this data science?
 
-- Statistics: Statistics is a mathematically based field which seeks to collect and interpret quantitative data. 
+- **Statistics** is a branch of mathematics which seeks to collect and interpret quantitative data. 
 
-- Data science: Data science is a multidisciplinary filed which uses scientific methods, processes and system to extract information from data in a large range of forms. 
+- **Data science** is a multidisciplinary filed which uses scientific methods, processes and system to extract information from data in a large range of forms. 
 
-Data science techniques can provide us a clean data and its visualization but statistical theory is still useful to figure out what the data is tell us. 
+Data science techniques can provide us a clean data and its visualization but statistical theory is still useful to figure out what the data actually tells us 
 
 ---
 ## Samples and Population
@@ -148,7 +148,7 @@ mean(Chicago$arr_delay) # population value
 ---
 ## What constitutes an “unacceptable” delay?
 
-How about an one and forty-five minuted delay (105 minutes)?
+How about an hour and forty-five minute delay (105 minutes)?
 
 ```{r}
 Chicago %>% mutate(less105 = arr_delay<=105) %>% 
@@ -290,7 +290,7 @@ Now suppose we want to report a range of plausible values that have a good shot 
 
 ```{r, echo=FALSE, out.width="70%", fig.align='center'}
 
-knitr::include_graphics("~/Documents/Classes/MTH365/mth-365/Week 7/slides/images/confidence-interval.png")
+knitr::include_graphics("images/confidence-interval.png")
 
 ```
 
@@ -393,7 +393,7 @@ Bootstrapping does not create new cases (not for data collection)
 
 ```{r, echo=FALSE, fig.align='center'}
 
-knitr::include_graphics("~/Documents/Classes/MTH365/mth-365/Week 7/slides/images/bootstrap.png")
+knitr::include_graphics("images/bootstrap.png")
 
 ```
 
@@ -533,13 +533,13 @@ Simpson's paradox is a phenomenon where a trend appears in several groups of dat
 
 ```{r, echo=FALSE, fig.align='center', out.height="90%", out.width="85%"}
 
-knitr::include_graphics("~/Documents/Classes/MTH365/mth-365/Week 7/slides/images/simpson-paradox.png")
+knitr::include_graphics("images/simpson-paradox.png")
 
 ```
 
 
 ---
-### Hypothesis Tests and its Perils
+### Hypothesis Tests and Their Perils
 
 Used to test an assumption about a population parameter
 
@@ -564,7 +564,7 @@ The Patriots’ fan base is hugely devoted, probably due to their long run of su
 
 Believe it or not, many people think so. That’s because, for a stretch of 25 games spanning the 2014-15 NFL seasons, the Patriots won 19 out of 25 coin tosses, for a suspiciously high 76% winning percentage. For the Patriots’ detractors, this fact was clear evidence that something fishy was going on. 
 
-But before turning to fraud or the Force as an explanation, let’s take a closer look at the evidence. Just how likely is it that one team could win the pre-game coin toss at least 19 out of 25 times, assuming that there’s no cheating going on? We are going to examine this using a hypothesis test
+But before turning to fraud or the Force as an explanation, let’s take a closer look at the evidence. Just how likely is it that one team could win the pre-game coin toss at least 19 out of 25 times, assuming that there’s no cheating going on? We are going to examine this using a hypothesis test.
 
 
 
@@ -580,8 +580,10 @@ $H_A:$ Patriots won the pre-game coin toss more often than what would be expecte
 
 Our burning question: just how likely is it that one team could win the pre-game coin toss at least 19 out of 25 times, assuming that there’s no cheating going on? We’d “expect” any given team to win only about half of its pre-game coin tosses, but we also have to account for the possibility that they just got lucky. Hence we want to simulate a random process, assuming the null hypothesis is true, called a **Null Distribution**
 
+---
+### Simulating the null distribution
 
-```{r, echo = FALSE, fig.align='center', fig.width=10, fig.height=5}
+```{r, fig.align='center', fig.width=10, fig.height=5}
 set.seed(4)
 patriots_sim = do(10000)*nflip(25)
 
@@ -652,6 +654,7 @@ Need to distinguish between statistical significance and practical significance.
 - Statistical significance just means whether we reject $H_0$
 - Practical significance, means whether the numerical magnitude of something is large enough to matter to actual human persons
   + Hypothesis tests with small differences in values can produce very low p-values if you have large sample size or the data have low variability.
+  + "Matter to human persons" isn't just, like, your opinion, man: we need to know if medicine is actually effective!
 
 
 ---
