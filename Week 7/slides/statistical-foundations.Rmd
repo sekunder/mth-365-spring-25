@@ -52,6 +52,23 @@ knit_hooks$set(output = function(x, options) {
 - Due Thursday, March 20 at 11:59 in Blueline (Thursday after spring break)
 
 
+---
+## About the lab...
+
+- Read the assignment
+
+> For each question, please make corresponding figures as well as several sentences to explain your findings in Questions 1-6 (explain to someone with very little statistical knowledge).
+
+- Don't just write "this plot shows the relationship between X and Y," write what the relationship is
+  + ex: "This plot shows a positive correlation between square footage and price"
+  + ex: "This plot shows that larger homes tend to have more bathrooms"
+
+- Think about what is the independent variable (usually put on the x-axis) and the dependent variable (y-axis)
+  + lots of plots where price was on the x-axis, when the question asked for "how price depends on..."
+  + if price is on the x-axis, you can say "Paying more gets you more of X" or something like that
+
+- A word about grades...
+
 
 
 ---
