@@ -1,7 +1,7 @@
 ---
-title: "MTH365: Introduction to Data Science"
-author: "Linear Models"
-date: "October 3, 2024"
+author: "MTH365: Introduction to Data Science"
+title: "Linear Models"
+date: "February 27, 2025"
 output: 
   xaringan::moon_reader:
     lib_dir: libs
@@ -38,13 +38,13 @@ knit_hooks$set(output = function(x, options) {
 
 - Due Tonight at 11:59 pm in Blueline
 
-**Lab 5**: work day in class on Thursday October 10
+**Lab 5**: work day in class next Thursday (March 6)
 
-- Due Tuesday October 22nd, 2024 at 11:59 pm in Blueline
+- Due Tuesday after Spring Break (March 18)
 
 **Mini Project 2**
 
-- Due Thursday October 24 at 11:59 in Blueline
+- Due Thursday after Spring Break (March 20)
 
 ---
 ## Language of Models
@@ -99,15 +99,15 @@ Sometimes we are only interested in one of them, sometimes both. They have sligh
 Today's lecture we focus on interpretation and your mini-project 3 focuses on prediction. General steps for fitting a model for interpretation: 
 
 1. Look at your research question. Identify the response variable.
-2. Look at your data. Which variables may related to the response variables?
+2. Look at your data. Which variables may be related to the response variables?
 3. Fit the variables to a statistical model
-4. Check the p-values to decide whether the variables is significant and interpret its meaning. 
+4. Check the p-values to decide whether the variables are significant and interpret their meaning. 
 
 ---
 ## Benefits and Drawbacks of Models
 
 - **Benefits**: Models can sometimes reveal patterns that are not evident in a graph of the data.
-- **Drawbacks**: There is a real risk, however, that a model is imposing structure that is not really there on the scatter of data, just as people imagine animal shapes in the stars. A skeptical approach is always warranted.
+- **Drawbacks**: There is a real risk, however, that a model is imposing structure that is not really there on the scatter of data, just as people imagine animal shapes in the stars or in clouds. A skeptical approach is always warranted.
 
 ---
 
@@ -196,9 +196,10 @@ $$\hat{y} = -19.55 + 2.0384*hours$$
 **Significance of Variable:** Hypothesis Test
 
 - $H_0: \hat{\beta}_1 = 0$
-- $H_0: \hat{\beta}_1 \neq 0$
+<!-- - $H_0: \hat{\beta}_1 \neq 0$ -->
 
   + Since the p-value (7.23e-11) is smaller than 0.05, there is a "statistically significant" relationship between arrival delay and hour.
+  + There is thus strong evidence to reject the null hypothesis
   
 ---
 ### Linear Model: One Categorical Predictor
@@ -437,7 +438,7 @@ BIC(model6)
 1. The response has a normal distribution
 2. We need to have a linear relationship
 3. Constant variance
-4. No perfect collinearity (i.e. one predictor isn’t a linear combination of another predictor in the model)
+4. No perfect collinearity (i.e. one predictor isn’t a linear combination of other predictors in the model)
   - Focus on numerical predictor variables
 5. Observations are independent
   
@@ -479,8 +480,8 @@ plot(model6, which = 3)
 ## Assumption: No Perfect Collinearity
 
 Collinearity - a linear relationship between two variables
-  - one predictor is a linear combination of another predictor in the model
-  - can't include revenue, profit, cost as profit = revenue-cost
+  - one predictor is a linear combination of other predictors in the model
+  - Example: can't include `revenue`, `profit`, `cost` as `profit = revenue - cost`
 
 
 High correlation between predictor variables
@@ -514,7 +515,7 @@ corrplot(M, method = "number", type = "upper")
   + `lm(arr_delay ~ hour + I(hour^2), data = Chicago1000)`
 - Interactions: used if you think two variables are related to each other
   + Allows for different slopes (coefficient for an explanatory variable would change as another explanatory variable changes)
-    + $\hat{Y} = \hat{\beta_0} + \hat{\beta_1}X_1 + \hat{\beta_2}X_2 \hat{\beta_3}X_1X_2$
+    + $\hat{Y} = \hat{\beta_0} + \hat{\beta_1}X_1 + \hat{\beta_2}X_2 + \hat{\beta_3}X_1X_2$
   + `int = lm(arr_delay ~ hour + carrier + hour:carrier, data = Chicago1000)`
   
 ---
