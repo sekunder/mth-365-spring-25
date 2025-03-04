@@ -456,9 +456,14 @@ Coefficients and p-values may change when variables are added and taken away.
 ---
 ### Variable Selection
 
-- Adjusted `\(R^2\)`
-- AIC/BIC
-- Prediction Accuracy (next class period)
+Since the choice of variables affects the quality of the model, how do we know which to pick?
+
+Measure the "quality" of the model in some way, and pick the variables which give you the highest quality.
+
+Some measures of quality
+- *Traditional Statistics:* Adjusted `\(R^2\)`
+- *Information Theory*: Akaike information criterion (AIC)/Bayesian Information Criterion (BIC)
+- *Hacks*: Prediction Accuracy (next class period)
 
 **Note**: This is far from an exhaustive list
 
@@ -512,9 +517,11 @@ BIC(model6)
 ---
 ### Now we can create a linear model, but is it appropriate?
 
-1. The response has a normal distribution
-2. We need to have a linear relationship
-3. Constant variance
+If you ask for a line of best fit, you're going to get a line, no matter what your data looks like.
+
+1. We need to have a linear relationship
+2. The response has a normal distribution (when adjusted for the regression)
+3. Constant variance (when adjusted for the regression)
 4. No perfect collinearity (i.e. one predictor isn’t a linear combination of other predictors in the model)
   - Focus on numerical predictor variables
 5. Observations are independent
@@ -575,7 +582,7 @@ High correlation between predictor variables
   - We interpret 1 variable while holding all others constant. Holding the others constant may not be possible
   
 When is this an issue:
-- Generally, the absolute value of a correlation above 0.8 is considered serious (caution is typically advised once you hit around 0.6)
+- Generally, the absolute value of a correlation between predictors above 0.8 is considered serious (caution is typically advised once you hit around 0.6)
 
 
 ---
@@ -606,9 +613,13 @@ corrplot(M, method = "number", type = "upper")
 - Non-constant variance is one of the most common model violations, however it is usually fixable by transforming the response (y) variable.
   + Common transformation is the log-transformation or square root
   + Be careful with your interpretations (untransform your response variable)
+
+
 - If you notice a curve in your data, you can add a quadratic term
   + `\(\hat{Y} = \hat{\beta_0} + \hat{\beta_1}X_1 + \hat{\beta_2}X_1^2\)`
   + `lm(arr_delay ~ hour + I(hour^2), data = Chicago1000)`
+
+
 - Interactions: used if you think two variables are related to each other
   + Allows for different slopes (coefficient for an explanatory variable would change as another explanatory variable changes)
     + `\(\hat{Y} = \hat{\beta_0} + \hat{\beta_1}X_1 + \hat{\beta_2}X_2 + \hat{\beta_3}X_1X_2\)`

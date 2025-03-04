@@ -1,7 +1,7 @@
 ---
-title: "MTH365: Introduction to Data Science"
-author: "Cross Validation and Prediction"
-date: "October 8, 2024"
+author: "MTH365: Introduction to Data Science"
+title: "Cross Validation and Prediction"
+date: "March 4, 2025"
 output: 
   xaringan::moon_reader:
     lib_dir: libs
@@ -35,13 +35,24 @@ knit_hooks$set(output = function(x, options) {
 
 ## Announcements
 
-**Lab 5**: work day in class on Thursday October 10
+About Lab 3:
+ - 👍 Cleaning up formatting
+ - 👍 Finding sorts of cool ways to do things (e.g. `separate_rows(events, sep=", ")`)
+ - 👎 Not checking the sensibility of your output:
+ 
+```
+...
+#   events <chr>, temp_diff <dbl>, Rain <lgl>, None <lgl>, `Fog ` <lgl>,
+...
+```
 
-- Due Tuesday October 22nd, 2024 at 11:59 pm in Blueline
+**Lab 5**: starting in class today!
+
+- Due Tuesday after spring break
 
 **Mini Project 2**
 
-- Due Thursday October 24 at 11:59 in Blueline
+- Due Thursday after spring break
 
 ---
 ### Statistical Models
@@ -68,7 +79,10 @@ Getting a good prediction is hard:
 ---
 ### No one best model
 
-.center["All models are wrong, some are just useful"]
+.center["All models are wrong, but some are useful"]
+.pull-right[---George E. P. Box]
+
+
 
 --
 
@@ -183,7 +197,7 @@ rmse(TEST$arr_delay, predictions)
 ---
 ### Your Turn!
 
-Find another model to predict `arr_delay`. Compare it's predictive accuracy to the previous model.
+Find another model to predict `arr_delay`. Compare its predictive accuracy to the previous model.
 
 
 

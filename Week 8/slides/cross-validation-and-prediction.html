@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="" xml:lang="">
   <head>
-    <title>MTH365: Introduction to Data Science</title>
+    <title>Cross Validation and Prediction</title>
     <meta charset="utf-8" />
-    <meta name="author" content="Cross Validation and Prediction" />
-    <meta name="date" content="2024-10-08" />
-    <script src="libs/header-attrs-2.27/header-attrs.js"></script>
+    <meta name="author" content="MTH365: Introduction to Data Science" />
+    <meta name="date" content="2025-03-04" />
+    <script src="libs/header-attrs-2.29/header-attrs.js"></script>
     <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
   </head>
@@ -14,13 +14,13 @@
 class: center, middle, inverse, title-slide
 
 .title[
-# MTH365: Introduction to Data Science
+# Cross Validation and Prediction
 ]
 .author[
-### Cross Validation and Prediction
+### MTH365: Introduction to Data Science
 ]
 .date[
-### October 8, 2024
+### March 4, 2025
 ]
 
 ---
@@ -30,13 +30,24 @@ class: center, middle, inverse, title-slide
 
 ## Announcements
 
-**Lab 5**: work day in class on Thursday October 10
+About Lab 3:
+ - 👍 Cleaning up formatting
+ - 👍 Finding sorts of cool ways to do things (e.g. `separate_rows(events, sep=", ")`)
+ - 👎 Not checking the sensibility of your output:
+ 
+```
+...
+#   events &lt;chr&gt;, temp_diff &lt;dbl&gt;, Rain &lt;lgl&gt;, None &lt;lgl&gt;, `Fog ` &lt;lgl&gt;,
+...
+```
 
-- Due Tuesday October 22nd, 2024 at 11:59 pm in Blueline
+**Lab 5**: starting in class today!
+
+- Due Tuesday after spring break
 
 **Mini Project 2**
 
-- Due Thursday October 24 at 11:59 in Blueline
+- Due Thursday after spring break
 
 ---
 ### Statistical Models
@@ -63,7 +74,10 @@ Getting a good prediction is hard:
 ---
 ### No one best model
 
-.center["All models are wrong, some are just useful"]
+.center["All models are wrong, but some are useful"]
+.pull-right[---George E. P. Box]
+
+
 
 --
 
@@ -87,7 +101,7 @@ Getting a good prediction is hard:
 ---
 ### Over vs Under Fitting
 
-&lt;img src="../../Week 8/slides/images/model-fit.png" width="2297" style="display: block; margin: auto;" /&gt;
+&lt;img src="../../Week 8/slides/images/model-fit.png" style="display: block; margin: auto;" /&gt;
 
 ---
 ### Splitting Our Data
@@ -175,7 +189,7 @@ rmse(TEST$arr_delay, predictions)
 ---
 ### Your Turn!
 
-Find another model to predict `arr_delay`. Compare it's predictive accuracy to the previous model.
+Find another model to predict `arr_delay`. Compare its predictive accuracy to the previous model.
 
 
 
