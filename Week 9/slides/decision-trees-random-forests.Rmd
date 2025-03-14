@@ -1,7 +1,7 @@
 ---
-title: "DSC365: Introduction to Data Science"
-author: "Decision Trees and Random Forests"
-date: "October 22, 2024"
+author: "DSC365: Introduction to Data Science"
+title: "Decision Trees and Random Forests"
+date: "March 18, 2025"
 output: 
   xaringan::moon_reader:
     lib_dir: libs
@@ -41,24 +41,26 @@ knit_hooks$set(output = function(x, options) {
 
 ## Announcements
 
-**Lab 5**: Due Tuesday October 22nd, 2024 at 11:59 pm in Blueline
+**Lab 5**: Due tonight!
 
-**Mini Project 2**
+**Mini Project 2:** Due Thursday night
 
-- Due Thursday October 24 at 11:59 in Blueline
-
-**Lab 6**: work day in class on Thursday October 24
-
-- Due Tuesday October 29th, 2024 at 11:59 pm in Blueline
+**Lab 6**:
+  - In class Thursday (maybe starting today)
+  - Due next Tuesday
 
 ---
+
 ## Supervised vs Unsupervised Learning
+
+"Learning" (as in machine learning) means finding a mathematical model to "explain" your data.
 
 Learning techniques fall into two categories:
 
-1. Supervised learning: Use input data (predictors) to predict the value of an output data (response variable). If the output data is continuous, we call it regression. If the output data is categorical, we call it classification.
-  -  You’re familiar with some (simple) supervised learning techniques already: like a linear model: y ~ x1 + x2 + x3
-2. Unsupervised learning: There is no response variable. We try to learn the pattern of the input data, usually by clustering them into several groups.
+1. **Supervised learning**: Use input data (predictors) to predict the value of an output data (response variable).
+  - If the output data is continuous, we call it *regression.* If the output data is categorical, we call it *classification.*
+  -  You’re familiar with some (simple) supervised learning techniques already, like a linear model: `y ~ x1 + x2 + x3`
+2. **Unsupervised learning**: There is no response variable. We try to learn the pattern of the input data, usually by clustering them into several groups.
 
 
 ---
@@ -91,7 +93,7 @@ glimpse(GSS)
 ---
 ## Let's Clean Our Data! Yay!
 
-- Let's only look at one year, say 2016, and remove "Not applicable from our response"
+- Let's only look at one year, say 2016, and remove "Not applicable" from our response
 
 ```{r}
 GSS <- GSS %>% filter(YEAR==2016) %>% 

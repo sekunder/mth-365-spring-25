@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="" xml:lang="">
   <head>
-    <title>DSC365: Introduction to Data Science</title>
+    <title>Decision Trees and Random Forests</title>
     <meta charset="utf-8" />
-    <meta name="author" content="Decision Trees and Random Forests" />
-    <meta name="date" content="2024-10-22" />
-    <script src="libs/header-attrs-2.27/header-attrs.js"></script>
+    <meta name="author" content="DSC365: Introduction to Data Science" />
+    <meta name="date" content="2025-03-18" />
+    <script src="libs/header-attrs-2.29/header-attrs.js"></script>
     <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
   </head>
@@ -14,13 +14,13 @@
 class: center, middle, inverse, title-slide
 
 .title[
-# DSC365: Introduction to Data Science
+# Decision Trees and Random Forests
 ]
 .author[
-### Decision Trees and Random Forests
+### DSC365: Introduction to Data Science
 ]
 .date[
-### October 22, 2024
+### March 18, 2025
 ]
 
 ---
@@ -36,24 +36,26 @@ class: center, middle, inverse, title-slide
 
 ## Announcements
 
-**Lab 5**: Due Tuesday October 22nd, 2024 at 11:59 pm in Blueline
+**Lab 5**: Due tonight!
 
-**Mini Project 2**
+**Mini Project 2** Due Thursday night
 
-- Due Thursday October 24 at 11:59 in Blueline
-
-**Lab 6**: work day in class on Thursday October 24
-
-- Due Tuesday October 29th, 2024 at 11:59 pm in Blueline
+**Lab 6**:
+  - In class Thursday (maybe starting today)
+  - Due next Tuesday
 
 ---
+
 ## Supervised vs Unsupervised Learning
+
+"Learning" (as in machine learning) means finding a mathematical model to "explain" your data.
 
 Learning techniques fall into two categories:
 
-1. Supervised learning: Use input data (predictors) to predict the value of an output data (response variable). If the output data is continuous, we call it regression. If the output data is categorical, we call it classification.
-  -  You’re familiar with some (simple) supervised learning techniques already: like a linear model: y ~ x1 + x2 + x3
-2. Unsupervised learning: There is no response variable. We try to learn the pattern of the input data, usually by clustering them into several groups.
+1. **Supervised learning**: Use input data (predictors) to predict the value of an output data (response variable).
+  - If the output data is continuous, we call it *regression.* If the output data is categorical, we call it *classification.*
+  -  You’re familiar with some (simple) supervised learning techniques already, like a linear model: `y ~ x1 + x2 + x3`
+2. **Unsupervised learning**: There is no response variable. We try to learn the pattern of the input data, usually by clustering them into several groups.
 
 
 ---
@@ -82,24 +84,24 @@ glimpse(GSS)
 ```
 ## Rows: 9,423
 ## Columns: 18
-## $ YEAR     &lt;int&gt; 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2010…
-## $ NEWSFROM &lt;chr&gt; "Not applicable", "Not applicable", "Not applicable", "Not applicable"…
-## $ HAPPY    &lt;chr&gt; "Pretty happy", "Not too happy", "Not too happy", "Not too happy", "Ve…
-## $ RELIG    &lt;chr&gt; "Catholic", "None", "Catholic", "Catholic", "Protestant", "None", "Cat…
-## $ GRASS    &lt;chr&gt; "Don't know", "Legal", "Not applicable", "Not legal", "Not legal", "Le…
-## $ COURTS   &lt;chr&gt; "About right", "Too harsh", "Not harsh enough", "Not harsh enough", "N…
-## $ ENERGY   &lt;chr&gt; "Too little", "Too little", "Don't know", "About right", "Don't know",…
-## $ EDUC     &lt;chr&gt; "Not applicable", "Too little", "Too little", "Not applicable", "About…
-## $ ENVIR    &lt;chr&gt; "Not applicable", "Too little", "Too little", "Not applicable", "About…
-## $ POLVIEWS &lt;chr&gt; "Slightly liberal", "Liberal", "Don't know", "Liberal", "Slightly libe…
-## $ PARTYID  &lt;chr&gt; "Democrat", "Democrat", "Democrat", "Republican", "Independent", "Demo…
-## $ REGION   &lt;chr&gt; "Middle atlantic", "Middle atlantic", "Middle atlantic", "Middle atlan…
-## $ INCOME   &lt;chr&gt; "$25000 or more", "$15000 - 19999", "$20000 - 24999", "$8000 to 9999",…
-## $ SEX      &lt;chr&gt; "Male", "Female", "Female", "Female", "Female", "Male", "Female", "Fem…
-## $ DEGREE   &lt;chr&gt; "Bachelor", "Bachelor", "Lt high school", "Lt high school", "Lt high s…
-## $ AGE      &lt;chr&gt; "31", "23", "71", "82", "78", "40", "46", "80", "31", "No answer", "31…
-## $ MARITAL  &lt;chr&gt; "Never married", "Never married", "Divorced", "Widowed", "Married", "N…
-## $ BALLOT   &lt;chr&gt; "Ballot b", "Ballot b", "Ballot a", "Ballot b", "Ballot c", "Ballot b"…
+## $ YEAR     &lt;int&gt; 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2…
+## $ NEWSFROM &lt;chr&gt; "Not applicable", "Not applicable", "Not applicable", "Not ap…
+## $ HAPPY    &lt;chr&gt; "Pretty happy", "Not too happy", "Not too happy", "Not too ha…
+## $ RELIG    &lt;chr&gt; "Catholic", "None", "Catholic", "Catholic", "Protestant", "No…
+## $ GRASS    &lt;chr&gt; "Don't know", "Legal", "Not applicable", "Not legal", "Not le…
+## $ COURTS   &lt;chr&gt; "About right", "Too harsh", "Not harsh enough", "Not harsh en…
+## $ ENERGY   &lt;chr&gt; "Too little", "Too little", "Don't know", "About right", "Don…
+## $ EDUC     &lt;chr&gt; "Not applicable", "Too little", "Too little", "Not applicable…
+## $ ENVIR    &lt;chr&gt; "Not applicable", "Too little", "Too little", "Not applicable…
+## $ POLVIEWS &lt;chr&gt; "Slightly liberal", "Liberal", "Don't know", "Liberal", "Slig…
+## $ PARTYID  &lt;chr&gt; "Democrat", "Democrat", "Democrat", "Republican", "Independen…
+## $ REGION   &lt;chr&gt; "Middle atlantic", "Middle atlantic", "Middle atlantic", "Mid…
+## $ INCOME   &lt;chr&gt; "$25000 or more", "$15000 - 19999", "$20000 - 24999", "$8000 …
+## $ SEX      &lt;chr&gt; "Male", "Female", "Female", "Female", "Female", "Male", "Fema…
+## $ DEGREE   &lt;chr&gt; "Bachelor", "Bachelor", "Lt high school", "Lt high school", "…
+## $ AGE      &lt;chr&gt; "31", "23", "71", "82", "78", "40", "46", "80", "31", "No ans…
+## $ MARITAL  &lt;chr&gt; "Never married", "Never married", "Divorced", "Widowed", "Mar…
+## $ BALLOT   &lt;chr&gt; "Ballot b", "Ballot b", "Ballot a", "Ballot b", "Ballot c", "…
 ```
 ]
 
@@ -589,7 +591,7 @@ fancyRpartPlot(tree4)
 
 
 
-&lt;img src="../../Week 9/slides/images/tree4.png" width="2437" style="display: block; margin: auto;" /&gt;
+&lt;img src="../../Week 9/slides/images/tree4.png" style="display: block; margin: auto;" /&gt;
 
 ---
 ### Your Turn: Age
