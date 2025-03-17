@@ -473,7 +473,7 @@ Which variables are most important for predicting `Age`? Use these to create a D
 ---
 ### If Time: Iris Data
 
-Here is the data from credit card customers. One variable that credit card companies are often interested in is utilization: how much of the available credit limit is currently being “used”?
+<!-- Here is the data from credit card customers. One variable that credit card companies are often interested in is utilization: how much of the available credit limit is currently being “used”? -->
 
 ```{r}
 data("iris")
