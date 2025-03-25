@@ -1,7 +1,7 @@
 ---
-title: "MTH365: Introduction to Data Science"
-author: "KNN"
-date: "October 29, 2024"
+author: "MTH365: Introduction to Data Science"
+title: "KNN (k Nearest Neighbors)"
+date: "March 25, 2025"
 output: 
   xaringan::moon_reader:
     lib_dir: libs
@@ -41,15 +41,17 @@ knit_hooks$set(output = function(x, options) {
 
 ## Announcements
 
-**Lab 6**: Due tonight at 11:59 pm in Blueline
+**Mini Project 2** You tried to warn me... please upload to the assignment labeled "UPLOAD HERE" and not the one labeled "NOT HERE" (I changed the assignment names last night)
+
+**Lab 6**: Due tonight at in Blueline
 
 **Mini Project 3**
 
-- Due Thursday November 7 at 2:00pm in Blueline
+- Details on Thursday
 
-**Lab 7**: work day in class on Thursday October 31
+**Lab 7**: work day in class on Thursday
 
-- Due Tuesday November 12, 2024 at 11:59 pm in Blueline
+- Due next Tuesday
 
 
 ---
@@ -104,33 +106,34 @@ ggplot(data.new, aes(x=x, y=y, group=group))+geom_point(size = 5, aes(col=group,
 ---
 ## Bayes Classifier
 
-A good classifier minimizes Testing Error 
+A good classifier minimizes Testing Error, the probability of mis-classifying an input
 
+Bayes Classifier assigns each observation $x_0$ to is most likely class using:
+
+$$f(j) = \arg\max_j P(Y = j|X = x_0)$$
 + Bayes Classifier produce the lowest possible test error rate [(proof)](https://www.ee.columbia.edu/~vittorio/BayesProof.pdf)
 
-Bayes Classifier assigns each observation to is most likely class using:
-
-$$P(Y = j|X = x_0)$$
-**Problem**: Don't know the conditional distribution
+**Problem**: Don't know the conditional distribution (if we did, we wouldn't need a classifier...)
 
 ---
-## $k$-nearest neighbor (k-NN or KNN) classifier: 
+## $k$-nearest neighbor ($k$-NN or KNN) classifier: 
 
 
 A non-parametric supervised learning method that estimates the conditional probability.
 
-- In k-NN classification, the output is a class membership. An object is classified by a plurality vote of its neighbors, with the object being assigned to the class most common among its k nearest neighbors (k is a positive integer). 
+- In $k$-NN classification, the output is a class membership. An object is classified by a plurality vote of its neighbors, with the object being assigned to the class most common among its $k$ nearest neighbors ($k$ is a positive integer). 
+
 
 
 ---
 ## KNN for Classification Steps
 
-In the KNN algorithm, $k$ specifies the number of neighbors and its algorithm is as follows:
+In the KNN algorithm, $k$ specifies the number of neighbors and its algorithm to classify a new input $x$ is as follows:
 
-- Choose the number $k$ of neighbors
-- Find the $k$ Nearest Neighbor of an unknown data point using distance.
+<!-- - Choose the number $k$ of neighbors -->
+- Find the $k$ Nearest Neighbors to $x$ using distance
   + Euclidean Distance: $d(p,q) = \sqrt{\sum^n_{i=1}(p_i - q_i)^2}$
-- Among the $k$-neighbors, count the number of data points in each category (or find the conditional probability the new point $(x_0)$ is in category *j*).
+- Among the $k$ nearest neighbors, count the number of data points in each category (or find the conditional probability the new point $(x_0)$ is in category *j*).
   + $P(Y=j|X=x_0) = \frac{1}{k}\sum_{i \in N_0}I(y_i = j)$
 - Assign the new data point to a category, where you counted the most neighbors/highest probability from formula above.
 
@@ -148,7 +151,6 @@ __Example__: Let's classify our new points using $k=2$.
 
 ```{r}
 library(class)
-
 knnModel = knn(train = data[,1:2], 
                test = new.points[,1:2], 
                cl = data$group, 
@@ -174,8 +176,11 @@ knnModel
 
 - The algorithm is easy to implement and straight forward. 
 
-- Sometimes it is hard to decide the k value. With more variables included, the accuracy will be affected. Sensitive to outliers, you need to scale the data sometimes. 
-- To provide accurate classification, KNN requires a lot of observations relative to the number of predictors—that is, n much larger than p.
+- Sometimes it is hard to decide the $k$ value.
+  + With more variables included, the accuracy will be affected.
+  + Sensitive to outliers
+  + may require scaling data
+- To provide accurate classification, KNN requires a lot of observations relative to the number of predictors—that is, $n$ much larger than $p$.
 
 - Since using Euclidean distance, can only use quantitative predictors
 
