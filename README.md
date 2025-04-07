@@ -32,13 +32,13 @@ This schedule is tentative and may change without warning. **The official calend
 | 9 | Mar 20 | **Lab 6** | Lab 6 Work Day |  | **Due** during week 10 in Blueline |
 | 10 | Mar 25 | [KNN](Week%2010/slides/knn-and-classification.html) | k-nearest neighbors | [in class document](Week%2010/KNN-student.qmd) |  |
 | 10 | Mar 27 | **Lab 7** | Lab 7 Work Day |  | **Due** during week 12 in Blueline |
-| 11 | Apr 1 | Text Data | Basics of Working with Text Data | [in class document](Week%2011/DSC365-text-data-student.qmd) |  |
+| 11 | Apr 1 | **Text Data** | Basics of Working with Text Data | [in class document](Week%2011/DSC365-text-data-student.qmd) |  |
 | 11 | Apr 3 | **Peer Review** | Review of MP3 |  | **Due** during week 12 in Blueline |
-| 12 | Apr 8 | **PCA** | Principle Component Analysis | [in class document](Week%2012/Cluster-PCA-student.qmd) |  |
-| 12 | Apr 10 | **Clustering** | Identifying related groups in data | [in class document](Week%2012/Cluster-PCA-student.qmd) |  |
+| 12 | Apr 8 | **Clustering** | Identifying related groups in data | [in class document](Week%2012/Cluster-PCA-student.qmd) |  |
+| 12 | Apr 10 | **PCA** | Principle Component Analysis | [in class document](Week%2012/Cluster-PCA-student.qmd) |  |
 | 13 | Apr 15 | **Lab 8** | Lab 8 Workday |  | **Due** during week 14 in Blueline |
 | 13 | Apr 17 | **Spatial Data** | Working with geographic data |  |  |
-| 14 | Apr 22 | Web Scraping | How to gather data from websites |  |  |
+| 14 | Apr 22 | **Web Scraping** | How to gather data from websites |  |  |
 | 14 | Apr 24 | **Lab 9** | Lab 9 workday |  | **Due** during week 15 in Blueline |
 | 15 | Apr 29 | **Presentations** | Presenting your final projects |  |  |
 | 15 | May 1 | **Presentations** |  |  |  |
