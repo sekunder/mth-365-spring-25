@@ -3117,24 +3117,38 @@ vertical-align: -.125em;
 
 <section id="the-creighton-course-catalog" class="level1">
 <h1>The Creighton Course Catalog</h1>
-<p>Let’s try to extract the Creighton course catalog into a tidy format! In this file I will try to document the <em>process</em> I used to get the table I’m after, since there’s definitely a few hiccups along the way!</p>
+<p>Let’s try to extract the Creighton course catalog into a tidy format! In this file I will try to document the <em>process</em> I used to get the table I’m after, since there’s definitely a few hiccups along the way! You can download the <a href="course_catalog.qmd">qmd file here.</a></p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A major challenge of web scraping is the fact that websites are constantly changing. So, while this ran successfully when I made it on April 22, 2025, there’s no guarantee it will still work a year from now. So, in this directory I’ve also downloaded the <a href="creighton_catalog.html">catalog webpage as it existed at the time</a>. Simply uncomment the line <code>html &lt;- read_html(&quot;creighton_catalog.html&quot;)</code></p>
+</div>
+</div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rvest)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>First, we’ll read the <a href="https://catalog.creighton.edu/undergraduate/all-courses-arts-and-sciences/#courseinventory">course catalog</a>. Using the inspector tool, I see that the course titles are in <code>&lt;p class=&quot;courseblocktitle&quot;&gt;</code> tags and course descriptions are in <code>&lt;p class=&quot;courseblockdesc&quot;&gt;</code> tags, so my first attempt will be to pull out each of those and see if I can jam them into a table.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>html <span class="ot">&lt;-</span> <span class="fu">read_html</span>(<span class="st">&quot;https://catalog.creighton.edu/undergraduate/all-courses-arts-and-sciences/#courseinventory&quot;</span>)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>title_blocks <span class="ot">=</span> html <span class="sc">%&gt;%</span> <span class="fu">html_elements</span>(<span class="st">&quot;.courseblocktitle&quot;</span>) <span class="sc">%&gt;%</span> <span class="fu">html_text</span>()</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>desc_blocks <span class="ot">=</span> html <span class="sc">%&gt;%</span> <span class="fu">html_elements</span>(<span class="st">&quot;.courseblockdesc&quot;</span>) <span class="sc">%&gt;%</span> <span class="fu">html_text</span>()</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>catalog <span class="ot">=</span> <span class="fu">tibble</span>(</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">Title.Block =</span> title_blocks,</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">Description.Block =</span> desc_blocks</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>catalog</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># html &lt;- read_html(&quot;https://catalog.creighton.edu/undergraduate/all-courses-arts-and-sciences/#courseinventory&quot;)</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>html <span class="ot">&lt;-</span> <span class="fu">read_html</span>(<span class="st">&quot;creighton_catalog.html&quot;</span>)  <span class="co"># if the online version changes, use the local copy</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>title_blocks <span class="ot">=</span> html <span class="sc">%&gt;%</span> <span class="fu">html_elements</span>(<span class="st">&quot;.courseblocktitle&quot;</span>) <span class="sc">%&gt;%</span> <span class="fu">html_text</span>()</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>desc_blocks <span class="ot">=</span> html <span class="sc">%&gt;%</span> <span class="fu">html_elements</span>(<span class="st">&quot;.courseblockdesc&quot;</span>) <span class="sc">%&gt;%</span> <span class="fu">html_text</span>()</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>catalog <span class="ot">=</span> <span class="fu">tibble</span>(</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">Title.Block =</span> title_blocks,</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">Description.Block =</span> desc_blocks</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>catalog</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 2,094 × 2
    Title.Block                                                 Description.Block

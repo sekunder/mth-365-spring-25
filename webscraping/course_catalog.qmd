@@ -9,7 +9,11 @@ format:
 
 # The Creighton Course Catalog
 
-Let's try to extract the Creighton course catalog into a tidy format! In this file I will try to document the _process_ I used to get the table I'm after, since there's definitely a few hiccups along the way!
+Let's try to extract the Creighton course catalog into a tidy format! In this file I will try to document the _process_ I used to get the table I'm after, since there's definitely a few hiccups along the way! You can download the [qmd file here.](course_catalog.qmd)
+
+::: callout-note
+A major challenge of web scraping is the fact that websites are constantly changing. So, while this ran successfully when I made it on April 22, 2025, there's no guarantee it will still work a year from now. So, in this directory I've also downloaded the [catalog webpage as it existed at the time](creighton_catalog.html). Simply uncomment the line `html <- read_html("creighton_catalog.html")`
+:::
 
 ```{r packages, message=FALSE, warning=FALSE}
 library(tidyverse)
@@ -21,7 +25,8 @@ Using the inspector tool, I see that the course titles are in `<p class="courseb
 
 
 ```{r}
-html <- read_html("https://catalog.creighton.edu/undergraduate/all-courses-arts-and-sciences/#courseinventory")
+# html <- read_html("https://catalog.creighton.edu/undergraduate/all-courses-arts-and-sciences/#courseinventory")
+html <- read_html("creighton_catalog.html")  # if the online version changes, use the local copy
 
 title_blocks = html %>% html_elements(".courseblocktitle") %>% html_text()
 desc_blocks = html %>% html_elements(".courseblockdesc") %>% html_text()
