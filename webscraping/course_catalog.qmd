@@ -25,8 +25,8 @@ Using the inspector tool, I see that the course titles are in `<p class="courseb
 
 
 ```{r}
-# html <- read_html("https://catalog.creighton.edu/undergraduate/all-courses-arts-and-sciences/#courseinventory")
-html <- read_html("creighton_catalog.html")  # if the online version changes, use the local copy
+html <- read_html("https://catalog.creighton.edu/undergraduate/all-courses-arts-and-sciences/#courseinventory")
+# html <- read_html("creighton_catalog.html")  # if the online version changes, use the local copy
 
 title_blocks = html %>% html_elements(".courseblocktitle") %>% html_text()
 desc_blocks = html %>% html_elements(".courseblockdesc") %>% html_text()
