@@ -1,0 +1,75 @@
+---
+title: "Tidy Course Catalog"
+author: "Alex Kunin"
+date: "April 22, 2025"
+format:
+  html:
+    embed-resources: true
+---
+
+# The Creighton Course Catalog
+
+Let's try to extract the Creighton course catalog into a tidy format! In this file I will try to document the _process_ I used to get the table I'm after, since there's definitely a few hiccups along the way!
+
+```{r packages, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(rvest)
+```
+
+First, we'll read the [course catalog](https://catalog.creighton.edu/undergraduate/all-courses-arts-and-sciences/#courseinventory).
+Using the inspector tool, I see that the course titles are in `<p class="courseblocktitle">` tags and course descriptions are in `<p class="courseblockdesc">` tags, so my first attempt will be to pull out each of those and see if I can jam them into a table.
+
+
+```{r}
+html <- read_html("https://catalog.creighton.edu/undergraduate/all-courses-arts-and-sciences/#courseinventory")
+
+title_blocks = html %>% html_elements(".courseblocktitle") %>% html_text()
+desc_blocks = html %>% html_elements(".courseblockdesc") %>% html_text()
+
+catalog = tibble(
+  Title.Block = title_blocks,
+  Description.Block = desc_blocks
+)
+
+catalog
+```
+
+Success! Now I need to do a bunch of text manipulation to split up the subject code, course number, course title, and so on.
+My first instinct is to try to split the text at periods, and maybe do some stripping of whitespace. I'm going to [do a google search for "string split R"](https://www.google.com/search?client=firefox-b-1-d&q=string+split+R). The first hit (for me, at least) is the `str_split` function in the `stringr` package, which appears to be part of `tidyverse`.
+
+```{r}
+help("str_split")
+
+# I try to split at "." and discover that it's treating this as a regular expression.
+# str_split(catalog$Title.Block, ".")
+
+# So now I'll used fixed()
+splits <- str_split(catalog$Title.Block, fixed(". "))
+splits[1:5]
+```
+
+Yikes. This is going to be trickier than I thought -- naively splitting at "." accidentally splits course titles with "U.S." in their name, which is not what I want. It might be time for regular expressions. Each chunk of text in the `Title.Block` column of my starts with a 3 letter code (I think...), followed by a space and a 3 digit code (I think...). Let's see if I can just extract those to start with.
+
+```{r}
+catalog <- catalog %>% mutate(subject = str_extract(catalog$Title.Block, "[A-Z]{3}"))
+catalog <- catalog %>% mutate(number = str_extract(catalog$Title.Block, "[0-9]{3}"))
+catalog %>% select(subject, number, Title.Block)
+```
+
+
+Now we're getting somewhere! Extracting the title is going to be a little trickier. As we already saw, splitting at a period won't get us where we want to go, so we need to be a little mover clever. The first thing that comes to my mind is to extract the "# credits" pattern, but I can see from the very first entry that it will require some care. I know that in some languages (such as `python`), the regular expression features allow you find a pattern, but then extract only part of it. Let's see if `R` has something similar. Looking at the [guide linked from the class notes](https://www.datacamp.com/tutorial/regex-r-regular-expressions-guide), in the Advanced Applications section, it mentions the idea of "lookarounds", which sounds like what I want. I don't feel like signing up for a datacamp account so I [go to google once more](https://www.google.com/search?client=firefox-b-1-d&q=R+regular+expression+lookaround) and go to the [first hit](https://debuggingdata.com/post/r/regular-expressions-look-arounds/). In thinking about this I realize I could make my life easier by getting a hold of just the "relevant" part of the text -- can I remove the subject and course number?
+
+```{r}
+str_remove(catalog$Title.Block, "[A-Z]{3}\\s+[0-9]{3}\\.\\s+")[1:5]
+```
+
+
+Looks like I can! So, my plan is to take those pieces of text, and try to find what looks like a period, followed by some space, followed by a digit (indicating that's the number of credits). I'll use a lookahead so that I match the pattern but only return the title itself.
+
+```{r}
+no_subject_number <- str_remove(catalog$Title.Block, "[A-Z]{3}\\s+[0-9]{3}\\.\\s+")
+catalog <- catalog %>% mutate(title=str_extract(no_subject_number, ".+(?=\\.\\s+\\d)"))
+catalog %>% select(subject, number, title, Title.Block)
+```
+
+Alright, this is going well! Unfortunately, it's noon and I have other stuff to get to, so I'm going to stop working on this for now. However, I hope this is helpful in thinking about how to use web scraping and the challenges (and rewards!) it poses.

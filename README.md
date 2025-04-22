@@ -38,7 +38,7 @@ This schedule is tentative and may change without warning. **The official calend
 | 12 | Apr 10 | **PCA** | Principle Component Analysis | [in class document](Week%2012/Cluster-PCA-student.qmd) |  |
 | 13 | Apr 15 | **Lab 8** | Lab 8 Workday |  | **Due** during week 14 in Blueline |
 | 13 | Apr 17 | **Spatial Data** | Working with geographic data |  |  |
-| 14 | Apr 22 | **Web Scraping** | How to gather data from websites |  |  |
+| 14 | Apr 22 | **Web Scraping** | How to gather data from websites | Creighton Course Catalog Example [html](webscraping/course_catalog.html) [qmd](webscraping/course_catalog.qmd) |  |
 | 14 | Apr 24 | **Lab 9** | Lab 9 workday |  | **Due** during week 15 in Blueline |
 | 15 | Apr 29 | **Presentations** | Presenting your final projects |  |  |
 | 15 | May 1 | **Presentations** |  |  |  |
